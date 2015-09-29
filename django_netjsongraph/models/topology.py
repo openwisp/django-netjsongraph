@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.module_loading import import_string
 
 from uuidfield import UUIDField
 
@@ -29,3 +30,11 @@ class BaseTopology(TimeStampedEditableModel):
 
     def __str__(self):
         return self.label
+
+    _parser_class = None
+
+    @property
+    def parser_class(self):
+        if not self._parser_class:
+            self._parser_class = import_string(self.parser)
+        return self._parser_class
