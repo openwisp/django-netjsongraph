@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 
 from uuidfield import UUIDField
 from jsonfield import JSONField
+from model_utils.fields import StatusField
+from model_utils import Choices
 
 from ..base import TimeStampedEditableModel
 
@@ -22,6 +24,8 @@ class BaseLink(TimeStampedEditableModel):
                                related_name='target_node_set')
     cost = models.FloatField()
     cost_text = models.CharField(max_length=24, blank=True)
+    STATUS = Choices('up', 'down')
+    status = StatusField()
     properties = JSONField(null=True, blank=True)
 
     class Meta:
