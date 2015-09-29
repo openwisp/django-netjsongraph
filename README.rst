@@ -19,7 +19,7 @@ django-netjsongraph
 
 ------------
 
-Django implementation of NetJSON NetworkGraph.
+Django implementation of `NetJSON <http://netjson.org>`__ NetworkGraph.
 
 Install stable version from pypi
 --------------------------------
