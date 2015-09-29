@@ -22,7 +22,7 @@ class BaseNode(TimeStampedEditableModel):
         abstract = True
 
     def __str__(self):
-        return self.label
+        return self.name
 
     def save(self, *args, **kwargs):
         self._format_addresses()

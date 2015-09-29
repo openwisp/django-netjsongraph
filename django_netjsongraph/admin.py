@@ -10,10 +10,11 @@ class TopologyAdmin(TimeStampedEditableAdmin):
 
 
 class NodeAdmin(TimeStampedEditableAdmin):
-    list_display = ('label', 'addresses')
+    list_display = ('name', 'addresses')
 
 
 class LinkAdmin(TimeStampedEditableAdmin):
+    raw_id_fields  = ('source', 'target')
     list_display = ('__str__', 'topology', 'cost', 'cost_text')
 
 
