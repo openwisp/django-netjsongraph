@@ -1,5 +1,4 @@
 from django.conf import settings
-from datetime import timedelta
 
 DEFAULT_PARSERS = [
     ('netdiff.OlsrParser', 'OLSRd (txtinfo/jsoninfo)'),
@@ -9,5 +8,5 @@ DEFAULT_PARSERS = [
     ('netdiff.CnmlParser', 'CNML 1.0'),
 ]
 
-PARSERS = DEFAULT_PARSERS + getattr(settings, 'NODESHOT_NETDIFF_PARSERS', [])
-TOPOLOGY_UPDATE_INTERVAL = getattr(settings, 'NODESHOT_TOPOLOGY_UPDATE_INTERVAL', 3)
+PARSERS = DEFAULT_PARSERS + getattr(settings, 'NETJSONGRAPH_PARSERS', [])
+TOPOLOGY_UPDATE_INTERVAL = getattr(settings, 'NETJSONGRAPH_UPDATE_INTERVAL', 3)
