@@ -54,3 +54,17 @@ class TestLink(TestCase):
         "pretty": true
     }
 }""")
+
+    def test_get_from_nodes(self):
+        l = Link(topology_id="a083b494-8e16-4054-9537-fb9eba914861",
+                 source_id="d083b494-8e16-4054-9537-fb9eba914861",
+                 target_id="d083b494-8e16-4054-9537-fb9eba914862",
+                 cost=1.0,
+                 cost_text='100mbit/s',
+                 properties='{"pretty": true}')
+        l.full_clean()
+        l.save()
+        l = Link.get_from_nodes('192.168.0.1', '192.168.0.2')
+        self.assertIsInstance(l, Link)
+        l = Link.get_from_nodes('wrong', 'wrong')
+        self.assertIsNone(l)

@@ -2,6 +2,7 @@ import json
 from collections import OrderedDict
 
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.core.exceptions import ValidationError
@@ -60,3 +61,21 @@ class BaseLink(TimeStampedEditableModel):
         if dict:
             return netjson
         return json.dumps(netjson, **kwargs)
+
+    @classmethod
+    def get_from_nodes(cls, source, target):
+        """
+        Find link between source and target,
+        (or vice versa, order is irrelevant).
+        Source and target nodes must already exist.
+        :param source: string
+        :param target: string
+        :returns: Link object or None
+        """
+        source = '{0};'.format(source)
+        target = '{0};'.format(target)
+        q = (Q(source__addresses__contains=source,
+               target__addresses__contains=target) |
+             Q(source__addresses__contains=target,
+               target__addresses__contains=source))
+        return cls.objects.filter(q).first()
