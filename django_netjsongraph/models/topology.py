@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.module_loading import import_string
+from django.utils.functional import cached_property
 
 from netdiff import diff, NetJsonParser
 
@@ -34,13 +35,9 @@ class BaseTopology(TimeStampedEditableModel):
     def __str__(self):
         return self.label
 
-    _parser_class = None
-
-    @property
+    @cached_property
     def parser_class(self):
-        if not self._parser_class:
-            self._parser_class = import_string(self.parser)
-        return self._parser_class
+        return import_string(self.parser)
 
     @property
     def latest(self):
