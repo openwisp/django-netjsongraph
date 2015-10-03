@@ -1,4 +1,5 @@
 import six
+import responses
 from django.test import TestCase
 from netdiff import OlsrParser
 
@@ -55,3 +56,17 @@ class TestTopology(TestCase):
         })
         self.assertIsInstance(t.json(), six.string_types)
 
+    @responses.activate
+    def test_empty_diff(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9090',
+                      body=t.json(),
+                      content_type='application/json')
+        self.assertDictEqual(t.diff(), {
+            'added': None,
+            'removed': None,
+            'changed': None
+        })
