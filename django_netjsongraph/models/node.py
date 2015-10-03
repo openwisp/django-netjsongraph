@@ -1,3 +1,6 @@
+import json
+from collections import OrderedDict
+
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
@@ -60,3 +63,16 @@ class BaseNode(TimeStampedEditableModel):
         if self.label:
             return self.label
         return self.netjson_id
+
+    def json(self, dict=False, **kwargs):
+        """
+        returns a NetJSON NetworkGraph Node object
+        """
+        netjson = OrderedDict({'id': self.netjson_id})
+        for attr in ['label', 'local_addresses', 'properties']:
+            value = getattr(self, attr)
+            if value:
+                netjson[attr] = value
+        if dict:
+            return netjson
+        return json.dumps(netjson, **kwargs)

@@ -7,6 +7,8 @@ class TestNode(TestCase):
     """
     tests for Node model
     """
+    max_diff = 0
+
     def test_node_address_list_single(self):
         n = Node(label='test node')
         n.addresses = '192.168.0.1'
@@ -47,3 +49,24 @@ class TestNode(TestCase):
         self.assertEqual(n.name, '192.168.0.1')
         n.label = 'test node'
         self.assertEqual(n.name, 'test node')
+
+    def test_json(self):
+        n = Node(label='test node',
+                 addresses='192.168.0.1;10.0.0.1;',
+                 properties='{"gateway": true}')
+        self.assertEqual(dict(n.json(dict=True)), {
+            'id': '192.168.0.1',
+            'label': 'test node',
+            'local_addresses': ['10.0.0.1'],
+            'properties': {'gateway': True}
+        })
+        self.assertEqual(n.json(indent=4), """{
+    "id": "192.168.0.1",
+    "label": "test node",
+    "local_addresses": [
+        "10.0.0.1"
+    ],
+    "properties": {
+        "gateway": true
+    }
+}""")
