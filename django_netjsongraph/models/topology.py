@@ -68,6 +68,7 @@ class BaseTopology(TimeStampedEditableModel):
             ('protocol', self.parser_class.protocol),
             ('version', self.parser_class.version),
             ('metric', self.parser_class.metric),
+            ('label', self.label),
             ('nodes', nodes),
             ('links', links)
         ))

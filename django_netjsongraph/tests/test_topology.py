@@ -14,7 +14,7 @@ class TestTopology(TestCase):
         'test_topologies.json',
         'test_nodes.json'
     ]
-    max_diff = None
+    maxDiff = None
 
     def _get_nodes(self):
         return Node.objects.all()
@@ -31,6 +31,7 @@ class TestTopology(TestCase):
             'protocol': 'OLSR',
             'version': '0.8',
             'metric': 'ETX',
+            'label': t.label,
             'nodes': [],
             'links': []
         })
@@ -46,6 +47,7 @@ class TestTopology(TestCase):
             'protocol': 'OLSR',
             'version': '0.8',
             'metric': 'ETX',
+            'label': t.label,
             'nodes': [
                 dict(node1.json(dict=True)),
                 dict(node2.json(dict=True))
