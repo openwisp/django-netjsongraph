@@ -1,5 +1,7 @@
+import os
 import six
 import responses
+
 from django.test import TestCase
 from netdiff import OlsrParser
 
@@ -18,6 +20,10 @@ class TestTopology(TestCase):
 
     def _get_nodes(self):
         return Node.objects.all()
+
+    def _load(self, file):
+        d = os.path.dirname(os.path.abspath(__file__))
+        return open(os.path.join(d, file)).read()
 
     def test_parser(self):
         t = Topology.objects.first()
@@ -72,3 +78,84 @@ class TestTopology(TestCase):
             'removed': None,
             'changed': None
         })
+
+    @responses.activate
+    def test_update_added(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9090',
+                      body=self._load('static/netjson-1-link.json'),
+                      content_type='application/json')
+        Node.objects.all().delete()
+        t.update()
+        self.assertEqual(Node.objects.count(), 2)
+        self.assertEqual(Link.objects.count(), 1)
+        node1 = Node.objects.get(addresses__contains='192.168.0.1;')
+        node2 = Node.objects.get(addresses__contains='192.168.0.2;')
+        self.assertEqual(node1.local_addresses, ['10.0.0.1'])
+        self.assertEqual(node1.properties, {'gateway': True})
+        link = Link.objects.first()
+        self.assertIn(link.source, [node1, node2])
+        self.assertIn(link.target, [node1, node2])
+        self.assertEqual(link.cost, 1.0)
+        self.assertEqual(link.properties, {'pretty': True})
+        # ensure repeating the action is idempotent
+        t.update()
+        self.assertEqual(Node.objects.count(), 2)
+        self.assertEqual(Link.objects.count(), 1)
+
+    @responses.activate
+    def test_update_changed(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9090',
+                      body=self._load('static/netjson-1-link.json'),
+                      content_type='application/json')
+        Node.objects.all().delete()
+        t.update()
+        link = Link.objects.first()
+        # now change
+        t.url = t.url.replace('9090', '9091')
+        t.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9091',
+                      body=self._load('static/netjson-2-links.json'),
+                      content_type='application/json')
+        t.update()
+        link.refresh_from_db()
+        self.assertEqual(Node.objects.count(), 3)
+        self.assertEqual(Link.objects.count(), 2)
+        self.assertEqual(link.cost, 1.5)
+
+    @responses.activate
+    def test_update_removed(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9090',
+                      body=self._load('static/netjson-2-links.json'),
+                      content_type='application/json')
+        Node.objects.all().delete()
+        t.update()
+        self.assertEqual(Node.objects.count(), 3)
+        self.assertEqual(Link.objects.count(), 2)
+        # now change
+        t.url = t.url.replace('9090', '9091')
+        t.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9091',
+                      body=self._load('static/netjson-1-link.json'),
+                      content_type='application/json')
+        t.update()
+        self.assertEqual(Node.objects.count(), 3)
+        self.assertEqual(Link.objects.count(), 2)
+        self.assertEqual(Link.objects.filter(status='down').count(), 1)
+        link = Link.objects.filter(status='down').first()
+        self.assertIn('192.168.0.3', [link.source.netjson_id,
+                                      link.target.netjson_id])
+        self.assertEqual(link.cost, 2.0)

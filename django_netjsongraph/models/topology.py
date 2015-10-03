@@ -1,4 +1,5 @@
 import json
+import logging
 from collections import OrderedDict
 
 from django.db import models
@@ -77,6 +78,7 @@ class BaseTopology(TimeStampedEditableModel):
         Links are not deleted straightaway but set as "down"
         """
         from . import Link, Node  # avoid circular dependency
+        logger = logging.getLogger(__name__)
         diff = self.diff()
 
         status = {
@@ -84,14 +86,11 @@ class BaseTopology(TimeStampedEditableModel):
             'removed': 'down',
             'changed': 'up'
         }
-        from django.db.models import Q
 
         try:
             added_nodes = diff['added']['nodes']
         except TypeError:
             added_nodes = []
-
-        #import pdb; pdb.set_trace()
 
         for node_dict in added_nodes:
             node = Node.objects.filter(addresses__contains=node_dict['id']).count()
@@ -99,42 +98,42 @@ class BaseTopology(TimeStampedEditableModel):
                 continue
             addresses = '{0};'.format(node_dict['id'])
             addresses += ';'.join(node_dict.get('local_addresses', []))
-            #label = node_dict.get('label', '')
             properties = node_dict.get('properties', {})
             node = Node(addresses=addresses,
                         properties=properties)
             node.full_clean()
             node.save()
 
-        for section in ['added', 'removed', 'changed']:
-            # if section is empty skip to next one
-            if not diff[section]:
+        for section, graph in sorted(diff.items()):
+            # if graph is empty skip to next one
+            if not graph:
                 continue
-            for link_dict in diff[section]['links']:
-                source_q = '{0};'.format(link_dict['source'])
-                target_q = '{0};'.format(link_dict['target'])
-                q = (Q(source__addresses__contains=source_q,
-                       target__addresses__contains=target_q) |
-                     Q(source__addresses__contains=target_q,
-                       target__addresses__contains=source_q))
-                link = Link.objects.filter(q).first()
+            for link_dict in graph['links']:
+                changed = False
+                link = Link.get_from_nodes(link_dict['source'],
+                                           link_dict['target'])
                 if not link:
-                    source = Node.objects.filter(addresses__contains=source_q).first()
-                    target = Node.objects.filter(addresses__contains=target_q).first()
+                    source = Node.get_from_address(link_dict['source'])
+                    target = Node.get_from_address(link_dict['target'])
                     link = Link(source=source,
                                 target=target,
                                 cost=link_dict['cost'],
                                 properties=link_dict.get('properties', {}),
                                 topology=self)
-                try:
-                    link.full_clean()
-                except ValidationError as e:
-                    msg = 'Exception while updating {0}'.format(self.__repr__())
-                    #logger.exception(msg)
-                    print('{0}\n{1}\n'.format(msg, e))
-                    continue
+                    changed = True
+                # links in changed and removed sections
+                # are always changing therefore needs to be saved
                 if section in ['changed', 'removed']:
                     link.status = status[section]
                     link.cost = link_dict['cost']
-                    link.full_clean()
-                link.save()
+                    changed = True
+                # perform writes only if needed
+                if changed:
+                    try:
+                        link.full_clean()
+                    except ValidationError as e:
+                        msg = 'Exception while updating {0}'.format(self.__repr__())
+                        logger.exception(msg)
+                        print('{0}\n{1}\n'.format(msg, e))
+                        continue
+                    link.save()
