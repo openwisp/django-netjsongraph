@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.functional import cached_property
 
 from uuidfield import UUIDField
 from jsonfield import JSONField
@@ -36,20 +37,23 @@ class BaseNode(TimeStampedEditableModel):
         self.addresses = self.addresses.replace(',', ';')\
                                        .replace(' ', '')\
                                        .replace(';', '; ')
-        if not self.addresses.endswith(';'):
-            self.addresses += ';'
+        if not self.addresses.endswith('; '):
+            self.addresses += '; '
+        self.addresses = self.addresses[0:-1]
 
-    @property
-    def local_addresses(self):
-        local_addresses = self.addresses.replace(' ', '').split(';')
-        if '' in local_addresses:
-            local_addresses.remove('')
-        return local_addresses
+    @cached_property
+    def address_list(self):
+        return self.addresses.replace(' ', '')[0:-1].split(';')
 
     @property
     def netjson_id(self):
         if self.addresses:
-            return self.local_addresses[0]
+            return self.address_list[0]
+
+    @cached_property
+    def local_addresses(self):
+        if self.addresses and len(self.address_list) > 1:
+            return self.address_list[1:]
 
     @property
     def name(self):
