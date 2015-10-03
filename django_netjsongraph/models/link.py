@@ -1,3 +1,6 @@
+import json
+from collections import OrderedDict
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
@@ -37,3 +40,25 @@ class BaseLink(TimeStampedEditableModel):
     def clean(self):
         if self.source is self.target or self.source_id is self.target_id:
             raise ValidationError(_('source and target must not be the same'))
+
+    def json(self, dict=False, **kwargs):
+        """
+        returns a NetJSON NetworkGraph Link object
+        """
+        netjson = OrderedDict((
+            ('source', self.source.netjson_id),
+            ('target', self.target.netjson_id),
+            ('cost', self.cost),
+        ))
+        if self.cost_text:
+            netjson['cost_text'] = self.cost_text
+        # properties contain status by default
+        properties = OrderedDict((
+            ('status', self.status),
+        ))
+        if self.properties:
+            properties.update(self.properties)
+        netjson['properties'] = properties
+        if dict:
+            return netjson
+        return json.dumps(netjson, **kwargs)
