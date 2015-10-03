@@ -1,6 +1,8 @@
 import json
 from collections import OrderedDict
+
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.module_loading import import_string
@@ -56,27 +58,11 @@ class BaseTopology(TimeStampedEditableModel):
         """ returns a dict that represents a NetJSON NetworkGraph object """
         nodes = []
         links = []
-
-        for link in self.link_set.all():
-            # append source node
-            source_addresses = self.source.local_addresses
-            source = {'id': source_addresses[0]}
-            if len(source_addresses) > 1:
-                source['local_addresses'] = source_addresses[1:]
-            nodes.append(source)
-            # append target node
-            target_addresses = self.target.local_addresses
-            target = {'id': target_addresses[0]}
-            if len(target_addresses) > 1:
-                target['local_addresses'] = target_addresses[1:]
-            nodes.append(target)
-            # append links
-            links.append(OrderedDict((
-                ('source', source['id']),
-                ('target', source['id']),
-                ('cost', link.cost)
-            )))
-
+        # populate graph
+        for link in self.link_set.select_related('source', 'target'):
+            nodes.append(link.source.json(dict=True))
+            nodes.append(link.target.json(dict=True))
+            links.append(link.json(dict=True))
         netjson = OrderedDict((
             ('type', 'NetworkGraph'),
             ('protocol', self.parser_class.protocol),
