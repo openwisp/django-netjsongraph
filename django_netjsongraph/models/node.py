@@ -5,7 +5,6 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 
-from uuidfield import UUIDField
 from jsonfield import JSONField
 
 from ..base import TimeStampedEditableModel
@@ -16,7 +15,6 @@ class BaseNode(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Node Object implementation
     """
-    id = UUIDField(auto=True, primary_key=True)
     label = models.CharField(max_length=64, blank=True)
     # netjson ID and local_addresses
     addresses = models.CharField(max_length=255, db_index=True)

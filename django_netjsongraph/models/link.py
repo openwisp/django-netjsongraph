@@ -6,7 +6,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.core.exceptions import ValidationError
 
-from uuidfield import UUIDField
 from jsonfield import JSONField
 from model_utils.fields import StatusField
 from model_utils import Choices
@@ -19,7 +18,6 @@ class BaseLink(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Link Object implementation
     """
-    id = UUIDField(auto=True, primary_key=True)
     topology = models.ForeignKey('netjsongraph.Topology')
     source = models.ForeignKey('netjsongraph.Node',
                                related_name='source_node_set')
