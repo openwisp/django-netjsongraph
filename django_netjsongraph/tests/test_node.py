@@ -7,7 +7,7 @@ class TestNode(TestCase):
     """
     tests for Node model
     """
-    max_diff = 0
+    maxDiff = 0
 
     def test_node_address_list_single(self):
         n = Node(label='test node')
@@ -70,3 +70,9 @@ class TestNode(TestCase):
         "gateway": true
     }
 }""")
+
+    def test_get_from_address(self):
+        Node.objects.create(addresses='192.168.0.1,10.0.0.1')
+        self.assertIsInstance(Node.get_from_address('192.168.0.1'), Node)
+        self.assertIsInstance(Node.get_from_address('10.0.0.1'), Node)
+        self.assertIsNone(Node.get_from_address('wrong'))

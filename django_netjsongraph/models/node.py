@@ -74,3 +74,13 @@ class BaseNode(TimeStampedEditableModel):
         if dict:
             return netjson
         return json.dumps(netjson, **kwargs)
+
+    @classmethod
+    def get_from_address(cls, address):
+        """
+        Find node from one of its addresses.
+        :param address: string
+        :returns: Node object or None
+        """
+        address = '{0};'.format(address)
+        return cls.objects.filter(addresses__contains=address).first()
