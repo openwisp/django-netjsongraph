@@ -25,8 +25,6 @@ INSTALLED_APPS = [
 
     # rest framework
     'rest_framework',
-
-    # test app
     'django_netjsongraph'
 ]
 

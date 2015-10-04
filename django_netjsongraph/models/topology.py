@@ -65,6 +65,10 @@ class BaseTopology(TimeStampedEditableModel):
             ('version', self.parser_class.version),
             ('metric', self.parser_class.metric),
             ('label', self.label),
+            ('id', str(self.id)),
+            ('parser', self.parser),
+            ('created', str(self.created)),
+            ('modified', str(self.modified)),
             ('nodes', nodes),
             ('links', links)
         ))
