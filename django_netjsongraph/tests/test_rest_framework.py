@@ -4,9 +4,6 @@ from ..models import Topology
 
 
 class TestRestFramework(TestCase):
-    """
-    tests for Link model
-    """
     fixtures = [
         'test_topologies.json',
         'test_nodes.json'

@@ -1,8 +1,6 @@
 from collections import OrderedDict
 from rest_framework import serializers
 
-from ..models import Topology
-
 
 class NetworkCollectionSerializer(serializers.ListSerializer):
     """
