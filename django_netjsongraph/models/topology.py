@@ -93,7 +93,7 @@ class BaseTopology(TimeStampedEditableModel):
             added_nodes = []
 
         for node_dict in added_nodes:
-            node = Node.objects.filter(addresses__contains=node_dict['id']).count()
+            node = Node.count_address(node_dict['id'])
             if node:
                 continue
             addresses = '{0};'.format(node_dict['id'])
