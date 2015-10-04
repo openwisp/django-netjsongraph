@@ -129,11 +129,5 @@ class BaseTopology(TimeStampedEditableModel):
                     changed = True
                 # perform writes only if needed
                 if changed:
-                    try:
-                        link.full_clean()
-                    except ValidationError as e:
-                        msg = 'Exception while updating {0}'.format(self.__repr__())
-                        logger.exception(msg)
-                        print('{0}\n{1}\n'.format(msg, e))
-                        continue
+                    link.full_clean()
                     link.save()

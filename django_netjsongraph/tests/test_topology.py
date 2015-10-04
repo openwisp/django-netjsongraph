@@ -1,4 +1,5 @@
 import os
+import sys
 import six
 import responses
 
@@ -6,6 +7,8 @@ from django.test import TestCase
 from netdiff import OlsrParser
 
 from ..models import Topology, Link, Node
+from ..utils import update_topology
+from .utils import StringIO, redirect_stdout
 
 
 class TestTopology(TestCase):
@@ -159,3 +162,34 @@ class TestTopology(TestCase):
         self.assertIn('192.168.0.3', [link.source.netjson_id,
                                       link.target.netjson_id])
         self.assertEqual(link.cost, 2.0)
+
+    @responses.activate
+    def test_update_topology_func(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9090',
+                      body=self._load('static/netjson-1-link.json'),
+                      content_type='application/json')
+        Node.objects.all().delete()
+        update_topology()
+        self.assertEqual(Node.objects.count(), 2)
+        self.assertEqual(Link.objects.count(), 1)
+        # test exception
+        t.url = t.url.replace('9090', '9091')
+        t.save()
+        Node.objects.all().delete()
+        Link.objects.all().delete()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9091',
+                      body=self._load('static/netjson-invalid.json'),
+                      content_type='application/json')
+        # capture output
+        output = StringIO()
+        with redirect_stdout(output):
+            update_topology()
+
+        self.assertEqual(Node.objects.count(), 1)
+        self.assertEqual(Link.objects.count(), 0)
+        self.assertIn('Failed to update', output.getvalue())

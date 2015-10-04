@@ -66,6 +66,8 @@ TEMPLATES = [
     },
 ]
 
+TEST_RUNNER = "django_netjsongraph.tests.utils.LoggingDisabledTestRunner"
+
 # local settings must be imported before test runner otherwise they'll be ignored
 try:
     from local_settings import *
