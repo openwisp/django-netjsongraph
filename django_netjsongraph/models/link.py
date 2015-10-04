@@ -37,7 +37,7 @@ class BaseLink(TimeStampedEditableModel):
         return '{0} - {1}'.format(self.source.name, self.target.name)
 
     def clean(self):
-        if self.source is self.target or self.source_id is self.target_id:
+        if self.source == self.target or self.source_id == self.target_id:
             raise ValidationError(_('source and target must not be the same'))
 
     def json(self, dict=False, **kwargs):
