@@ -14,7 +14,7 @@ class TestLink(TestCase):
         'test_nodes.json'
     ]
 
-    def test_node_str(self):
+    def test_str(self):
         l = Link(topology_id="a083b494-8e16-4054-9537-fb9eba914861",
                  source_id="d083b494-8e16-4054-9537-fb9eba914861",
                  target_id="d083b494-8e16-4054-9537-fb9eba914862",

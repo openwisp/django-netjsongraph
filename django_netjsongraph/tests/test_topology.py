@@ -29,6 +29,10 @@ class TestTopology(TestCase):
         d = os.path.dirname(os.path.abspath(__file__))
         return open(os.path.join(d, file)).read()
 
+    def test_str(self):
+        t = Topology.objects.first()
+        self.assertIsInstance(str(t), str)
+
     def test_parser(self):
         t = Topology.objects.first()
         self.assertIs(t.parser_class, OlsrParser)
