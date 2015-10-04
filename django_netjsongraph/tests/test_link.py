@@ -14,6 +14,13 @@ class TestLink(TestCase):
         'test_nodes.json'
     ]
 
+    def test_node_str(self):
+        l = Link(topology_id="a083b494-8e16-4054-9537-fb9eba914861",
+                 source_id="d083b494-8e16-4054-9537-fb9eba914861",
+                 target_id="d083b494-8e16-4054-9537-fb9eba914862",
+                 cost=1.0)
+        self.assertIsInstance(str(l), str)
+
     def test_same_source_and_target_id(self):
         l = Link(topology_id="a083b494-8e16-4054-9537-fb9eba914861",
                  source_id="d083b494-8e16-4054-9537-fb9eba914861",
