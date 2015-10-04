@@ -84,3 +84,13 @@ class BaseNode(TimeStampedEditableModel):
         """
         address = '{0};'.format(address)
         return cls.objects.filter(addresses__contains=address).first()
+
+    @classmethod
+    def count_address(cls, address):
+        """
+        Count nodes with the specified address.
+        :param address: string
+        :returns: int
+        """
+        address = '{0};'.format(address)
+        return cls.objects.filter(addresses__contains=address).count()
