@@ -174,7 +174,7 @@ class TestTopology(TestCase):
                       body=self._load('static/netjson-1-link.json'),
                       content_type='application/json')
         Node.objects.all().delete()
-        update_topology()
+        update_topology('testnetwork')
         self.assertEqual(Node.objects.count(), 2)
         self.assertEqual(Link.objects.count(), 1)
         # test exception
