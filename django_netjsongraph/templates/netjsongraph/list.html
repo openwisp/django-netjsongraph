@@ -1,0 +1,10 @@
+{% extends 'netjsongraph/base.html' %}
+{% block body %}
+    <ul id="menu">
+        {% for topology in topologies %}
+            <li>
+                <a href="{% url 'topology_detail' topology.id %}">{{ topology.label }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
