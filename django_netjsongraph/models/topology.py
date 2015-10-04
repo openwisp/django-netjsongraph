@@ -11,6 +11,7 @@ from netdiff import diff, NetJsonParser
 
 from ..base import TimeStampedEditableModel
 from ..settings import PARSERS
+from ..contextmanagers import log_on_fail
 
 
 @python_2_unicode_compatible
@@ -84,6 +85,11 @@ class BaseTopology(TimeStampedEditableModel):
             'removed': 'down',
             'changed': 'up'
         }
+        action = {
+            'added': 'add',
+            'changed': 'change',
+            'removed': 'remove'
+        }
 
         try:
             added_nodes = diff['added']['nodes']
@@ -127,5 +133,6 @@ class BaseTopology(TimeStampedEditableModel):
                     changed = True
                 # perform writes only if needed
                 if changed:
-                    link.full_clean()
-                    link.save()
+                    with log_on_fail(action[section], link):
+                        link.full_clean()
+                        link.save()

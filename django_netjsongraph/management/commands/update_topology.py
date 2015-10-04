@@ -7,7 +7,6 @@ class Command(BaseCommand):
     help = 'Update network topology'
 
     def add_arguments(self, parser):
-        # Positional arguments
         parser.add_argument('--label',
                             action='store',
                             default=None,
