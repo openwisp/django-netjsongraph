@@ -193,7 +193,7 @@ class TestTopology(TestCase):
 
         self.assertEqual(Node.objects.count(), 1)
         self.assertEqual(Link.objects.count(), 0)
-        self.assertIn('Failed to update', output.getvalue())
+        self.assertIn('Failed to', output.getvalue())
 
     @responses.activate
     def test_update_topology_command(self):
@@ -224,4 +224,4 @@ class TestTopology(TestCase):
 
         self.assertEqual(Node.objects.count(), 1)
         self.assertEqual(Link.objects.count(), 0)
-        self.assertIn('Failed to update', output.getvalue())
+        self.assertIn('Failed to', output.getvalue())
