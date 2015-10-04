@@ -1,7 +1,6 @@
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
 
@@ -65,6 +64,45 @@ TEMPLATES = [
         },
     },
 ]
+
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '\n\n[%(levelname)s %(asctime)s] module: %(module)s, process: %(process)d, thread: %(thread)d\n%(message)s'
+        },
+    },
+    'handlers': {
+        'mainlog': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': os.path.join(BASE_DIR, 'netjsongraph.error.log'),
+            'maxBytes': 5242880.0,
+            'backupCount': 3,
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['mainlog'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['mainlog'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        '': {
+            'handlers': ['mainlog'],
+            'level': 'ERROR',
+        }
+    }
+}
 
 TEST_RUNNER = "django_netjsongraph.tests.utils.LoggingDisabledTestRunner"
 
