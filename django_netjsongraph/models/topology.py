@@ -1,9 +1,7 @@
 import json
-import logging
 from collections import OrderedDict
 
 from django.db import models
-from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.module_loading import import_string
@@ -18,9 +16,10 @@ from ..settings import PARSERS
 @python_2_unicode_compatible
 class BaseTopology(TimeStampedEditableModel):
     label = models.CharField(_('label'), max_length=64)
-    parser = models.CharField(_('format'), choices=PARSERS,
-                                           max_length=128,
-                                           help_text=_('Select topology format'))
+    parser = models.CharField(_('format'),
+                              choices=PARSERS,
+                              max_length=128,
+                              help_text=_('Select topology format'))
     url = models.URLField(_('url'), help_text=_('Topology data will be fetched from this URL'))
 
     # the following fields will be filled automatically
@@ -78,7 +77,6 @@ class BaseTopology(TimeStampedEditableModel):
         Links are not deleted straightaway but set as "down"
         """
         from . import Link, Node  # avoid circular dependency
-        logger = logging.getLogger(__name__)
         diff = self.diff()
 
         status = {
@@ -94,7 +92,7 @@ class BaseTopology(TimeStampedEditableModel):
 
         for node_dict in added_nodes:
             node = Node.count_address(node_dict['id'])
-            if node:
+            if node:  # pragma no cover
                 continue
             addresses = '{0};'.format(node_dict['id'])
             addresses += ';'.join(node_dict.get('local_addresses', []))

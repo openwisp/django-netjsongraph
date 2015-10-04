@@ -1,5 +1,3 @@
-from django.utils.translation import ugettext_lazy as _
-
 from .topology import BaseTopology
 from .node import BaseNode
 from .link import BaseLink
