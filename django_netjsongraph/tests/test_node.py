@@ -10,6 +10,10 @@ class TestNode(TestCase):
     """
     maxDiff = 0
 
+    def test_node_str(self):
+        n = Node(addresses='192.168.0.1', label='test node')
+        self.assertIsInstance(str(n), str)
+
     def test_node_address_list_single(self):
         n = Node(label='test node')
         n.addresses = '192.168.0.1'
