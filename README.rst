@@ -1,17 +1,17 @@
 django-netjsongraph
 ===================
 
-.. image:: https://travis-ci.org/interop-dev/django-netjsongraph.png
+.. image:: https://travis-ci.org/interop-dev/django-netjsongraph.svg
    :target: https://travis-ci.org/interop-dev/django-netjsongraph
 
-.. image:: https://coveralls.io/repos/interop-dev/django-netjsongraph/badge.png
+.. image:: https://coveralls.io/repos/interop-dev/django-netjsongraph/badge.svg
   :target: https://coveralls.io/r/interop-dev/django-netjsongraph
 
-.. image:: https://requires.io/github/interop-dev/django-netjsongraph/requirements.png?branch=master
+.. image:: https://requires.io/github/interop-dev/django-netjsongraph/requirements.svg?branch=master
    :target: https://requires.io/github/interop-dev/django-netjsongraph/requirements/?branch=master
    :alt: Requirements Status
 
-.. image:: https://badge.fury.io/py/django-netjsongraph.png
+.. image:: https://badge.fury.io/py/django-netjsongraph.svg
    :target: http://badge.fury.io/py/django-netjsongraph
 
 .. image:: https://img.shields.io/pypi/dm/django-netjsongraph.svg
