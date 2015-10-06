@@ -53,6 +53,11 @@ If you want to contribute, install your cloned fork:
     cd django-netjsongraph
     python setup.py develop
 
+Setup
+-----
+
+TODO
+
 Running tests
 -------------
 
