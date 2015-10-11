@@ -53,13 +53,44 @@ If you want to contribute, install your cloned fork:
     cd django-netjsongraph
     python setup.py develop
 
-Setup
------
+Setup (integrate in an existing django project)
+-----------------------------------------------
 
-TODO
+Add ``rest_framework`` and ``django_netjsongraph`` to ``INSTALLED_APPS``:
 
-Running tests
--------------
+.. code-block:: python
+
+    INSTALLED_APPS = [
+        # other apps
+        'rest_framework',
+        'django_netjsongraph'
+        # ...
+    ]
+
+Include urls in your urlconf (you can change the prefixes
+according to your needs):
+
+.. code-block:: python
+
+    # your other imports ...
+
+    from django_netjsongraph.rest_framework import urls as rest_urls
+    from django_netjsongraph.visualizer import urls as netjsongraph_urls
+
+    urlpatterns = [
+        # your URLs ...
+        url(r'^api/', include(rest_urls)),  # NetJSON API
+        url(r'', include(netjsongraph_urls)),
+    ]
+
+Installing for development
+--------------------------
+
+Install sqlite:
+
+.. code-block:: shell
+
+    sudo apt-get install sqlite3 libsqlite3-dev
 
 Install your forked repo:
 
@@ -75,6 +106,23 @@ Install test requirements:
 
     pip install -r requirements-test.txt
 
+Create database:
+
+.. code-block:: shell
+
+    cd tests/
+    ./manage.py migrate
+    ./manage.py createsuperuser
+
+Launch development server:
+
+.. code-block:: shell
+
+    ./manage.py runserver
+
+You can access the visualizer at http://127.0.0.1:8000/
+and the admin interface at http://127.0.0.1:8000/admin/.
+
 Run tests with:
 
 .. code-block:: shell
@@ -84,7 +132,7 @@ Run tests with:
 Contributing
 ------------
 
-1. Announce your intentions in the `issue tracker <https://github.com/openwisp/netjsonconfig/issues>`__
+1. Announce your intentions in the `issue tracker <https://github.com/interop-dev/django-netjsongraph/issues>`__
 2. Fork this repo and install it
 3. Follow `PEP8, Style Guide for Python Code`_
 4. Write code
