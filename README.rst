@@ -83,6 +83,11 @@ according to your needs):
         url(r'', include(netjsongraph_urls)),
     ]
 
+Add topology URLs (URLs exposing the files that the topology of the network) in the admin,
+then run::
+
+    ./manage.py update_topology
+
 Installing for development
 --------------------------
 
