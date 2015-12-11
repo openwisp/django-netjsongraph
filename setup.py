@@ -29,7 +29,7 @@ if sys.argv[-1] == 'publish':
 
 
 setup(
-    name='django_netjsongraph',
+    name='django-netjsongraph',
     version=get_version(),
     license='MIT',
     author='Federico Capoano',
@@ -41,6 +41,8 @@ setup(
     keywords=['django', 'netjson', 'mesh', 'networking'],
     packages=find_packages(exclude=['tests', 'tests.*']),
     install_requires=get_install_requires(),
+    include_package_data=True,
+    zip_safe=False,
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
