@@ -103,6 +103,15 @@ The ``update_topology`` management command will automatically try to log errors.
 For a good default ``LOGGING`` configuration refer to the `test settings
 <https://github.com/interop-dev/django-netjsongraph/blob/master/tests/settings.py#L66>`_.
 
+Settings
+--------
+
++---------------------------------+-------------------------------------+--------------------------------------------------------------------------------------------------+
+| Setting                         | Default value                       | Description                                                                                      |
++=================================+=====================================+==================================================================================================+
+| ``NETJSONGRAPH_PARSERS``        | ``[]``                              | list with additional custom `netdiff parsers <https://github.com/ninuxorg/netdiff#parsers>`_     |
++---------------------------------+-------------------------------------+--------------------------------------------------------------------------------------------------+
+
 Installing for development
 --------------------------
 
