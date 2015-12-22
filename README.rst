@@ -83,11 +83,17 @@ according to your needs):
         url(r'', include(netjsongraph_urls)),
     ]
 
-Add topology URLs (URLs exposing the files that the topology of the network) in the admin,
-then run::
+Management Commands
+-------------------
+
+``update_topology``
+^^^^^^^^^^^^^^^^^^^
+
+After topology URLs (URLs exposing the files that the topology of the network) have been
+added in the admin, the ``update_topology`` management command can be used to collect data
+and start playing with the network graph::
 
     ./manage.py update_topology
-
 
 Logging
 -------
