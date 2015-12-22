@@ -56,9 +56,12 @@ class TestTopology(TestCase):
 
     def test_json(self):
         node1, node2 = self._get_nodes()
+        node3 = Node.objects.create(addresses='192.168.0.3', label='node3')
         t = Topology.objects.first()
         l = Link.objects.create(topology=t, source=node1,
                                 target=node2, cost=1)
+        l2 = Link.objects.create(topology=t, source=node1,
+                                 target=node3, cost=1)
         graph = t.json(dict=True)
         self.assertDictEqual(dict(graph), {
             'type': 'NetworkGraph',
@@ -72,10 +75,12 @@ class TestTopology(TestCase):
             'modified': str(t.modified),
             'nodes': [
                 dict(node1.json(dict=True)),
-                dict(node2.json(dict=True))
+                dict(node2.json(dict=True)),
+                dict(node3.json(dict=True))
             ],
             'links': [
-                dict(l.json(dict=True))
+                dict(l.json(dict=True)),
+                dict(l2.json(dict=True))
             ]
         })
         self.assertIsInstance(t.json(), six.string_types)
