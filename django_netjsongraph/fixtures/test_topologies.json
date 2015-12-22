@@ -1,7 +1,7 @@
 [
     {
         "pk":"a083b494-8e16-4054-9537-fb9eba914861",
-        "model":"netjsongraph.topology",
+        "model":"django_netjsongraph.topology",
         "fields":{
             "label":"TestNetwork",
             "parser":"netdiff.OlsrParser",

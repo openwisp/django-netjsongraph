@@ -1,7 +1,7 @@
 [
     {
         "pk":"d083b494-8e16-4054-9537-fb9eba914861",
-        "model":"netjsongraph.node",
+        "model":"django_netjsongraph.node",
         "fields":{
             "label":"node1",
             "addresses": "192.168.0.1;",
@@ -11,7 +11,7 @@
     },
     {
         "pk":"d083b494-8e16-4054-9537-fb9eba914862",
-        "model":"netjsongraph.Node",
+        "model":"django_netjsongraph.Node",
         "fields":{
             "label":"node2",
             "addresses": "192.168.0.2;",
