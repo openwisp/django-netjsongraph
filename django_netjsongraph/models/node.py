@@ -18,13 +18,20 @@ class BaseNode(TimeStampedEditableModel):
     label = models.CharField(max_length=64, blank=True)
     # netjson ID and local_addresses
     addresses = models.CharField(max_length=255, db_index=True)
-    properties = JSONField(null=True, blank=True)
+    properties = JSONField(default=dict,
+                           blank=True,
+                           load_kwargs={'object_pairs_hook': OrderedDict},
+                           dump_kwargs={'indent': 4})
 
     class Meta:
         abstract = True
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        if self.properties is None:
+            self.properties = {}
 
     def save(self, *args, **kwargs):
         self._format_addresses()

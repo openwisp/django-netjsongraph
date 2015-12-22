@@ -28,7 +28,10 @@ class BaseLink(TimeStampedEditableModel):
     cost_text = models.CharField(max_length=24, blank=True)
     STATUS = Choices('up', 'down')
     status = StatusField()
-    properties = JSONField(null=True, blank=True)
+    properties = JSONField(default=dict,
+                           blank=True,
+                           load_kwargs={'object_pairs_hook': OrderedDict},
+                           dump_kwargs={'indent': 4})
 
     class Meta:
         abstract = True
@@ -39,6 +42,8 @@ class BaseLink(TimeStampedEditableModel):
     def clean(self):
         if self.source == self.target or self.source_id == self.target_id:
             raise ValidationError(_('source and target must not be the same'))
+        if self.properties is None:
+            self.properties = {}
 
     def json(self, dict=False, **kwargs):
         """
