@@ -9,3 +9,5 @@ DEFAULT_PARSERS = [
 ]
 
 PARSERS = DEFAULT_PARSERS + getattr(settings, 'NETJSONGRAPH_PARSERS', [])
+
+SIGNALS = getattr(settings, 'NETJSONGRAPH_SIGNALS', None)
