@@ -19,10 +19,10 @@ class BaseLink(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Link Object implementation
     """
-    topology = models.ForeignKey('netjsongraph.Topology')
-    source = models.ForeignKey('netjsongraph.Node',
+    topology = models.ForeignKey('django_netjsongraph.Topology')
+    source = models.ForeignKey('django_netjsongraph.Node',
                                related_name='source_node_set')
-    target = models.ForeignKey('netjsongraph.Node',
+    target = models.ForeignKey('django_netjsongraph.Node',
                                related_name='target_node_set')
     cost = models.FloatField()
     cost_text = models.CharField(max_length=24, blank=True)

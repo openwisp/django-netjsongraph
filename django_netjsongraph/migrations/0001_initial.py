@@ -65,16 +65,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='link',
             name='source',
-            field=models.ForeignKey(related_name='source_node_set', to='netjsongraph.Node'),
+            field=models.ForeignKey(related_name='source_node_set', to='django_netjsongraph.Node'),
         ),
         migrations.AddField(
             model_name='link',
             name='target',
-            field=models.ForeignKey(related_name='target_node_set', to='netjsongraph.Node'),
+            field=models.ForeignKey(related_name='target_node_set', to='django_netjsongraph.Node'),
         ),
         migrations.AddField(
             model_name='link',
             name='topology',
-            field=models.ForeignKey(to='netjsongraph.Topology'),
+            field=models.ForeignKey(to='django_netjsongraph.Topology'),
         ),
     ]
