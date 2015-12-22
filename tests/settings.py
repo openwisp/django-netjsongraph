@@ -67,37 +67,52 @@ TEMPLATES = [
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
     'formatters': {
+        'simple': {
+            'format': '[%(levelname)s] %(message)s'
+        },
         'verbose': {
             'format': '\n\n[%(levelname)s %(asctime)s] module: %(module)s, process: %(process)d, thread: %(thread)d\n%(message)s'
         },
     },
     'handlers': {
-        'mainlog': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'filters': ['require_debug_true'],
+            'formatter': 'simple'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'main_log': {
             'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
-            'filename': os.path.join(BASE_DIR, 'netjsongraph.error.log'),
+            'filename': os.path.join(BASE_DIR, 'error.log'),
             'maxBytes': 5242880.0,
             'backupCount': 3,
             'formatter': 'verbose'
         }
     },
+    'root': {
+        'level': 'INFO',
+        'handlers': ['main_log', 'console', 'mail_admins'],
+    },
     'loggers': {
-        'django': {
-            'handlers': ['mainlog'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-        'django.request': {
-            'handlers': ['mainlog'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-        '': {
-            'handlers': ['mainlog'],
-            'level': 'ERROR',
+        'py.warnings': {
+            'handlers': ['console'],
         }
     }
 }

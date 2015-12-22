@@ -88,6 +88,15 @@ then run::
 
     ./manage.py update_topology
 
+
+Logging
+-------
+
+The ``update_topology`` management command will automatically try to log errors.
+
+For a good default ``LOGGING`` configuration refer to the `test settings
+<https://github.com/interop-dev/django-netjsongraph/blob/master/tests/settings.py#L66>`_.
+
 Installing for development
 --------------------------
 
