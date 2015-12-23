@@ -1,4 +1,6 @@
 {% extends 'netjsongraph/base.html' %}
+{% load i18n %}
+{% block title %}{% trans 'Topology list' %}{% endblock %}
 {% block body %}
     <ul id="menu">
         {% for topology in topologies %}
