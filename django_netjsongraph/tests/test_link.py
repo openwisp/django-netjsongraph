@@ -59,7 +59,12 @@ class TestLink(TestCase):
             'target': '192.168.0.2',
             'cost': 1.0,
             'cost_text': '100mbit/s',
-            'properties': {'pretty': True, 'status': 'up'}
+            'properties': {
+                'pretty': True,
+                'status': 'up',
+                'created': str(l.created),
+                'modified': str(l.modified)
+            }
         })
         self.assertIsInstance(l.json(), six.string_types)
 

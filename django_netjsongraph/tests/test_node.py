@@ -79,7 +79,11 @@ class TestNode(TestCase):
             'id': '192.168.0.1',
             'label': 'test node',
             'local_addresses': ['10.0.0.1'],
-            'properties': {'gateway': True}
+            'properties': {
+                'gateway': True,
+                'created': str(n.created),
+                'modified': str(n.modified)
+            }
         })
         self.assertIsInstance(n.json(), six.string_types)
 

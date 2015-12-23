@@ -77,8 +77,10 @@ class BaseNode(TimeStampedEditableModel):
         netjson = OrderedDict({'id': self.netjson_id})
         for attr in ['label', 'local_addresses', 'properties']:
             value = getattr(self, attr)
-            if value:
+            if value or attr == 'properties':
                 netjson[attr] = value
+        netjson['properties']['created'] = str(self.created)
+        netjson['properties']['modified'] = str(self.modified)
         if dict:
             return netjson
         return json.dumps(netjson, **kwargs)

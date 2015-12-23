@@ -63,6 +63,8 @@ class BaseLink(TimeStampedEditableModel):
         if self.properties:
             properties.update(self.properties)
         netjson['properties'] = properties
+        netjson['properties']['created'] = str(self.created)
+        netjson['properties']['modified'] = str(self.modified)
         if dict:
             return netjson
         return json.dumps(netjson, **kwargs)
