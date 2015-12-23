@@ -56,13 +56,9 @@ class BaseTopology(TimeStampedEditableModel):
         links = []
         # populate graph
         for link in self.link_set.select_related('source', 'target'):
-            source = link.source.json(dict=True)
-            if source not in nodes:
-                nodes.append(source)
-            target = link.target.json(dict=True)
-            if target not in nodes:
-                nodes.append(target)
             links.append(link.json(dict=True))
+        for node in self.node_set.all():
+            nodes.append(node.json(dict=True))
         netjson = OrderedDict((
             ('type', 'NetworkGraph'),
             ('protocol', self.parser_class.protocol),
