@@ -74,13 +74,13 @@ according to your needs):
 
     # your other imports ...
 
-    from django_netjsongraph.rest_framework import urls as rest_urls
-    from django_netjsongraph.visualizer import urls as netjsongraph_urls
+    from django_netjsongraph.api import urls as netjsongraph_api
+    from django_netjsongraph.visualizer import urls as netjsongraph_visualizer
 
     urlpatterns = [
         # your URLs ...
-        url(r'^api/', include(rest_urls)),  # NetJSON API
-        url(r'', include(netjsongraph_urls)),
+        url(r'^api/', include(netjsongraph_api)),
+        url(r'', include(netjsongraph_visualizer)),
     ]
 
 Management Commands
