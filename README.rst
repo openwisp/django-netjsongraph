@@ -19,7 +19,18 @@ django-netjsongraph
 
 ------------
 
-Django implementation of `NetJSON <http://netjson.org>`__ NetworkGraph.
+Reusable django app for collecting and visualizing network topology.
+
+Current features:
+
+* topology information collector supporting different formats:
+    - NetJSON NetworkGraph
+    - OLSR (jsoninfo/txtinfo)
+    - batman-adv (jsondoc/txtinfo)
+    - BMX6 (q6m)
+    - CNML 1.0
+* **visualizer** based on `netjsongraph.js <https://github.com/interop-dev/netjsongraph.js>`_
+* **simple HTTP API** that exposes data in `NetJSON <http://netjson.org>`__ *NetworkGraph* format
 
 Install stable version from pypi
 --------------------------------
