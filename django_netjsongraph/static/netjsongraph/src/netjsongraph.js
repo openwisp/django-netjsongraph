@@ -80,17 +80,18 @@
          * @param  {string}     el                  "body"      The container element                                  el: "body" [description]
          * @param  {bool}       metadata            true        Display NetJSON metadata at startup?
          * @param  {bool}       defaultStyle        true        Use css style?
-         * @param  {int}        tooltipDelay        0           The delay before showing tooltip
          * @param  {bool}       animationAtStart    false       Animate nodes or not on load
          * @param  {array}      scaleExtent         [0.25, 5]   The zoom scale's allowed range. @see {@link https://github.com/mbostock/d3/wiki/Zoom-Behavior#scaleExtent}
          * @param  {int}        charge              -130        The charge strength to the specified value. @see {@link https://github.com/mbostock/d3/wiki/Force-Layout#charge}
-         * @param  {int}        linkDistance        40          The target distance between linked nodes to the specified value. @see {@link https://github.com/mbostock/d3/wiki/Force-Layout#linkDistance}
+         * @param  {int}        linkDistance        50          The target distance between linked nodes to the specified value. @see {@link https://github.com/mbostock/d3/wiki/Force-Layout#linkDistance}
          * @param  {float}      linkStrength        0.2         The strength (rigidity) of links to the specified value in the range. @see {@link https://github.com/mbostock/d3/wiki/Force-Layout#linkStrength}
          * @param  {float}      friction            0.9         The friction coefficient to the specified value. @see {@link https://github.com/mbostock/d3/wiki/Force-Layout#friction}
          * @param  {string}     chargeDistance      Infinity    The maximum distance over which charge forces are applied. @see {@link https://github.com/mbostock/d3/wiki/Force-Layout#chargeDistance}
          * @param  {float}      theta               0.8         The Barnes–Hut approximation criterion to the specified value. @see {@link https://github.com/mbostock/d3/wiki/Force-Layout#theta}
          * @param  {float}      gravity             0.1         The gravitational strength to the specified numerical value. @see {@link https://github.com/mbostock/d3/wiki/Force-Layout#gravity}
          * @param  {int}        circleRadius        8           The radius of circles (nodes) in pixel
+         * @param  {string}     labelDx             "0"         SVG dx (distance on x axis) attribute of node labels in graph
+         * @param  {string}     labelDy             "-1.3em"    SVG dy (distance on y axis) attribute of node labels in graph
          * @param  {function}   onInit                          Callback function executed on initialization
          * @param  {function}   onLoad                          Callback function executed after data has been loaded
          * @param  {function}   onEnd                           Callback function executed when initial animation is complete
@@ -104,17 +105,18 @@
             el: "body",
             metadata: true,
             defaultStyle: true,
-            tooltipDelay: 300,
             animationAtStart: true,
             scaleExtent: [0.25, 5],
             charge: -130,
-            linkDistance: 40,
+            linkDistance: 50,
             linkStrength: 0.2,
             friction: 0.9,  // d3 default
             chargeDistance: Infinity,  // d3 default
             theta: 0.8,  // d3 default
             gravity: 0.1,
             circleRadius: 8,
+            labelDx: "0",
+            labelDy: "-1.3em",
             nodeClassProperty: null,
             linkClassProperty: null,
             /**
@@ -171,7 +173,6 @@
                     "translate(" + d3.event.translate + ") " +
                     "scale(" + d3.event.scale + ")"
                 );
-                tooltip.style("visibility", "hidden");
             },
             /**
              * @function
@@ -221,11 +222,13 @@
                     if(n.properties) {
                         for(var key in n.properties) {
                             if(!n.properties.hasOwnProperty(key)) { continue; }
-                            key = key.replace("_", " ");
-                            html += "<p><b>"+key+"</b>: " + n.properties[key] + "</p>";
+                            html += "<p><b>"+key.replace(/_/g, " ")+"</b>: " + n.properties[key] + "</p>";
                     }
                 }
                 if(n.linkCount) { html += "<p><b>links</b>: " + n.linkCount + "</p>"; }
+                if(n.local_addresses) {
+                    html += "<p><b>local addresses</b>:<br>" + n.local_addresses.join('<br>') + "</p>";
+                }
                 overlayInner.html(html);
                 overlay.classed("njg-hidden", false);
                 overlay.style("display", "block");
@@ -298,8 +301,6 @@
                        .style("position", "absolute"),
             svg = d3.select(opts.el + " svg"),
             drag = force.drag(),
-            // create tooltip div
-            tooltip = d3.select(opts.el).append("div").attr("class", "njg-tooltip"),
             overlay = d3.select(opts.el).append("div").attr("class", "njg-overlay"),
             closeOverlay = overlay.append("a").attr("class", "njg-close"),
             overlayInner = overlay.append("div").attr("class", "njg-inner"),
@@ -309,43 +310,6 @@
             // container of ungrouped networks
             str = [],
             selected = [],
-            /**
-             * @function
-             * @name onMouseOverNode
-             */
-             onMouseOverNode = function(n) {
-                 var self = this;
-                 tooltip.text(n.label || n.id);
-                 // use css "display" property to
-                 // control wether mouse has moved out
-                 // before the delayTooltip time has passed
-                 // (mouseout event sets "display" back to "none")
-                 tooltip.style("display", "block");
-                 setTimeout(function () {
-                     if (tooltip.style("display") != "block") {
-                         return;
-                     }
-                     // position of current element relative to svg container
-                     var pos = d3._getPosition(d3.select(self), svg),
-                     // find horizontal and vertical offsets
-                         xOffset = (tooltip.node().getBoundingClientRect().width/2) - pos.width/2,
-                         yOffset = 1 + zoom.scale() / 5;
-                     // position tooltip accordingly
-                     return tooltip.style("left", pos.left - xOffset + "px")
-                                   .style("top", pos.top - 25 * yOffset + "px")
-                                   .style("visibility", "visible");
-                 }, opts.tooltipDelay);
-             },
-            /**
-             * @function
-             * @name onMouseOutNode
-             */
-            onMouseOutNode = function(){
-                tooltip.style({
-                    "visibility": "hidden",
-                    "display": "none"
-                });
-            },
             /**
              * @function
              * @name removeOpenClass
@@ -368,7 +332,6 @@
                 destroy = function() {
                     force.stop();
                     d3.select("#selectGroup").remove();
-                    d3.select(".njg-tooltip").remove();
                     d3.select(".njg-overlay").remove();
                     d3.select(".njg-metadata").remove();
                     overlay.remove();
@@ -396,12 +359,10 @@
                 // disable some transitions while dragging
                 drag.on('dragstart', function(n){
                     d3.event.sourceEvent.stopPropagation();
-                    d3.select(this).on("mouseover", null);
                     zoom.on('zoom', null);
                 })
                 // re-enable transitions when dragging stops
                 .on('dragend', function(n){
-                    d3.select(this).on("mouseover", onMouseOverNode);
                     zoom.on('zoom', opts.redraw);
                 })
                 .on("drag", function(d) {
@@ -434,9 +395,11 @@
                                      return baseClass;
                                  })
                                  .on("click", opts.onClickLink),
-                    node = panner.selectAll(".node")
-                                 .data(nodes)
-                                 .enter().append("circle")
+                    groups = panner.selectAll(".node")
+                                   .data(nodes)
+                                   .enter()
+                                   .append("g");
+                    node = groups.append("circle")
                                  .attr("class", function (node) {
                                      var baseClass = "njg-node",
                                          addClass = null;
@@ -457,10 +420,14 @@
                                      return baseClass;
                                  })
                                  .attr("r", opts.circleRadius)
-                                 .on("mouseover", onMouseOverNode)
-                                 .on("mouseout", onMouseOutNode)
                                  .on("click", opts.onClickNode)
                                  .call(drag);
+
+                    var labels = groups.append('text')
+                                       .text(function(n){ return n.label || n.id })
+                                       .attr('dx', opts.labelDx)
+                                       .attr('dy', opts.labelDy)
+                                       .attr('class', 'njg-tooltip');
 
                 // Close overlay
                 closeOverlay.on("click", function() {
@@ -537,6 +504,10 @@
                     })
                     .attr("cy", function(d) {
                         return d.y;
+                    });
+
+                    labels.attr("transform", function(d) {
+                        return "translate(" + d.x + "," + d.y + ")";
                     });
                 })
                 .on("end", function(){
