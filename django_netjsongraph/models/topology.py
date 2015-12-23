@@ -7,6 +7,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.module_loading import import_string
 from django.utils.functional import cached_property
 
+from rest_framework.utils.encoders import JSONEncoder
 from netdiff import diff, NetJsonParser
 
 from ..base import TimeStampedEditableModel
@@ -67,14 +68,14 @@ class BaseTopology(TimeStampedEditableModel):
             ('label', self.label),
             ('id', str(self.id)),
             ('parser', self.parser),
-            ('created', str(self.created)),
-            ('modified', str(self.modified)),
+            ('created', self.created),
+            ('modified', self.modified),
             ('nodes', nodes),
             ('links', links)
         ))
         if dict:
             return netjson
-        return json.dumps(netjson, **kwargs)
+        return json.dumps(netjson, cls=JSONEncoder, **kwargs)
 
     def update(self):
         """

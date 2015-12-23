@@ -62,8 +62,8 @@ class TestLink(TestCase):
             'properties': {
                 'pretty': True,
                 'status': 'up',
-                'created': str(l.created),
-                'modified': str(l.modified)
+                'created': l.created,
+                'modified': l.modified
             }
         })
         self.assertIsInstance(l.json(), six.string_types)

@@ -49,8 +49,8 @@ class TestTopology(TestCase):
             'label': t.label,
             'id': str(t.id),
             'parser': t.parser,
-            'created': str(t.created),
-            'modified': str(t.modified),
+            'created': t.created,
+            'modified': t.modified,
             'nodes': [],
             'links': []
         })
@@ -72,8 +72,8 @@ class TestTopology(TestCase):
             'label': t.label,
             'id': str(t.id),
             'parser': t.parser,
-            'created': str(t.created),
-            'modified': str(t.modified),
+            'created': t.created,
+            'modified': t.modified,
             'nodes': [
                 dict(node1.json(dict=True)),
                 dict(node2.json(dict=True)),

@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 
+from rest_framework.utils.encoders import JSONEncoder
 from jsonfield import JSONField
 
 from ..base import TimeStampedEditableModel
@@ -79,11 +80,11 @@ class BaseNode(TimeStampedEditableModel):
             value = getattr(self, attr)
             if value or attr == 'properties':
                 netjson[attr] = value
-        netjson['properties']['created'] = str(self.created)
-        netjson['properties']['modified'] = str(self.modified)
+        netjson['properties']['created'] = self.created
+        netjson['properties']['modified'] = self.modified
         if dict:
             return netjson
-        return json.dumps(netjson, **kwargs)
+        return json.dumps(netjson, cls=JSONEncoder, **kwargs)
 
     @classmethod
     def get_from_address(cls, address):

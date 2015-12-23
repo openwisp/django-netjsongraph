@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.core.exceptions import ValidationError
 
+from rest_framework.utils.encoders import JSONEncoder
 from jsonfield import JSONField
 from model_utils.fields import StatusField
 from model_utils import Choices
@@ -63,11 +64,11 @@ class BaseLink(TimeStampedEditableModel):
         if self.properties:
             properties.update(self.properties)
         netjson['properties'] = properties
-        netjson['properties']['created'] = str(self.created)
-        netjson['properties']['modified'] = str(self.modified)
+        netjson['properties']['created'] = self.created
+        netjson['properties']['modified'] = self.modified
         if dict:
             return netjson
-        return json.dumps(netjson, **kwargs)
+        return json.dumps(netjson, cls=JSONEncoder, **kwargs)
 
     @classmethod
     def get_from_nodes(cls, source, target):
