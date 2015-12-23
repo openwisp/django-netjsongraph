@@ -34,7 +34,7 @@ class BaseTopology(TimeStampedEditableModel):
         abstract = True
 
     def __str__(self):
-        return self.label
+        return '{0} - {1}'.format(self.label, self.get_parser_display())
 
     @cached_property
     def parser_class(self):
