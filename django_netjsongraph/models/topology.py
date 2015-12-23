@@ -112,7 +112,8 @@ class BaseTopology(TimeStampedEditableModel):
             addresses += ';'.join(node_dict.get('local_addresses', []))
             properties = node_dict.get('properties', {})
             node = Node(addresses=addresses,
-                        properties=properties)
+                        properties=properties,
+                        topology=self)
             node.full_clean()
             node.save()
 

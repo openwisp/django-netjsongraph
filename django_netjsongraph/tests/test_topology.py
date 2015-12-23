@@ -39,6 +39,7 @@ class TestTopology(TestCase):
 
     def test_json_empty(self):
         t = Topology.objects.first()
+        Node.objects.all().delete()
         graph = t.json(dict=True)
         self.assertDictEqual(graph, {
             'type': 'NetworkGraph',
@@ -56,8 +57,8 @@ class TestTopology(TestCase):
 
     def test_json(self):
         node1, node2 = self._get_nodes()
-        node3 = Node.objects.create(addresses='192.168.0.3', label='node3')
         t = Topology.objects.first()
+        node3 = Node.objects.create(topology=t, addresses='192.168.0.3', label='node3')
         l = Link.objects.create(topology=t, source=node1,
                                 target=node2, cost=1)
         l2 = Link.objects.create(topology=t, source=node1,
