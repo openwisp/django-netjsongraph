@@ -15,7 +15,7 @@ class TopologyAdmin(TimeStampedEditableAdmin):
 
 
 class NodeAdmin(TimeStampedEditableAdmin):
-    list_display = ('name', 'addresses')
+    list_display = ('name', 'topology', 'addresses')
     list_filter = ('topology',)
     search_fields = ('addresses', 'label', 'properties')
 
