@@ -21,6 +21,12 @@ django-netjsongraph
 
 Reusable django app for collecting and visualizing network topology.
 
+.. image:: https://raw.githubusercontent.com/interop-dev/django-netjsongraph/master/docs/images/visualizer.png
+
+.. image:: https://raw.githubusercontent.com/interop-dev/django-netjsongraph/master/docs/images/admin.png
+
+------------
+
 Current features:
 
 * topology information collector supporting different formats:
