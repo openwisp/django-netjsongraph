@@ -36,7 +36,7 @@ setup(
     author_email='nemesis@ninux.org',
     description='Django implementation of NetJSON NetworkGraph',
     url='http://netjson.org',
-    download_url='https://github.com/interop-dev/django_netjsongraph/releases',
+    download_url='https://github.com/interop-dev/django-netjsongraph/releases',
     platforms=['Platform Indipendent'],
     keywords=['django', 'netjson', 'mesh', 'networking'],
     packages=find_packages(exclude=['tests', 'tests.*']),
