@@ -6,6 +6,9 @@
             "label":"TestNetwork",
             "parser":"netdiff.OlsrParser",
             "url":"http://127.0.0.1:9090",
+            "protocol":"OLSR",
+            "version":"0.8",
+            "metric":"ETX",
             "created":"2015-05-16T20:02:52.483Z",
             "modified":"2015-05-16T19:33:41.621Z"
         }

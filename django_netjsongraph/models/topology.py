@@ -47,7 +47,18 @@ class BaseTopology(TimeStampedEditableModel):
 
     @property
     def latest(self):
-        return self.parser_class(self.url, timeout=5)
+        latest = self.parser_class(self.url, timeout=5)
+        # update topology attributes if needed
+        changed = False
+        for attr in ['protocol', 'version', 'metric']:
+            latest_attr = getattr(latest, attr)
+            if getattr(self, attr) != latest_attr:
+                setattr(self, attr, latest_attr)
+                changed = True
+        if changed:
+            self.save()
+        # return latest
+        return latest
 
     def diff(self):
         """ shortcut to netdiff.diff """
@@ -66,9 +77,9 @@ class BaseTopology(TimeStampedEditableModel):
             nodes.append(node.json(dict=True))
         netjson = OrderedDict((
             ('type', 'NetworkGraph'),
-            ('protocol', self.parser_class.protocol),
-            ('version', self.parser_class.version),
-            ('metric', self.parser_class.metric),
+            ('protocol', self.protocol),
+            ('version', self.version),
+            ('metric', self.metric),
             ('label', self.label),
             ('id', str(self.id)),
             ('parser', self.parser),

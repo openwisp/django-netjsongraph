@@ -96,6 +96,24 @@ class TestTopology(TestCase, LoadMixin):
         })
 
     @responses.activate
+    def test_update_topology_attributes(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9090',
+                      body=self._load('static/netjson-1-link.json'),
+                      content_type='application/json')
+        t.protocol = None
+        t.version = None
+        t.metric = None
+        t.update()
+        t.refresh_from_db()
+        self.assertEqual(t.protocol, 'OLSR')
+        self.assertEqual(t.version, '0.8')
+        self.assertEqual(t.metric, 'ETX')
+
+    @responses.activate
     def test_update_added(self):
         t = Topology.objects.first()
         t.parser = 'netdiff.NetJsonParser'
