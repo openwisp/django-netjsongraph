@@ -1,3 +1,4 @@
+import os
 import sys
 import logging
 from django.test.runner import DiscoverRunner
@@ -31,3 +32,9 @@ class UnpublishMixin(object):
         t = Topology.objects.first()
         t.published = False
         t.save()
+
+
+class LoadMixin(object):
+    def _load(self, file):
+        d = os.path.dirname(os.path.abspath(__file__))
+        return open(os.path.join(d, file)).read()

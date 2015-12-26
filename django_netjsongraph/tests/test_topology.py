@@ -1,5 +1,3 @@
-import os
-import sys
 import six
 import responses
 
@@ -9,10 +7,10 @@ from netdiff import OlsrParser
 
 from ..models import Topology, Link, Node
 from ..utils import update_topology
-from .utils import StringIO, redirect_stdout
+from .utils import StringIO, LoadMixin, redirect_stdout
 
 
-class TestTopology(TestCase):
+class TestTopology(TestCase, LoadMixin):
     """
     tests for Topology model
     """
@@ -24,10 +22,6 @@ class TestTopology(TestCase):
 
     def _get_nodes(self):
         return Node.objects.all()
-
-    def _load(self, file):
-        d = os.path.dirname(os.path.abspath(__file__))
-        return open(os.path.join(d, file)).read()
 
     def test_str(self):
         t = Topology.objects.first()
