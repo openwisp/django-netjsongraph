@@ -112,6 +112,11 @@ and start playing with the network graph::
 
     ./manage.py update_topology
 
+The management command accepts a ``--label`` argument that will be used to search in
+topology labels, eg::
+
+    ./manage.py update_topology --label mytopology
+
 Logging
 -------
 
