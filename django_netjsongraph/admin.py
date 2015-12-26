@@ -24,7 +24,13 @@ class LinkAdmin(TimeStampedEditableAdmin):
     raw_id_fields = ('source', 'target')
     list_display = ('__str__', 'topology', 'status', 'cost', 'cost_text')
     list_filter = ('status', 'topology')
-    search_fields = ('source__addresses', 'target__addresses', 'properties',)
+    search_fields = (
+        'source__label',
+        'target__label',
+        'source__addresses',
+        'target__addresses',
+        'properties',
+    )
 
 
 admin.site.register(Topology, TopologyAdmin)
