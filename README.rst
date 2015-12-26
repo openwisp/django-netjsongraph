@@ -89,7 +89,7 @@ according to your needs):
 
 .. code-block:: python
 
-    # your other imports ...
+    from django.conf.urls import include, url
 
     from django_netjsongraph.api import urls as netjsongraph_api
     from django_netjsongraph.visualizer import urls as netjsongraph_visualizer
