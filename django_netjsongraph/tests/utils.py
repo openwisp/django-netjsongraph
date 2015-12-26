@@ -23,3 +23,11 @@ class LoggingDisabledTestRunner(DiscoverRunner):
         # disable logging below CRITICAL while testing
         logging.disable(logging.CRITICAL)
         return super(LoggingDisabledTestRunner, self).run_tests(test_labels, extra_tests, **kwargs)
+
+
+class UnpublishMixin(object):
+    def _unpublish(self):
+        from ..models import Topology
+        t = Topology.objects.first()
+        t.published = False
+        t.save()

@@ -23,6 +23,10 @@ class BaseTopology(TimeStampedEditableModel):
                               max_length=128,
                               help_text=_('Select topology format'))
     url = models.URLField(_('url'), help_text=_('Topology data will be fetched from this URL'))
+    published = models.BooleanField(_('published'),
+                                    default=True,
+                                    help_text=_('Unpublished topologies won\'t be updated or'
+                                                'shown in the visualizer'))
 
     # the following fields will be filled automatically
     protocol = models.CharField(_('protocol'), max_length=64, blank=True)

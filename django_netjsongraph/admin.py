@@ -5,7 +5,7 @@ from .base import TimeStampedEditableAdmin
 
 
 class TopologyAdmin(TimeStampedEditableAdmin):
-    list_display = ('label', 'parser', 'link_url', 'created', 'modified')
+    list_display = ('label', 'parser', 'link_url', 'published', 'created', 'modified')
     readonly_fields = ['protocol', 'version', 'revision', 'metric']
     list_filter = ('parser',)
 

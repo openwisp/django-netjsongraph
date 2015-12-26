@@ -243,3 +243,18 @@ class TestTopology(TestCase):
         self.assertEqual(Node.objects.count(), 1)
         self.assertEqual(Link.objects.count(), 0)
         self.assertIn('Failed to', output.getvalue())
+
+    @responses.activate
+    def test_update_topology_func_unpublished(self):
+        t = Topology.objects.first()
+        t.published = False
+        t.parser = 'netdiff.NetJsonParser'
+        t.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9090',
+                      body=self._load('static/netjson-1-link.json'),
+                      content_type='application/json')
+        Node.objects.all().delete()
+        update_topology()
+        self.assertEqual(Node.objects.count(), 0)
+        self.assertEqual(Link.objects.count(), 0)

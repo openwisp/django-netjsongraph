@@ -9,10 +9,9 @@ def update_topology(label=None):
     updates all the topology
     sends logs to the "nodeshot.networking" logger
     """
+    queryset = Topology.objects.filter(published=True)
     if label:
-        queryset = Topology.objects.filter(label__icontains=label)
-    else:
-        queryset = Topology.objects.all()
+        queryset = queryset.filter(label__icontains=label)
     for topology in queryset:
         # print info message if calling from management command
         if 'update_topology' in sys.argv:  # pragma no cover
