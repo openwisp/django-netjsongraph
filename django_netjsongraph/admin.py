@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Topology, Node, Link
 from .base import TimeStampedEditableAdmin
@@ -8,10 +9,37 @@ class TopologyAdmin(TimeStampedEditableAdmin):
     list_display = ('label', 'parser', 'link_url', 'published', 'created', 'modified')
     readonly_fields = ['protocol', 'version', 'revision', 'metric']
     list_filter = ('parser',)
+    actions = ['unpublish_selected', 'publish_selected']
 
     def link_url(self, obj):  # pragma nocover
         return '<a href="{0}" target="_blank">{0}</a>'.format(obj.url)
     link_url.allow_tags = True
+
+    def get_actions(self, request):
+        """ move delete action to last position """
+        actions = super(TopologyAdmin, self).get_actions(request)
+        delete = actions['delete_selected']
+        del actions['delete_selected']
+        actions['delete_selected'] = delete
+        return actions
+
+    def publish_selected(self, request, queryset):
+        rows_updated = queryset.update(published=True)
+        if rows_updated == 1:
+            message_bit = _("1 item was")
+        else:
+            message_bit = _("%s items were") % rows_updated
+        self.message_user(request, _("%s successfully published.") % message_bit)
+    publish_selected.short_description = _("Publish selected items")
+
+    def unpublish_selected(self, request, queryset):
+        rows_updated = queryset.update(published=False)
+        if rows_updated == 1:
+            message_bit = _("1 item was")
+        else:
+            message_bit = _("%s items were") % rows_updated
+        self.message_user(request, _("%s successfully unpublished.") % message_bit)
+    unpublish_selected.short_description = _("Unpublish selected items")
 
 
 class NodeAdmin(TimeStampedEditableAdmin):
