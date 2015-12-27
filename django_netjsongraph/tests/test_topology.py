@@ -195,6 +195,29 @@ class TestTopology(TestCase, LoadMixin):
         self.assertEqual(link.cost, 2.0)
 
     @responses.activate
+    def test_update_status_existing_link(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.save()
+        l = Link(source_id='d083b494-8e16-4054-9537-fb9eba914861',
+                 target_id='d083b494-8e16-4054-9537-fb9eba914862',
+                 cost=1,
+                 status='down',
+                 properties={'pretty': True},
+                 topology=t)
+        l.full_clean()
+        l.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9090',
+                      body=self._load('static/netjson-1-link.json'),
+                      content_type='application/json')
+        t.update()
+        self.assertEqual(Node.objects.count(), 2)
+        self.assertEqual(Link.objects.count(), 1)
+        l.refresh_from_db()
+        self.assertEqual(l.status, 'up')
+
+    @responses.activate
     def test_update_topology_func(self):
         t = Topology.objects.first()
         t.parser = 'netdiff.NetJsonParser'

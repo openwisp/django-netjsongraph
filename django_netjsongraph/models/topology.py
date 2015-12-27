@@ -63,15 +63,19 @@ class BaseTopology(TimeStampedEditableModel):
     def diff(self):
         """ shortcut to netdiff.diff """
         latest = self.latest
-        current = NetJsonParser(self.json(dict=True))
+        current = NetJsonParser(self.json(dict=True, omit_down=True))
         return diff(current, latest)
 
-    def json(self, dict=False, **kwargs):
+    def json(self, dict=False, omit_down=False, **kwargs):
         """ returns a dict that represents a NetJSON NetworkGraph object """
         nodes = []
         links = []
+        link_queryset = self.link_set.select_related('source', 'target')
+        # needed to detected links coming back online
+        if omit_down:
+            link_queryset = link_queryset.filter(status='up')
         # populate graph
-        for link in self.link_set.select_related('source', 'target'):
+        for link in link_queryset:
             links.append(link.json(dict=True))
         for node in self.node_set.all():
             nodes.append(node.json(dict=True))
@@ -146,10 +150,10 @@ class BaseTopology(TimeStampedEditableModel):
                                 properties=link_dict.get('properties', {}),
                                 topology=self)
                     changed = True
-                # links in changed and removed sections
-                # are always changing therefore needs to be saved
-                if section in ['changed', 'removed']:
+                if link.status != status[section]:
                     link.status = status[section]
+                    changed = True
+                if link.cost != link_dict['cost']:
                     link.cost = link_dict['cost']
                     changed = True
                 # perform writes only if needed
