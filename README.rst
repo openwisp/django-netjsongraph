@@ -38,6 +38,15 @@ Current features:
 * **visualizer** based on `netjsongraph.js <https://github.com/interop-dev/netjsongraph.js>`_
 * **simple HTTP API** that exposes data in `NetJSON <http://netjson.org>`__ *NetworkGraph* format
 
+Goals:
+
+* make it easy to visualize network topology data for the formats supported by `netdiff <https://github.com/ninuxorg/netdiff>`_
+* expose topology data via RESTful resources in *NetJSON NetworkGraph* format
+* make it easy to integrate in larger django projects to improve reusability
+* make it easy to extend its models by providing abstract models (**needs improvement in this point**)
+* provide ways to customize or replace the visualizer (**needs improvement in this point**)
+* keep the core very simple, provide ways to extend the default behaviour
+
 Install stable version from pypi
 --------------------------------
 
