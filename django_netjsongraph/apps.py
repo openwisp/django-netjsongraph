@@ -10,5 +10,5 @@ class DjangoNetjsongraphConfig(AppConfig):
     verbose_name = _('Network Graph')
 
     def ready(self):
-        if SIGNALS:
+        if SIGNALS:  # pragma: nocover
             __import__(SIGNALS)

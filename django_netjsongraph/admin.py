@@ -23,34 +23,29 @@ class TopologyAdmin(TimeStampedEditableAdmin):
         actions['delete_selected'] = delete
         return actions
 
+    def _message(self, request, rows, suffix):
+        if rows == 1:
+            prefix = _('1 {0} was'.format(self.model._meta.verbose_name))
+        else:  # pragma: nocover
+            prefix = _('{0} {1} were'.format(rows, self.model._meta.verbose_name_plural))
+        self.message_user(request, '{0} {1}'.format(prefix, suffix))
+
     def update_selected(self, request, queryset):
         items = list(queryset)
         for item in items:
             item.update()
-        if len(items) == 1:
-            message_bit = _("1 topology was")
-        else:
-            message_bit = _("%s topologies were") % rows_updated
-        self.message_user(request, _("%s successfully updated.") % message_bit)
-    update_selected.short_description = _("Update selected topologies")
+        self._message(request, len(items), _('successfully updated'))
+    update_selected.short_description = _('Update selected topologies')
 
     def publish_selected(self, request, queryset):
         rows_updated = queryset.update(published=True)
-        if rows_updated == 1:
-            message_bit = _("1 item was")
-        else:
-            message_bit = _("%s items were") % rows_updated
-        self.message_user(request, _("%s successfully published.") % message_bit)
-    publish_selected.short_description = _("Publish selected items")
+        self._message(request, rows_updated, _('successfully published'))
+    publish_selected.short_description = _('Publish selected topologies')
 
     def unpublish_selected(self, request, queryset):
         rows_updated = queryset.update(published=False)
-        if rows_updated == 1:
-            message_bit = _("1 item was")
-        else:
-            message_bit = _("%s items were") % rows_updated
-        self.message_user(request, _("%s successfully unpublished.") % message_bit)
-    unpublish_selected.short_description = _("Unpublish selected items")
+        self._message(request, rows_updated, _('successfully unpublished'))
+    unpublish_selected.short_description = _('Unpublish selected items')
 
 
 class NodeAdmin(TimeStampedEditableAdmin):
