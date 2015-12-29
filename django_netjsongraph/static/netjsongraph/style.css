@@ -93,7 +93,7 @@ body {
     stroke: #c92517;
     stroke-dasharray: 10, 5
 }
-.down:hover,.down .njg-open{
+.down:hover,.down.njg-open{
     stroke: red;
 }
 
