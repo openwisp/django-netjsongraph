@@ -145,6 +145,8 @@ Settings
 | ``NETJSONGRAPH_SIGNALS``        | ``None``                            | String representing python module to import on initialization.                                    |
 |                                 |                                     | Useful for loading django signals or to define custom behaviour.                                  |
 +---------------------------------+-------------------------------------+---------------------------------------------------------------------------------------------------+
+| ``NETJSONGRAPH_TIMEOUT``        | ``8``                               | Timeout when requesting topology URLs                                                             |
++---------------------------------+-------------------------------------+---------------------------------------------------------------------------------------------------+
 
 Installing for development
 --------------------------

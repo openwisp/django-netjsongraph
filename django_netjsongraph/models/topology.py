@@ -11,7 +11,7 @@ from rest_framework.utils.encoders import JSONEncoder
 from netdiff import diff, NetJsonParser
 
 from ..base import TimeStampedEditableModel
-from ..settings import PARSERS
+from ..settings import PARSERS, TIMEOUT
 from ..contextmanagers import log_on_fail
 
 
@@ -47,7 +47,7 @@ class BaseTopology(TimeStampedEditableModel):
 
     @property
     def latest(self):
-        latest = self.parser_class(self.url, timeout=5)
+        latest = self.parser_class(self.url, timeout=TIMEOUT)
         # update topology attributes if needed
         changed = False
         for attr in ['protocol', 'version', 'metric']:
