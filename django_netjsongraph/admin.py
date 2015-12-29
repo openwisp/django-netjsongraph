@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Topology, Node, Link
@@ -24,19 +25,30 @@ class TopologyAdmin(TimeStampedEditableAdmin):
         actions['delete_selected'] = delete
         return actions
 
-    def _message(self, request, rows, suffix):
+    def _message(self, request, rows, suffix, level=messages.SUCCESS):
         if rows == 1:
             prefix = _('1 {0} was'.format(self.model._meta.verbose_name))
         else:  # pragma: nocover
             prefix = _('{0} {1} were'.format(rows, self.model._meta.verbose_name_plural))
-        self.message_user(request, '{0} {1}'.format(prefix, suffix))
+        self.message_user(request, '{0} {1}'.format(prefix, suffix), level=level)
 
     def update_selected(self, request, queryset):
         items = list(queryset)
+        failed = []
         for item in items:
-            with log_on_fail('update topology admin action', item):
+            try:
                 item.update()
-        self._message(request, len(items), _('successfully updated'))
+            except Exception as e:
+                failed.append('{0}: {1}'.format(item.label, str(e)))
+                with log_on_fail('update topology admin action', item):
+                    raise e
+        failures = len(failed)
+        successes = len(items) - failures
+        if successes > 0:
+            self._message(request, successes, _('successfully updated'))
+        if failures > 0:
+            message = _('not updated. %s') % '; '.join(failed)
+            self._message(request, failures, message, level=messages.ERROR)
     update_selected.short_description = _('Update selected topologies')
 
     def publish_selected(self, request, queryset):

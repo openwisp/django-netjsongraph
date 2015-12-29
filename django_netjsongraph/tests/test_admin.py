@@ -55,3 +55,24 @@ class TestAdmin(TestCase, LoadMixin):
         })
         self.assertEqual(Node.objects.count(), 2)
         self.assertEqual(Link.objects.count(), 1)
+
+    @responses.activate
+    def test_update_selected_failed(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.save()
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9090',
+                      body='{"error": "not found"}',
+                      status=404,
+                      content_type='application/json')
+        Node.objects.all().delete()
+        response = self.client.post(self.changelist_path, {
+            'action': 'update_selected',
+            '_selected_action': str(t.pk)
+        }, follow=True)
+        self.assertEqual(Node.objects.count(), 0)
+        self.assertEqual(Link.objects.count(), 0)
+        message = list(response.context['messages'])[0]
+        self.assertEqual(message.tags, 'error')
+        self.assertIn('not updated', message.message)
