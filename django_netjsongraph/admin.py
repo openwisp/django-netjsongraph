@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .models import Topology, Node, Link
 from .base import TimeStampedEditableAdmin
+from .contextmanagers import log_on_fail
 
 
 class TopologyAdmin(TimeStampedEditableAdmin):
@@ -33,7 +34,8 @@ class TopologyAdmin(TimeStampedEditableAdmin):
     def update_selected(self, request, queryset):
         items = list(queryset)
         for item in items:
-            item.update()
+            with log_on_fail('update topology admin action', item):
+                item.update()
         self._message(request, len(items), _('successfully updated'))
     update_selected.short_description = _('Update selected topologies')
 
