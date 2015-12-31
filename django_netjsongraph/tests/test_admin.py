@@ -76,3 +76,10 @@ class TestAdmin(TestCase, LoadMixin):
         message = list(response.context['messages'])[0]
         self.assertEqual(message.tags, 'error')
         self.assertIn('not updated', message.message)
+
+    def test_topology_viewonsite(self):
+        t = Topology.objects.first()
+        path = reverse('admin:django_netjsongraph_topology_change', args=[t.pk])
+        response = self.client.get(path)
+        self.assertContains(response, 'View on site')
+        self.assertContains(response, t.get_absolute_url())

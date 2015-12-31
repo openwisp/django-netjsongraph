@@ -2,6 +2,7 @@ import json
 from collections import OrderedDict
 
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.module_loading import import_string
@@ -40,6 +41,9 @@ class BaseTopology(TimeStampedEditableModel):
 
     def __str__(self):
         return '{0} - {1}'.format(self.label, self.get_parser_display())
+
+    def get_absolute_url(self):
+        return reverse('topology_detail', args=[self.pk])
 
     @cached_property
     def parser_class(self):
