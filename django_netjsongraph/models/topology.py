@@ -71,7 +71,7 @@ class BaseTopology(TimeStampedEditableModel):
         nodes = []
         links = []
         link_queryset = self.link_set.select_related('source', 'target')
-        # needed to detected links coming back online
+        # needed to detect links coming back online
         if omit_down:
             link_queryset = link_queryset.filter(status='up')
         # populate graph
