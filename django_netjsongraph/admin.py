@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.contrib import admin
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
@@ -13,7 +14,7 @@ class TopologyAdmin(TimeStampedEditableAdmin):
     list_filter = ('parser',)
     actions = ['update_selected', 'unpublish_selected', 'publish_selected']
 
-    def link_url(self, obj):  # pragma nocover
+    def link_url(self, obj):
         return '<a href="{0}" target="_blank">{0}</a>'.format(obj.url)
     link_url.allow_tags = True
 
@@ -66,6 +67,18 @@ class NodeAdmin(TimeStampedEditableAdmin):
     list_display = ('name', 'topology', 'addresses')
     list_filter = ('topology',)
     search_fields = ('addresses', 'label', 'properties')
+
+    def change_view(self, request, object_id, form_url='', extra_context={}):
+        extra_context.update({
+            'node_links': Link.objects.select_related('source', 'target')
+                                      .only('source__label',
+                                            'target__label',
+                                            'cost',
+                                            'status')
+                                      .filter(Q(source_id=object_id) |
+                                              Q(target_id=object_id))
+        })
+        return super(NodeAdmin, self).change_view(request, object_id, form_url, extra_context)
 
 
 class LinkAdmin(TimeStampedEditableAdmin):

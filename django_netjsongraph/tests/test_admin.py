@@ -83,3 +83,14 @@ class TestAdmin(TestCase, LoadMixin):
         response = self.client.get(path)
         self.assertContains(response, 'View on site')
         self.assertContains(response, t.get_absolute_url())
+
+    def test_node_change_form(self):
+        n = Node.objects.first()
+        path = reverse('admin:django_netjsongraph_node_change', args=[n.pk])
+        response = self.client.get(path)
+        self.assertContains(response, 'Links to other nodes')
+
+    def test_node_add(self):
+        path = reverse('admin:django_netjsongraph_node_add')
+        response = self.client.get(path)
+        self.assertNotContains(response, 'Links to other nodes')
