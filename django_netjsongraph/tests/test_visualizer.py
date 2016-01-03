@@ -1,6 +1,5 @@
 from django.test import TestCase
 
-from ..models import Topology
 from .utils import UnpublishMixin
 
 

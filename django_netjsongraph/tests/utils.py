@@ -5,9 +5,9 @@ from django.test.runner import DiscoverRunner
 from contextlib import contextmanager
 
 try:
-    from cStringIO import StringIO
+    from cStringIO import StringIO  # noqa
 except ImportError:
-    from io import StringIO
+    from io import StringIO  # noqa
 
 
 @contextmanager
@@ -23,7 +23,9 @@ class LoggingDisabledTestRunner(DiscoverRunner):
     def run_tests(self, test_labels, extra_tests=None, **kwargs):
         # disable logging below CRITICAL while testing
         logging.disable(logging.CRITICAL)
-        return super(LoggingDisabledTestRunner, self).run_tests(test_labels, extra_tests, **kwargs)
+        return super(LoggingDisabledTestRunner, self).run_tests(test_labels,
+                                                                extra_tests,
+                                                                **kwargs)
 
 
 class UnpublishMixin(object):

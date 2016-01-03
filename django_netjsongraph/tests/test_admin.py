@@ -21,7 +21,7 @@ class TestAdmin(TestCase, LoadMixin):
     def test_unpublish_selected(self):
         t = Topology.objects.first()
         self.assertEqual(t.published, True)
-        response = self.client.post(self.changelist_path, {
+        self.client.post(self.changelist_path, {
             'action': 'unpublish_selected',
             '_selected_action': str(t.pk)
         })
@@ -32,7 +32,7 @@ class TestAdmin(TestCase, LoadMixin):
         t = Topology.objects.first()
         t.published = False
         t.save()
-        response = self.client.post(self.changelist_path, {
+        self.client.post(self.changelist_path, {
             'action': 'publish_selected',
             '_selected_action': str(t.pk)
         })
@@ -49,7 +49,7 @@ class TestAdmin(TestCase, LoadMixin):
                       body=self._load('static/netjson-1-link.json'),
                       content_type='application/json')
         Node.objects.all().delete()
-        response = self.client.post(self.changelist_path, {
+        self.client.post(self.changelist_path, {
             'action': 'update_selected',
             '_selected_action': str(t.pk)
         })
