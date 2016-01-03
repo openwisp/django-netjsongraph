@@ -5,7 +5,7 @@ from django.utils.timezone import now
 
 from .contextmanagers import log_on_fail
 from .models import Topology, Link
-from .settings import LINK_EXPIRATION
+from . import settings
 
 
 def print_info(message):  # pragma no cover
@@ -21,6 +21,7 @@ def delete_expired_links():
     deletes links that have been down for more than
     ``NETJSONGRAPH_LINK_EXPIRATION`` days
     """
+    LINK_EXPIRATION = settings.LINK_EXPIRATION
     if LINK_EXPIRATION not in [False, None]:
         expiration_date = now() - timedelta(days=int(LINK_EXPIRATION))
         expired_links = Link.objects.filter(status='down',
