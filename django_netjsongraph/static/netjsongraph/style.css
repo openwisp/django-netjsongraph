@@ -47,7 +47,8 @@
 
 .njg-node:hover,
 .njg-node.njg-open {
-    stroke: #fdecca;
+    stroke: #fff;
+    fill: #000;
 }
 
 .njg-link{
