@@ -1,6 +1,25 @@
 Changelog
 =========
 
+Version 0.1.2 [unreleased]
+--------------------------
+
+- `19a1f6a <https://github.com/interop-dev/django-netjsongraph/commit/19a1f6a>`_:
+  added ``NETJSONGRAPH_TIMEOUT``
+- `365509c <https://github.com/interop-dev/django-netjsongraph/commit/365509c>`_:
+  avoided possible *500 internal server error* when updating topology from admin action
+- `7fa86db <https://github.com/interop-dev/django-netjsongraph/commit/7fa86db>`_:
+  added failure message when updating topology from admin
+- `56066e8 <https://github.com/interop-dev/django-netjsongraph/commit/56066e8>`_:
+  added ``get_absolute_url()`` method to ``Topology`` model
+- `f90c639 <https://github.com/interop-dev/django-netjsongraph/commit/f90c639>`_:
+  added "Links to other nodes" section in ``Node`` admin
+- `d6fff61 <https://github.com/interop-dev/django-netjsongraph/commit/d6fff61>`_:
+  added ``NETJSONGRAPH_LINK_EXPIRATION`` days setting
+- `#3 <https://github.com/interop-dev/django-netjsongraph/issues/3>`_,
+  `b246669 <https://github.com/interop-dev/django-netjsongraph/commit/b246669>`_:
+  minor improvements to visualizer
+
 Version 0.1.1 [2015-12-27]
 --------------------------
 
