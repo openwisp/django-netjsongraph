@@ -1,6 +1,6 @@
 django>=1.9,<=1.10
 djangorestframework>=3.3,<3.4
 django-model-utils
-netdiff>=0.4.6,<=5.0
+netdiff>=0.4.7,<=5.0
 jsonfield
 six
