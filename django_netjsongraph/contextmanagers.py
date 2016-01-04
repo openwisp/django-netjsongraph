@@ -4,7 +4,7 @@ from contextlib import contextmanager
 
 
 @contextmanager
-def log_on_fail(action, obj):
+def log_failure(action, obj):
     try:
         yield
     except Exception as e:

@@ -3,7 +3,7 @@ import sys
 from datetime import timedelta
 from django.utils.timezone import now
 
-from .contextmanagers import log_on_fail
+from .contextmanagers import log_failure
 from .models import Topology, Link
 from . import settings
 
@@ -44,6 +44,6 @@ def update_topology(label=None):
         queryset = queryset.filter(label__icontains=label)
     for topology in queryset:
         print_info('Updating topology {0}'.format(topology))
-        with log_on_fail('update', topology):
+        with log_failure('update', topology):
             topology.update()
     delete_expired_links()

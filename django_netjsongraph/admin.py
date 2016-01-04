@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .models import Topology, Node, Link
 from .base import TimeStampedEditableAdmin
-from .contextmanagers import log_on_fail
+from .contextmanagers import log_failure
 
 
 class TopologyAdmin(TimeStampedEditableAdmin):
@@ -41,7 +41,7 @@ class TopologyAdmin(TimeStampedEditableAdmin):
                 item.update()
             except Exception as e:
                 failed.append('{0}: {1}'.format(item.label, str(e)))
-                with log_on_fail('update topology admin action', item):
+                with log_failure('update topology admin action', item):
                     raise e
         failures = len(failed)
         successes = len(items) - failures

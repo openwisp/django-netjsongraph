@@ -13,7 +13,7 @@ from netdiff import diff, NetJsonParser
 
 from ..base import TimeStampedEditableModel
 from ..settings import PARSERS, TIMEOUT
-from ..contextmanagers import log_on_fail
+from ..contextmanagers import log_failure
 
 
 @python_2_unicode_compatible
@@ -162,6 +162,6 @@ class BaseTopology(TimeStampedEditableModel):
                     changed = True
                 # perform writes only if needed
                 if changed:
-                    with log_on_fail(action[section], link):
+                    with log_failure(action[section], link):
                         link.full_clean()
                         link.save()
