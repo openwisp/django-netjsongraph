@@ -212,3 +212,13 @@ Contributing
 
 .. _PEP8, Style Guide for Python Code: http://www.python.org/dev/peps/pep-0008/
 .. _ninux-dev mailing list: http://ml.ninux.org/mailman/listinfo/ninux-dev
+
+Changelog
+---------
+
+See `CHANGES <https://github.com/interop-dev/django-netjsongraph/blob/master/CHANGES.rst>`_.
+
+License
+-------
+
+See `LICENSE <https://github.com/interop-dev/django-netjsongraph/blob/master/LICENSE>`_.
