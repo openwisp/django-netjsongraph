@@ -25,6 +25,10 @@ Reusable django app for collecting and visualizing network topology.
 
 .. image:: https://raw.githubusercontent.com/interop-dev/django-netjsongraph/master/docs/images/admin.png
 
+.. contents:: **Table of Contents**:
+   :backlinks: none
+   :depth: 3
+
 ------------
 
 Current features
