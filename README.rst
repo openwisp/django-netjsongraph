@@ -209,15 +209,24 @@ Run tests with:
 Contributing
 ------------
 
-1. Announce your intentions in the `issue tracker <https://github.com/interop-dev/django-netjsongraph/issues>`__
-2. Fork this repo and install it
-3. Follow `PEP8, Style Guide for Python Code`_
-4. Write code
-5. Write tests for your code
-6. Ensure all tests pass
-7. Ensure test coverage is not under 90%
-8. Document your changes
-9. Send pull request
+First off, thanks for taking the time to read these guidelines.
+
+Trying to follow these guidelines is important in order to minimize waste and
+avoid misunderstandings.
+
+1. Ensure your changes meet the `Project Goals`_
+2. If you found a bug please send a failing test with a patch
+3. If you want to add a new feature, announce your intentions in the
+   `issue tracker <https://github.com/interop-dev/django-netjsongraph/issues>`_
+4. Fork this repo and install it by following the instructions in
+   `Installing for development`_
+5. Follow `PEP8, Style Guide for Python Code`_
+6. Write code
+7. Write tests for your code
+8. Ensure all tests pass
+9. Ensure test coverage is not under 90%
+10. Document your changes
+11. Send pull request
 
 .. _PEP8, Style Guide for Python Code: http://www.python.org/dev/peps/pep-0008/
 .. _ninux-dev mailing list: http://ml.ninux.org/mailman/listinfo/ninux-dev

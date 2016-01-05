@@ -1,5 +1,5 @@
 Contributing
 ============
 
-Thanks for your interest! We love contributions, so please feel free to fix bugs, improve things, provide documentation. Just `follow the
-guidelines <https://github.com/interop-dev/django-netjsongraph>`_ and submit a PR.
+Please read the `Contributing <https://github.com/interop-dev/django-netjsongraph#contributing>`_
+section in the README of this project.
