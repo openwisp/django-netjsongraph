@@ -27,16 +27,18 @@ Reusable django app for collecting and visualizing network topology.
 
 ------------
 
-Current features:
+Current features
+----------------
 
-* topology information collector supporting different formats:
+* **network topology collector** supporting different formats:
     - NetJSON NetworkGraph
     - OLSR (jsoninfo/txtinfo)
     - batman-adv (jsondoc/txtinfo)
     - BMX6 (q6m)
     - CNML 1.0
-* **visualizer** based on `netjsongraph.js <https://github.com/interop-dev/netjsongraph.js>`_
+* **network topology visualizer** based on `netjsongraph.js <https://github.com/interop-dev/netjsongraph.js>`_
 * **simple HTTP API** that exposes data in `NetJSON <http://netjson.org>`__ *NetworkGraph* format
+* **admin interface** that allows to easily manage, audit and debug topologies and their relative data (nodes, links)
 
 Goals:
 
