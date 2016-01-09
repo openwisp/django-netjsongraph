@@ -39,6 +39,7 @@ setup(
     download_url='https://github.com/interop-dev/django-netjsongraph/releases',
     platforms=['Platform Indipendent'],
     keywords=['django', 'netjson', 'mesh', 'networking'],
+    packages=find_packages(),
     install_requires=get_install_requires(),
     include_package_data=True,
     zip_safe=False,
