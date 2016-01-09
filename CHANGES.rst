@@ -1,10 +1,11 @@
 Changelog
 =========
 
-Version 0.1.3 [unreleased]
+Version 0.1.3 [2016-01-09]
 --------------------------
 
-WIP
+- `#4 <https://github.com/interop-dev/django-netjsongraph/issues/4>`_:
+  pevented ``ValueError`` in ``topology_detail`` view
 
 Version 0.1.2 [2016-01-04]
 --------------------------
