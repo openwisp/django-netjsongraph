@@ -230,3 +230,93 @@ class TestTopology(TestCase, LoadMixin):
                      key='')
         with self.assertRaises(ValidationError):
             t.full_clean()
+
+    def test_receive_added(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.strategy = 'receive'
+        t.key = 'test'
+        t.ttl = 0
+        t.save()
+        Node.objects.all().delete()
+        data = self._load('static/netjson-1-link.json')
+        t.receive(data)
+        self.assertEqual(Node.objects.count(), 2)
+        self.assertEqual(Link.objects.count(), 1)
+        node1 = Node.objects.get(addresses__contains='192.168.0.1;')
+        node2 = Node.objects.get(addresses__contains='192.168.0.2;')
+        self.assertEqual(node1.local_addresses, ['10.0.0.1'])
+        self.assertEqual(node1.properties, {'gateway': True})
+        link = Link.objects.first()
+        self.assertIn(link.source, [node1, node2])
+        self.assertIn(link.target, [node1, node2])
+        self.assertEqual(link.cost, 1.0)
+        self.assertEqual(link.properties, {'pretty': True})
+        # ensure repeating the action is idempotent
+        t.receive(data)
+        self.assertEqual(Node.objects.count(), 2)
+        self.assertEqual(Link.objects.count(), 1)
+
+    def test_receive_changed(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.strategy = 'receive'
+        t.key = 'test'
+        t.ttl = 0
+        t.save()
+        Node.objects.all().delete()
+        data = self._load('static/netjson-1-link.json')
+        t.receive(data)
+        link = Link.objects.first()
+        # now change
+        data = self._load('static/netjson-2-links.json')
+        t.receive(data)
+        link.refresh_from_db()
+        self.assertEqual(Node.objects.count(), 3)
+        self.assertEqual(Link.objects.count(), 2)
+        self.assertEqual(link.cost, 1.5)
+
+    def test_receive_removed(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.strategy = 'receive'
+        t.key = 'test'
+        t.ttl = 0
+        t.save()
+        Node.objects.all().delete()
+        data = self._load('static/netjson-2-links.json')
+        t.receive(data)
+        self.assertEqual(Node.objects.count(), 3)
+        self.assertEqual(Link.objects.count(), 2)
+        # now change
+        data = self._load('static/netjson-1-link.json')
+        t.receive(data)
+        self.assertEqual(Node.objects.count(), 3)
+        self.assertEqual(Link.objects.count(), 2)
+        self.assertEqual(Link.objects.filter(status='down').count(), 1)
+        link = Link.objects.filter(status='down').first()
+        self.assertIn('192.168.0.3', [link.source.netjson_id,
+                                      link.target.netjson_id])
+        self.assertEqual(link.cost, 2.0)
+
+    def test_receive_status_existing_link(self):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.strategy = 'receive'
+        t.key = 'test'
+        t.ttl = 0
+        t.save()
+        l = Link(source_id='d083b494-8e16-4054-9537-fb9eba914861',
+                 target_id='d083b494-8e16-4054-9537-fb9eba914862',
+                 cost=1,
+                 status='down',
+                 properties={'pretty': True},
+                 topology=t)
+        l.full_clean()
+        l.save()
+        data = self._load('static/netjson-1-link.json')
+        t.receive(data)
+        self.assertEqual(Node.objects.count(), 2)
+        self.assertEqual(Link.objects.count(), 1)
+        l.refresh_from_db()
+        self.assertEqual(l.status, 'up')

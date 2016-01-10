@@ -90,9 +90,13 @@ class BaseTopology(TimeStampedEditableModel):
     def parser_class(self):
         return import_string(self.parser)
 
-    @property
-    def latest(self):
-        latest = self.parser_class(self.url, timeout=TIMEOUT)
+    def get_topology_data(self, data=None):
+        """
+        gets latest topology data
+        """
+        if data is None:
+            data = self.url
+        latest = self.parser_class(data, timeout=TIMEOUT)
         # update topology attributes if needed
         changed = False
         for attr in ['protocol', 'version', 'metric']:
@@ -102,12 +106,11 @@ class BaseTopology(TimeStampedEditableModel):
                 changed = True
         if changed:
             self.save()
-        # return latest
         return latest
 
-    def diff(self):
+    def diff(self, data=None):
         """ shortcut to netdiff.diff """
-        latest = self.latest
+        latest = self.get_topology_data(data)
         current = NetJsonParser(self.json(dict=True, omit_down=True))
         return diff(current, latest)
 
@@ -141,13 +144,13 @@ class BaseTopology(TimeStampedEditableModel):
             return netjson
         return json.dumps(netjson, cls=JSONEncoder, **kwargs)
 
-    def update(self):
+    def update(self, data=None):
         """
         Updates topology
         Links are not deleted straightaway but set as "down"
         """
         from . import Link, Node  # avoid circular dependency
-        diff = self.diff()
+        diff = self.diff(data)
 
         status = {
             'added': 'up',
@@ -206,3 +209,10 @@ class BaseTopology(TimeStampedEditableModel):
                     with log_failure(action[section], link):
                         link.full_clean()
                         link.save()
+
+    def receive(self, data):
+        """
+        Receive topology data
+        """
+        if self.ttl is 0:
+            self.update(data)
