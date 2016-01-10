@@ -2,6 +2,7 @@ import six
 import responses
 
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 from netdiff import OlsrParser
 
 from ..models import Topology, Link, Node
@@ -214,3 +215,18 @@ class TestTopology(TestCase, LoadMixin):
         self.assertEqual(Link.objects.count(), 1)
         l.refresh_from_db()
         self.assertEqual(l.status, 'up')
+
+    def test_topology_url_empty(self):
+        t = Topology(label='test',
+                     parser='netdiff.NetJsonParser',
+                     strategy='fetch')
+        with self.assertRaises(ValidationError):
+            t.full_clean()
+
+    def test_topology_key_empty(self):
+        t = Topology(label='test',
+                     parser='netdiff.NetJsonParser',
+                     strategy='receive',
+                     key='')
+        with self.assertRaises(ValidationError):
+            t.full_clean()

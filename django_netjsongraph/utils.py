@@ -39,7 +39,7 @@ def update_topology(label=None):
     - logs failures
     - calls delete_expired_links()
     """
-    queryset = Topology.objects.filter(published=True)
+    queryset = Topology.objects.filter(published=True, strategy='fetch')
     if label:
         queryset = queryset.filter(label__icontains=label)
     for topology in queryset:

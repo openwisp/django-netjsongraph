@@ -5,6 +5,7 @@
         "fields":{
             "label":"TestNetwork",
             "parser":"netdiff.OlsrParser",
+            "strategy":"fetch",
             "url":"http://127.0.0.1:9090",
             "protocol":"OLSR",
             "version":"0.8",

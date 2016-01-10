@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='topology',
             name='published',
-            field=models.BooleanField(default=True, help_text="Unpublished topologies won't be updated orshown in the visualizer", verbose_name='published'),
+            field=models.BooleanField(default=True, help_text="Unpublished topologies won't be updated or shown in the visualizer", verbose_name='published'),
         ),
     ]

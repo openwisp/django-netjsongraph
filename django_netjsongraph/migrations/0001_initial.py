@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
                 ('label', models.CharField(max_length=64, verbose_name='label')),
                 ('parser', models.CharField(choices=[('netdiff.OlsrParser', 'OLSRd (txtinfo/jsoninfo)'), ('netdiff.BatmanParser', 'batman-advanced (jsondoc/txtinfo)'), ('netdiff.BmxParser', 'BMX6 (q6m)'), ('netdiff.NetJsonParser', 'NetJSON NetworkGraph'), ('netdiff.CnmlParser', 'CNML 1.0')], help_text='Select topology format', max_length=128, verbose_name='format')),
-                ('url', models.URLField(help_text='Topology data will be fetched from this URL', verbose_name='url')),
+                ('url', models.URLField(blank=True, help_text='Topology data will be fetched from this URL (FETCH strategy)', verbose_name='url')),
                 ('protocol', models.CharField(blank=True, max_length=64, verbose_name='protocol')),
                 ('version', models.CharField(blank=True, max_length=24, verbose_name='version')),
                 ('revision', models.CharField(blank=True, max_length=64, verbose_name='revision')),

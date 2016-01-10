@@ -13,7 +13,7 @@ def topology_list(request):
 def topology_detail(request, pk):
     try:
         topology = get_object_or_404(Topology, pk=pk, published=True)
-    except ValueError as e:
+    except ValueError:
         raise Http404()
     return render_to_response('netjsongraph/detail.html',
                               {'topology': topology})

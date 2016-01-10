@@ -3,10 +3,12 @@ from collections import OrderedDict
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.module_loading import import_string
 from django.utils.functional import cached_property
+from django.utils.crypto import get_random_string
 
 from rest_framework.utils.encoders import JSONEncoder
 from netdiff import diff, NetJsonParser
@@ -16,6 +18,16 @@ from ..settings import PARSERS, TIMEOUT
 from ..contextmanagers import log_failure
 
 
+def get_random_key():
+    return get_random_string(length=32)
+
+
+STRATEGIES = (
+    ('fetch', _('FETCH')),
+    ('receive', _('RECEIVE'))
+)
+
+
 @python_2_unicode_compatible
 class BaseTopology(TimeStampedEditableModel):
     label = models.CharField(_('label'), max_length=64)
@@ -23,10 +35,29 @@ class BaseTopology(TimeStampedEditableModel):
                               choices=PARSERS,
                               max_length=128,
                               help_text=_('Select topology format'))
-    url = models.URLField(_('url'), help_text=_('Topology data will be fetched from this URL'))
+    strategy = models.CharField(_('strategy'),
+                                max_length=16,
+                                choices=STRATEGIES,
+                                default='fetch',
+                                db_index=True)
+    url = models.URLField(_('url'),
+                          blank=True,
+                          help_text=_('Topology data will be fetched from this URL'
+                                      ' (FETCH strategy)'))
+    key = models.CharField(_('key'),
+                           blank=True,
+                           max_length=64,
+                           default=get_random_key,
+                           help_text=_('key needed to update topology from nodes'
+                                       ' (RECEIVE strategy)'))
+    ttl = models.PositiveIntegerField(_('TTL'),
+                                      default=0,
+                                      help_text=_('"Time To Live" in seconds: 0 will immediately mark missing links as down; '
+                                                  'a value higher than 0 will delay marking missing links as down until the '
+                                                  '"last modified" field is older than TTL  (RECEIVE strategy)'))
     published = models.BooleanField(_('published'),
                                     default=True,
-                                    help_text=_('Unpublished topologies won\'t be updated or'
+                                    help_text=_('Unpublished topologies won\'t be updated or '
                                                 'shown in the visualizer'))
 
     # the following fields will be filled automatically
@@ -44,6 +75,16 @@ class BaseTopology(TimeStampedEditableModel):
 
     def get_absolute_url(self):
         return reverse('topology_detail', args=[self.pk])
+
+    def clean(self):
+        if self.strategy == 'fetch' and not self.url:
+            raise ValidationError({
+                'url': [_('an url must be specified when using FETCH strategy')]
+            })
+        elif self.strategy == 'receive' and not self.key:
+            raise ValidationError({
+                'key': [_('a key must be specified when using RECEIVE strategy')]
+            })
 
     @cached_property
     def parser_class(self):
