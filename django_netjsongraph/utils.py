@@ -2,6 +2,8 @@ import sys
 
 from datetime import timedelta
 from django.utils.timezone import now
+from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 from .contextmanagers import log_failure
 from .models import Topology, Link
@@ -47,3 +49,17 @@ def update_topology(label=None):
         with log_failure('update', topology):
             topology.update()
     delete_expired_links()
+
+
+def get_topology_or_404(pk, **kwargs):
+    """
+    retrieves topology with specified arguments or raises 404
+    """
+    kwargs.update({
+        'pk': pk,
+        'published': True
+    })
+    try:
+        return get_object_or_404(Topology, **kwargs)
+    except ValueError:
+        raise Http404()

@@ -1,7 +1,7 @@
-from django.shortcuts import render_to_response, get_object_or_404
-from django.http import Http404
+from django.shortcuts import render_to_response
 
 from ..models import Topology
+from ..utils import get_topology_or_404
 
 
 def topology_list(request):
@@ -11,9 +11,6 @@ def topology_list(request):
 
 
 def topology_detail(request, pk):
-    try:
-        topology = get_object_or_404(Topology, pk=pk, published=True)
-    except ValueError:
-        raise Http404()
+    topology = get_topology_or_404(pk)
     return render_to_response('netjsongraph/detail.html',
                               {'topology': topology})
