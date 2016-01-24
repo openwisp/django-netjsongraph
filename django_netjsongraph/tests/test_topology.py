@@ -1,5 +1,6 @@
 import six
 import responses
+from time import sleep
 
 from django.test import TestCase
 from django.core.exceptions import ValidationError
@@ -240,9 +241,9 @@ class TestTopology(TestCase, LoadMixin):
         with self.assertRaises(ValidationError):
             t.full_clean()
 
-    def test_receive_added(self):
-        t = self._set_receive()
+    def _test_receive_added(self, ttl=0):
         Node.objects.all().delete()
+        t = self._set_receive(ttl)
         data = self._load('static/netjson-1-link.json')
         t.receive(data)
         self.assertEqual(Node.objects.count(), 2)
@@ -261,8 +262,11 @@ class TestTopology(TestCase, LoadMixin):
         self.assertEqual(Node.objects.count(), 2)
         self.assertEqual(Link.objects.count(), 1)
 
-    def test_receive_changed(self):
-        t = self._set_receive()
+    def test_receive_added(self):
+        self._test_receive_added()
+
+    def _test_receive_changed(self, ttl=0):
+        t = self._set_receive(ttl)
         Node.objects.all().delete()
         data = self._load('static/netjson-1-link.json')
         t.receive(data)
@@ -274,6 +278,9 @@ class TestTopology(TestCase, LoadMixin):
         self.assertEqual(Node.objects.count(), 3)
         self.assertEqual(Link.objects.count(), 2)
         self.assertEqual(link.cost, 1.5)
+
+    def test_receive_changed(self):
+        self._test_receive_changed()
 
     def test_receive_removed(self):
         t = self._set_receive()
@@ -309,3 +316,62 @@ class TestTopology(TestCase, LoadMixin):
         self.assertEqual(Link.objects.count(), 1)
         l.refresh_from_db()
         self.assertEqual(l.status, 'up')
+
+    def test_multiple_receive_added(self):
+        self._test_receive_added(ttl=50)
+
+    def test_multiple_receive_changed(self):
+        self._test_receive_changed(ttl=50)
+
+    def test_multiple_receive_removed(self):
+        t = self._set_receive(ttl=0.1)
+        data = self._load('static/netjson-2-links.json')
+        for sleep_time in [0, 0.2, 0.1]:
+            sleep(sleep_time)
+            t.receive(data)
+            self.assertEqual(Node.objects.count(), 3)
+            self.assertEqual(Link.objects.count(), 2)
+            self.assertEqual(Link.objects.filter(status='down').count(), 0)
+        # receive change
+        data = self._load('static/netjson-1-link.json')
+        t.receive(data)
+        self.assertEqual(Node.objects.count(), 3)
+        self.assertEqual(Link.objects.count(), 2)
+        # ttl has not expired
+        self.assertEqual(Link.objects.filter(status='down').count(), 0)
+        # ttl has now expired for 1 link
+        sleep(0.2)
+        t.receive(data)
+        self.assertEqual(Link.objects.filter(status='down').count(), 1)
+        link = Link.objects.filter(status='down').first()
+        self.assertIn('192.168.0.3', [link.source.netjson_id,
+                                      link.target.netjson_id])
+        self.assertEqual(link.cost, 2.0)
+
+    def test_multiple_receive_split_network(self):
+        def _assert_split_topology(self):
+            self.assertEqual(Node.objects.count(), 4)
+            self.assertEqual(Link.objects.filter(status='up').count(), 2)
+            self.assertEqual(Link.objects.filter(status='down').count(), 0)
+            link = Link.get_from_nodes('192.168.0.1', '192.168.0.2')
+            self.assertIsNotNone(link)
+            self.assertEqual(link.status, 'up')
+            self.assertEqual(link.cost, 1.0)
+            link = Link.get_from_nodes('192.168.0.10', '192.168.0.20')
+            self.assertIsNotNone(link)
+            self.assertEqual(link.status, 'up')
+            self.assertEqual(link.cost, 1.1)
+        Node.objects.all().delete()
+        t = self._set_receive(ttl=0.5)
+        network1 = self._load('static/netjson-1-link.json')
+        network2 = self._load('static/split-network.json')
+        t.receive(network1)
+        t.receive(network2)
+        _assert_split_topology(self)
+        for sleep_time in [0.1, 0.25, 0.3]:
+            sleep(sleep_time)
+            t.receive(network1)
+            _assert_split_topology(self)
+            sleep(sleep_time)
+            t.receive(network2)
+            _assert_split_topology(self)

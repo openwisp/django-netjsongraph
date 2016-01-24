@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 from collections import OrderedDict
 
 from django.db import models
@@ -9,6 +10,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.module_loading import import_string
 from django.utils.functional import cached_property
 from django.utils.crypto import get_random_string
+from django.utils.timezone import now
 
 from rest_framework.utils.encoders import JSONEncoder
 from netdiff import diff, NetJsonParser
@@ -90,10 +92,19 @@ class BaseTopology(TimeStampedEditableModel):
     def parser_class(self):
         return import_string(self.parser)
 
+    @property
+    def link_model(self):
+        return self.link_set.model
+
+    @property
+    def node_model(self):
+        return self.node_set.model
+
     def get_topology_data(self, data=None):
         """
         gets latest topology data
         """
+        # fetch data from URL unless data is passed as argument
         if data is None:
             data = self.url
         latest = self.parser_class(data, timeout=TIMEOUT)
@@ -110,7 +121,12 @@ class BaseTopology(TimeStampedEditableModel):
 
     def diff(self, data=None):
         """ shortcut to netdiff.diff """
-        latest = self.get_topology_data(data)
+        # if we get an instance of ``self.parser_class`` it means
+        # ``self.get_topology_data`` has already been executed by ``receive``
+        if isinstance(data, self.parser_class):
+            latest = data
+        else:
+            latest = self.get_topology_data(data)
         current = NetJsonParser(self.json(dict=True, omit_down=True))
         return diff(current, latest)
 
@@ -149,7 +165,7 @@ class BaseTopology(TimeStampedEditableModel):
         Updates topology
         Links are not deleted straightaway but set as "down"
         """
-        from . import Link, Node  # avoid circular dependency
+        Link, Node = self.link_model, self.node_model
         diff = self.diff(data)
 
         status = {
@@ -170,8 +186,10 @@ class BaseTopology(TimeStampedEditableModel):
 
         for node_dict in added_nodes:
             node = Node.count_address(node_dict['id'])
+            # if node exists skip to next iteration
             if node:  # pragma no cover
                 continue
+            # if node doesn't exist create new
             addresses = '{0};'.format(node_dict['id'])
             addresses += ';'.join(node_dict.get('local_addresses', []))
             properties = node_dict.get('properties', {})
@@ -189,6 +207,7 @@ class BaseTopology(TimeStampedEditableModel):
                 changed = False
                 link = Link.get_from_nodes(link_dict['source'],
                                            link_dict['target'])
+                # if link does not exist create new
                 if not link:
                     source = Node.get_from_address(link_dict['source'])
                     target = Node.get_from_address(link_dict['target'])
@@ -198,9 +217,11 @@ class BaseTopology(TimeStampedEditableModel):
                                 properties=link_dict.get('properties', {}),
                                 topology=self)
                     changed = True
-                if link.status != status[section]:
+                # if status of link is changed
+                if self.link_status_changed(link, status[section]):
                     link.status = status[section]
                     changed = True
+                # if cost of link has changed
                 if link.cost != link_dict['cost']:
                     link.cost = link_dict['cost']
                     changed = True
@@ -210,9 +231,42 @@ class BaseTopology(TimeStampedEditableModel):
                         link.full_clean()
                         link.save()
 
+    def link_status_changed(self, link, status):
+        """
+        determines if link status has changed,
+        takes in consideration also ``strategy`` and ``ttl``
+        """
+        status_changed = link.status != status
+        # if status has not changed return ``False`` immediately
+        if not status_changed:
+            return False
+        # if using fetch strategy or
+        # using receive strategy and link is coming back up or
+        # receive strategy and ``ttl is 0``
+        elif self.strategy == 'fetch' or status == 'up' or self.ttl is 0:
+            return True
+        # if using receive strategy and ttl of link has expired
+        elif link.modified < (now() - timedelta(seconds=self.ttl)):
+            return True
+        # if using receive strategy and ttl of link has not expired
+        return False
+
     def receive(self, data):
         """
-        Receive topology data
+        Receive topology data (RECEIVE strategy)
+        TTL at 0 means:
+          "if a link is missing, mark it as down immediately"
+        TTL > 0 means:
+          "if a link is missing, wait TTL seconds before marking it as down"
         """
-        if self.ttl is 0:
-            self.update(data)
+        if self.ttl > 0:
+            data = self.get_topology_data(data)
+            Link = self.link_model
+            netjson = data.json(dict=True)
+            # update last modified date of all received links
+            for link_dict in netjson['links']:
+                link = Link.get_from_nodes(link_dict['source'],
+                                           link_dict['target'])
+                if link:
+                    link.save()
+        self.update(data)
