@@ -4,7 +4,12 @@ Changelog
 Version 0.2.0 [unreleased]
 --------------------------
 
-WIP
+- `#5 <https://github.com/interop-dev/django-netjsongraph/issues/5>`_:
+  added support for receiving topology from nodes
+- `#6 <https://github.com/interop-dev/django-netjsongraph/issues/6>`_:
+  avoid failures if ``addresses`` field is too long
+- `#7 <https://github.com/interop-dev/django-netjsongraph/issues/7>`_:
+  stricter lookups in ``get_from_address``, ``get_from_nodes``, ``count_address``
 
 Version 0.1.3 [2016-01-09]
 --------------------------
