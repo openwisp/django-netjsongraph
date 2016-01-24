@@ -22,6 +22,15 @@ class TestTopology(TestCase, LoadMixin):
     def _get_nodes(self):
         return Node.objects.all()
 
+    def _set_receive(self, ttl=0):
+        t = Topology.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.strategy = 'receive'
+        t.key = 'test'
+        t.ttl = ttl
+        t.save()
+        return t
+
     def test_str(self):
         t = Topology.objects.first()
         self.assertIsInstance(str(t), str)
@@ -232,12 +241,7 @@ class TestTopology(TestCase, LoadMixin):
             t.full_clean()
 
     def test_receive_added(self):
-        t = Topology.objects.first()
-        t.parser = 'netdiff.NetJsonParser'
-        t.strategy = 'receive'
-        t.key = 'test'
-        t.ttl = 0
-        t.save()
+        t = self._set_receive()
         Node.objects.all().delete()
         data = self._load('static/netjson-1-link.json')
         t.receive(data)
@@ -258,12 +262,7 @@ class TestTopology(TestCase, LoadMixin):
         self.assertEqual(Link.objects.count(), 1)
 
     def test_receive_changed(self):
-        t = Topology.objects.first()
-        t.parser = 'netdiff.NetJsonParser'
-        t.strategy = 'receive'
-        t.key = 'test'
-        t.ttl = 0
-        t.save()
+        t = self._set_receive()
         Node.objects.all().delete()
         data = self._load('static/netjson-1-link.json')
         t.receive(data)
@@ -277,12 +276,7 @@ class TestTopology(TestCase, LoadMixin):
         self.assertEqual(link.cost, 1.5)
 
     def test_receive_removed(self):
-        t = Topology.objects.first()
-        t.parser = 'netdiff.NetJsonParser'
-        t.strategy = 'receive'
-        t.key = 'test'
-        t.ttl = 0
-        t.save()
+        t = self._set_receive()
         Node.objects.all().delete()
         data = self._load('static/netjson-2-links.json')
         t.receive(data)
@@ -300,12 +294,7 @@ class TestTopology(TestCase, LoadMixin):
         self.assertEqual(link.cost, 2.0)
 
     def test_receive_status_existing_link(self):
-        t = Topology.objects.first()
-        t.parser = 'netdiff.NetJsonParser'
-        t.strategy = 'receive'
-        t.key = 'test'
-        t.ttl = 0
-        t.save()
+        t = self._set_receive()
         l = Link(source_id='d083b494-8e16-4054-9537-fb9eba914861',
                  target_id='d083b494-8e16-4054-9537-fb9eba914862',
                  cost=1,
