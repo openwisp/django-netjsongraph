@@ -19,7 +19,7 @@ class BaseNode(TimeStampedEditableModel):
     topology = models.ForeignKey('django_netjsongraph.Topology')
     label = models.CharField(max_length=64, blank=True)
     # netjson ID and local_addresses
-    addresses = models.CharField(max_length=255, db_index=True)
+    addresses = models.CharField(max_length=510, db_index=True)
     properties = JSONField(default=dict,
                            blank=True,
                            load_kwargs={'object_pairs_hook': OrderedDict},

@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='topology',
             name='strategy',
-            field=models.CharField(choices=[(b'fetch', 'FETCH'), (b'receive', 'RECEIVE')], db_index=True, default=b'fetch', max_length=16, verbose_name='strategy'),
+            field=models.CharField(choices=[('fetch', 'FETCH'), ('receive', 'RECEIVE')], db_index=True, default='fetch', max_length=16, verbose_name='strategy'),
         ),
         migrations.AddField(
             model_name='topology',
