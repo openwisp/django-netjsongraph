@@ -12,7 +12,7 @@ class TestRestFramework(TestCase, UnpublishMixin, LoadMixin):
 
     list_url = '/api/topology/'
     detail_url = '/api/topology/a083b494-8e16-4054-9537-fb9eba914861/'
-    receive_url = '/api/receive/a083b494-8e16-4054-9537-fb9eba914861?key=test'
+    receive_url = '/api/receive/a083b494-8e16-4054-9537-fb9eba914861/?key=test'
 
     def _set_receive(self):
         t = Topology.objects.first()
