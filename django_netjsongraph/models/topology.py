@@ -206,6 +206,7 @@ class BaseTopology(TimeStampedEditableModel):
             node = Node(addresses=addresses,
                         properties=properties,
                         topology=self)
+            node.truncate_addresses()
             node.full_clean()
             node.save()
 

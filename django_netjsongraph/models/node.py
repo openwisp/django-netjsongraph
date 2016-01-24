@@ -51,6 +51,19 @@ class BaseNode(TimeStampedEditableModel):
             self.addresses += '; '
         self.addresses = self.addresses[0:-1]
 
+    def truncate_addresses(self):
+        """
+        ensures "addresses" field is not too long
+        """
+        max_length = self._meta.get_field('addresses').max_length
+        if len(self.addresses) <= max_length:
+            return
+        addresses = self.address_list
+        # +1 stands for the character added in self._format_address()
+        while len('; '.join(addresses))+1 > max_length:
+            addresses.pop()
+        self.addresses = '; '.join(addresses)
+
     @cached_property
     def address_list(self):
         return self.addresses.replace(' ', '')[0:-1].split(';')

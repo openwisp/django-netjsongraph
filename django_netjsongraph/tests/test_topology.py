@@ -375,3 +375,13 @@ class TestTopology(TestCase, LoadMixin):
             sleep(sleep_time)
             t.receive(network2)
             _assert_split_topology(self)
+
+    def test_very_long_addresses(self):
+        """
+        see https://github.com/interop-dev/django-netjsongraph/issues/6
+        """
+        t = self._set_receive()
+        data = self._load('static/very-long-addresses.json')
+        t.receive(data)
+        n = Node.get_from_address('2001:4e12:452a:1:172::10')
+        self.assertEqual(len(n.addresses), 485)
