@@ -23,12 +23,12 @@ class TestTopology(TestCase, LoadMixin):
     def _get_nodes(self):
         return Node.objects.all()
 
-    def _set_receive(self, ttl=0):
+    def _set_receive(self, expiration_time=0):
         t = Topology.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.strategy = 'receive'
         t.key = 'test'
-        t.ttl = ttl
+        t.expiration_time = expiration_time
         t.save()
         return t
 
@@ -241,9 +241,9 @@ class TestTopology(TestCase, LoadMixin):
         with self.assertRaises(ValidationError):
             t.full_clean()
 
-    def _test_receive_added(self, ttl=0):
+    def _test_receive_added(self, expiration_time=0):
         Node.objects.all().delete()
-        t = self._set_receive(ttl)
+        t = self._set_receive(expiration_time)
         data = self._load('static/netjson-1-link.json')
         t.receive(data)
         self.assertEqual(Node.objects.count(), 2)
@@ -265,8 +265,8 @@ class TestTopology(TestCase, LoadMixin):
     def test_receive_added(self):
         self._test_receive_added()
 
-    def _test_receive_changed(self, ttl=0):
-        t = self._set_receive(ttl)
+    def _test_receive_changed(self, expiration_time=0):
+        t = self._set_receive(expiration_time)
         Node.objects.all().delete()
         data = self._load('static/netjson-1-link.json')
         t.receive(data)
@@ -318,13 +318,13 @@ class TestTopology(TestCase, LoadMixin):
         self.assertEqual(l.status, 'up')
 
     def test_multiple_receive_added(self):
-        self._test_receive_added(ttl=50)
+        self._test_receive_added(expiration_time=50)
 
     def test_multiple_receive_changed(self):
-        self._test_receive_changed(ttl=50)
+        self._test_receive_changed(expiration_time=50)
 
     def test_multiple_receive_removed(self):
-        t = self._set_receive(ttl=0.1)
+        t = self._set_receive(expiration_time=0.1)
         data = self._load('static/netjson-2-links.json')
         for sleep_time in [0, 0.2, 0.1]:
             sleep(sleep_time)
@@ -337,9 +337,9 @@ class TestTopology(TestCase, LoadMixin):
         t.receive(data)
         self.assertEqual(Node.objects.count(), 3)
         self.assertEqual(Link.objects.count(), 2)
-        # ttl has not expired
+        # expiration_time has not expired
         self.assertEqual(Link.objects.filter(status='down').count(), 0)
-        # ttl has now expired for 1 link
+        # expiration_time has now expired for 1 link
         sleep(0.2)
         t.receive(data)
         self.assertEqual(Link.objects.filter(status='down').count(), 1)
@@ -362,7 +362,7 @@ class TestTopology(TestCase, LoadMixin):
             self.assertEqual(link.status, 'up')
             self.assertEqual(link.cost, 1.1)
         Node.objects.all().delete()
-        t = self._set_receive(ttl=0.5)
+        t = self._set_receive(expiration_time=0.5)
         network1 = self._load('static/netjson-1-link.json')
         network2 = self._load('static/split-network.json')
         t.receive(network1)

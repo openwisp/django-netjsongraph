@@ -19,7 +19,7 @@ class TestRestFramework(TestCase, UnpublishMixin, LoadMixin):
         t.parser = 'netdiff.NetJsonParser'
         t.strategy = 'receive'
         t.key = 'test'
-        t.ttl = 0
+        t.expiration_time = 0
         t.save()
 
     def test_list(self):

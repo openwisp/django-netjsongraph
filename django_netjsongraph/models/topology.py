@@ -42,25 +42,35 @@ class BaseTopology(TimeStampedEditableModel):
                                 choices=STRATEGIES,
                                 default='fetch',
                                 db_index=True)
-    url = models.URLField(_('url'),
-                          blank=True,
-                          help_text=_('Topology data will be fetched from this URL'
-                                      ' (FETCH strategy)'))
-    key = models.CharField(_('key'),
-                           blank=True,
-                           max_length=64,
-                           default=get_random_key,
-                           help_text=_('key needed to update topology from nodes'
-                                       ' (RECEIVE strategy)'))
-    ttl = models.PositiveIntegerField(_('TTL'),
-                                      default=0,
-                                      help_text=_('"Time To Live" in seconds: 0 will immediately mark missing links as down; '
-                                                  'a value higher than 0 will delay marking missing links as down until the '
-                                                  '"last modified" field is older than TTL  (RECEIVE strategy)'))
-    published = models.BooleanField(_('published'),
-                                    default=True,
-                                    help_text=_('Unpublished topologies won\'t be updated or '
-                                                'shown in the visualizer'))
+    # fetch strategy
+    url = models.URLField(
+        _('url'),
+        blank=True,
+        help_text=_('Topology data will be fetched from this URL'
+                    ' (FETCH strategy)')
+    )
+    # receive strategy
+    key = models.CharField(
+        _('key'),
+        blank=True,
+        max_length=64,
+        default=get_random_key,
+        help_text=_('key needed to update topology from nodes ')
+    )
+    # receive strategy
+    expiration_time = models.PositiveIntegerField(
+        _('expiration time'),
+        default=0,
+        help_text=_('"Expiration Time" in seconds: setting this to 0 will immediately mark missing links as down; '
+                    'a value higher than 0 will delay marking missing links as down until the '
+                    '"modified" field of a link is older than "Expiration Time"')
+    )
+    published = models.BooleanField(
+        _('published'),
+        default=True,
+        help_text=_('Unpublished topologies won\'t be updated or '
+                    'shown in the visualizer')
+    )
 
     # the following fields will be filled automatically
     protocol = models.CharField(_('protocol'), max_length=64, blank=True)
@@ -234,7 +244,7 @@ class BaseTopology(TimeStampedEditableModel):
     def link_status_changed(self, link, status):
         """
         determines if link status has changed,
-        takes in consideration also ``strategy`` and ``ttl``
+        takes in consideration also ``strategy`` and ``expiration_time``
         """
         status_changed = link.status != status
         # if status has not changed return ``False`` immediately
@@ -242,24 +252,24 @@ class BaseTopology(TimeStampedEditableModel):
             return False
         # if using fetch strategy or
         # using receive strategy and link is coming back up or
-        # receive strategy and ``ttl is 0``
-        elif self.strategy == 'fetch' or status == 'up' or self.ttl is 0:
+        # receive strategy and ``expiration_time is 0``
+        elif self.strategy == 'fetch' or status == 'up' or self.expiration_time is 0:
             return True
-        # if using receive strategy and ttl of link has expired
-        elif link.modified < (now() - timedelta(seconds=self.ttl)):
+        # if using receive strategy and expiration_time of link has expired
+        elif link.modified < (now() - timedelta(seconds=self.expiration_time)):
             return True
-        # if using receive strategy and ttl of link has not expired
+        # if using receive strategy and expiration_time of link has not expired
         return False
 
     def receive(self, data):
         """
         Receive topology data (RECEIVE strategy)
-        TTL at 0 means:
+        expiration_time at 0 means:
           "if a link is missing, mark it as down immediately"
-        TTL > 0 means:
-          "if a link is missing, wait TTL seconds before marking it as down"
+        expiration_time > 0 means:
+          "if a link is missing, wait expiration_time seconds before marking it as down"
         """
-        if self.ttl > 0:
+        if self.expiration_time > 0:
             data = self.get_topology_data(data)
             Link = self.link_model
             netjson = data.json(dict=True)

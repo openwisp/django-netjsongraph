@@ -9,14 +9,10 @@ from .contextmanagers import log_failure
 
 
 class TopologyAdmin(TimeStampedEditableAdmin):
-    list_display = ('label', 'parser', 'link_url', 'published', 'created', 'modified')
+    list_display = ('label', 'parser', 'strategy', 'published', 'created', 'modified')
     readonly_fields = ['protocol', 'version', 'revision', 'metric']
-    list_filter = ('parser',)
+    list_filter = ('parser', 'strategy')
     actions = ['update_selected', 'unpublish_selected', 'publish_selected']
-
-    def link_url(self, obj):
-        return '<a href="{0}" target="_blank">{0}</a>'.format(obj.url)
-    link_url.allow_tags = True
 
     def get_actions(self, request):
         """ move delete action to last position """
