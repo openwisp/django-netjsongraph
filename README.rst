@@ -190,19 +190,54 @@ topology even if the network has been split in several parts.
 Settings
 --------
 
-+----------------------------------+-------------------------------------+---------------------------------------------------------------------------------------------------+
-| Setting                          | Default value                       | Description                                                                                       |
-+==================================+=====================================+===================================================================================================+
-| ``NETJSONGRAPH_PARSERS``         | ``[]``                              | List with additional custom `netdiff parsers <https://github.com/ninuxorg/netdiff#parsers>`_      |
-+----------------------------------+-------------------------------------+---------------------------------------------------------------------------------------------------+
-| ``NETJSONGRAPH_SIGNALS``         | ``None``                            | String representing python module to import on initialization.                                    |
-|                                  |                                     | Useful for loading django signals or to define custom behaviour.                                  |
-+----------------------------------+-------------------------------------+---------------------------------------------------------------------------------------------------+
-| ``NETJSONGRAPH_TIMEOUT``         | ``8``                               | Timeout when requesting topology URLs                                                             |
-+----------------------------------+-------------------------------------+---------------------------------------------------------------------------------------------------+
-| ``NETJSONGRAPH_LINK_EXPIRATION`` | ``60``                              | If a link is down for more days than this number, it will be deleted by the ``update_topology``   |
-|                                  |                                     | management command. Setting this to ``False`` will disable this feature.                          |
-+----------------------------------+-------------------------------------+---------------------------------------------------------------------------------------------------+
+``NETJSONGRAPH_PARSERS``
+^^^^^^^^^^^^^^^^^^^^^^^^
+
++--------------+-------------+
+| **type**:    | ``list``    |
++--------------+-------------+
+| **default**: | ``[]``      |
++--------------+-------------+
+
+Additional custom `netdiff parsers <https://github.com/ninuxorg/netdiff#parsers>`_.
+
+``NETJSONGRAPH_SIGNALS``
+^^^^^^^^^^^^^^^^^^^^^^^^
+
++--------------+-------------+
+| **type**:    | ``str``     |
++--------------+-------------+
+| **default**: | ``None``    |
++--------------+-------------+
+
+String representing python module to import on initialization.
+
+Useful for loading django signals or to define custom behaviour.
+
+``NETJSONGRAPH_TIMEOUT``
+^^^^^^^^^^^^^^^^^^^^^^^^
+
++--------------+-------------+
+| **type**:    | ``int``     |
++--------------+-------------+
+| **default**: | ``8``       |
++--------------+-------------+
+
+Timeout when fetching topology URLs.
+
+``NETJSONGRAPH_LINK_EXPIRATION``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
++--------------+-------------+
+| **type**:    | ``int``     |
++--------------+-------------+
+| **default**: | ``60``      |
++--------------+-------------+
+
+If a link is down for more days than this number, it will be deleted by the
+``update_topology`` management command.
+
+Setting this to ``False`` will disable this feature.
 
 Installing for development
 --------------------------
