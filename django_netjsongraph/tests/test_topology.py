@@ -349,15 +349,15 @@ class TestTopology(TestCase, LoadMixin):
         self.assertEqual(link.cost, 2.0)
 
     def test_multiple_receive_split_network(self):
-        def _assert_split_topology(self):
+        def _assert_split_topology(self, topology):
             self.assertEqual(Node.objects.count(), 4)
             self.assertEqual(Link.objects.filter(status='up').count(), 2)
             self.assertEqual(Link.objects.filter(status='down').count(), 0)
-            link = Link.get_from_nodes('192.168.0.1', '192.168.0.2')
+            link = Link.get_from_nodes('192.168.0.1', '192.168.0.2', topology)
             self.assertIsNotNone(link)
             self.assertEqual(link.status, 'up')
             self.assertEqual(link.cost, 1.0)
-            link = Link.get_from_nodes('192.168.0.10', '192.168.0.20')
+            link = Link.get_from_nodes('192.168.0.10', '192.168.0.20', topology)
             self.assertIsNotNone(link)
             self.assertEqual(link.status, 'up')
             self.assertEqual(link.cost, 1.1)
@@ -367,14 +367,14 @@ class TestTopology(TestCase, LoadMixin):
         network2 = self._load('static/split-network.json')
         t.receive(network1)
         t.receive(network2)
-        _assert_split_topology(self)
+        _assert_split_topology(self, t)
         for sleep_time in [0.1, 0.25, 0.3]:
             sleep(sleep_time)
             t.receive(network1)
-            _assert_split_topology(self)
+            _assert_split_topology(self, t)
             sleep(sleep_time)
             t.receive(network2)
-            _assert_split_topology(self)
+            _assert_split_topology(self, t)
 
     def test_very_long_addresses(self):
         """
@@ -383,5 +383,5 @@ class TestTopology(TestCase, LoadMixin):
         t = self._set_receive()
         data = self._load('static/very-long-addresses.json')
         t.receive(data)
-        n = Node.get_from_address('2001:4e12:452a:1:172::10')
+        n = Node.get_from_address('2001:4e12:452a:1:172::10', t)
         self.assertEqual(len(n.addresses), 485)

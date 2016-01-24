@@ -71,13 +71,14 @@ class BaseLink(TimeStampedEditableModel):
         return json.dumps(netjson, cls=JSONEncoder, **kwargs)
 
     @classmethod
-    def get_from_nodes(cls, source, target):
+    def get_from_nodes(cls, source, target, topology):
         """
         Find link between source and target,
         (or vice versa, order is irrelevant).
         Source and target nodes must already exist.
         :param source: string
         :param target: string
+        :param topology: Topology instance
         :returns: Link object or None
         """
         source = '{0};'.format(source)
@@ -86,4 +87,4 @@ class BaseLink(TimeStampedEditableModel):
                target__addresses__contains=target) |
              Q(source__addresses__contains=target,
                target__addresses__contains=source))
-        return cls.objects.filter(q).first()
+        return cls.objects.filter(q).filter(topology=topology).first()

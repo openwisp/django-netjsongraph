@@ -100,21 +100,25 @@ class BaseNode(TimeStampedEditableModel):
         return json.dumps(netjson, cls=JSONEncoder, **kwargs)
 
     @classmethod
-    def get_from_address(cls, address):
+    def get_from_address(cls, address, topology):
         """
-        Find node from one of its addresses.
+        Find node from one of its addresses and its topology.
         :param address: string
+        :param topology: Topology instance
         :returns: Node object or None
         """
         address = '{0};'.format(address)
-        return cls.objects.filter(addresses__contains=address).first()
+        return cls.objects.filter(topology=topology,
+                                  addresses__contains=address).first()
 
     @classmethod
-    def count_address(cls, address):
+    def count_address(cls, address, topology):
         """
-        Count nodes with the specified address.
+        Count nodes with the specified address and topology.
         :param address: string
+        :param topology: Topology instance
         :returns: int
         """
         address = '{0};'.format(address)
-        return cls.objects.filter(addresses__contains=address).count()
+        return cls.objects.filter(topology=topology,
+                                  addresses__contains=address).count()

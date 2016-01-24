@@ -195,7 +195,7 @@ class BaseTopology(TimeStampedEditableModel):
             added_nodes = []
 
         for node_dict in added_nodes:
-            node = Node.count_address(node_dict['id'])
+            node = Node.count_address(node_dict['id'], topology=self)
             # if node exists skip to next iteration
             if node:  # pragma no cover
                 continue
@@ -217,11 +217,12 @@ class BaseTopology(TimeStampedEditableModel):
             for link_dict in graph['links']:
                 changed = False
                 link = Link.get_from_nodes(link_dict['source'],
-                                           link_dict['target'])
+                                           link_dict['target'],
+                                           topology=self)
                 # if link does not exist create new
                 if not link:
-                    source = Node.get_from_address(link_dict['source'])
-                    target = Node.get_from_address(link_dict['target'])
+                    source = Node.get_from_address(link_dict['source'], self)
+                    target = Node.get_from_address(link_dict['target'], self)
                     link = Link(source=source,
                                 target=target,
                                 cost=link_dict['cost'],
@@ -277,7 +278,8 @@ class BaseTopology(TimeStampedEditableModel):
             # update last modified date of all received links
             for link_dict in netjson['links']:
                 link = Link.get_from_nodes(link_dict['source'],
-                                           link_dict['target'])
+                                           link_dict['target'],
+                                           topology=self)
                 if link:
                     link.save()
         self.update(data)
