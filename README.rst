@@ -119,6 +119,10 @@ according to your needs):
         url(r'', include(netjsongraph_visualizer)),
     ]
 
+Create database tables::
+
+    ./manage.py migrate
+
 Management Commands
 -------------------
 
