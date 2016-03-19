@@ -9,7 +9,7 @@
         <div>
             <p>
                 <a href="{% url 'admin:django_netjsongraph_link_change' link.pk %}">
-                    {% if link.source_id == object_id %}
+                    {% if link.source_id|lower == object_id|lower %}
                         {{ link.target }}
                     {% else %}
                         {{ link.source }}
