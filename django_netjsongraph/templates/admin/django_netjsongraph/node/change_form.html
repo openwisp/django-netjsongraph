@@ -16,8 +16,15 @@
                     {% endif %}
                 </a>
             </p>
-            <p><label>{% trans 'status' %}</label>: {{ link.status }}</p>
-            <p><label>{% trans 'cost' %}</label>: {{ link.cost }}</p>
+            <p>
+                <label>{% trans 'status' %}</label>:
+                <span style="font-weight:bold; color:{% if link.status == 'up' %}green{% else %}red{% endif %}">
+                    {{ link.status }}
+                </span>
+            </p>
+            <p>
+                <label>{% trans 'cost' %}</label>: {{ link.cost }}
+            </p>
         </div>
     </div>
     {% endfor %}
