@@ -6,7 +6,7 @@ Version 0.2.1 [unreleased]
 
 WIP
 
-Version 0.2.1 [unreleased]
+Version 0.2.1 [2016-05-20]
 --------------------------
 
 - `f3fa59f <https://github.com/interop-dev/django-netjsongraph/commit/f3fa59f>`_:
