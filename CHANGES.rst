@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Version 0.2.1 [unreleased]
+Version 0.2.2 [unreleased]
 --------------------------
 
 WIP
@@ -13,6 +13,7 @@ Version 0.2.1 [2016-05-20]
   [admin] fixed name mismatch in "Links to other nodes"
 - `#10 <https://github.com/interop-dev/django-netjsongraph/issues/10>`_:
   fixed visualizer: removed accidental ignore of d3.js
+
 Version 0.2.0 [2016-01-24]
 --------------------------
 
