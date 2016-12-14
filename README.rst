@@ -14,9 +14,6 @@ django-netjsongraph
 .. image:: https://badge.fury.io/py/django-netjsongraph.svg
    :target: http://badge.fury.io/py/django-netjsongraph
 
-.. image:: https://img.shields.io/pypi/dm/django-netjsongraph.svg
-   :target: https://pypi.python.org/pypi/django-netjsongraph
-
 ------------
 
 Reusable django app for collecting and visualizing network topology.
