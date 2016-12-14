@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Version 0.2.2 [unreleased]
+Version 0.2.2 [2016-12-14]
 --------------------------
 
 - `#16 <https://github.com/interop-dev/django-netjsongraph/issues/16>`_:
