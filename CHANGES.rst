@@ -4,7 +4,10 @@ Changelog
 Version 0.2.2 [unreleased]
 --------------------------
 
-WIP
+- `#16 <https://github.com/interop-dev/django-netjsongraph/issues/16>`_:
+  added support for django 1.10.x
+- `9ce1b15 <https://github.com/interop-dev/django-netjsongraph/commit/9ce1b15>`_:
+  [JS] Updated d3 to 3.5.17
 
 Version 0.2.1 [2016-05-20]
 --------------------------
