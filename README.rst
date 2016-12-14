@@ -318,3 +318,7 @@ License
 -------
 
 See `LICENSE <https://github.com/interop-dev/django-netjsongraph/blob/master/LICENSE>`_.
+
+This projects bundles third-party javascript libraries in its source code:
+
+- `D3.js (BSD-3-Clause) <https://github.com/interop-dev/django-netjsongraph/blob/master/django_netjsongraph/static/netjsongraph/lib/d3.min.js>`_
