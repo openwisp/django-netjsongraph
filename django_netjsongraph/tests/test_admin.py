@@ -2,6 +2,7 @@ import responses
 
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.contrib.auth import get_user_model
 
 from ..models import Topology, Node, Link
 from .utils import LoadMixin
@@ -15,7 +16,8 @@ class TestAdmin(TestCase, LoadMixin):
     ]
 
     def setUp(self):
-        self.client.login(username='admin', password='tester')
+        user_model = get_user_model()
+        self.client.force_login(user_model.objects.get(username='admin'))
         self.changelist_path = reverse('admin:django_netjsongraph_topology_changelist')
 
     def test_unpublish_selected(self):
