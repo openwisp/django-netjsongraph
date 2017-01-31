@@ -1,14 +1,14 @@
 django-netjsongraph
 ===================
 
-.. image:: https://travis-ci.org/interop-dev/django-netjsongraph.svg
-   :target: https://travis-ci.org/interop-dev/django-netjsongraph
+.. image:: https://travis-ci.org/netjson/django-netjsongraph.svg
+   :target: https://travis-ci.org/netjson/django-netjsongraph
 
-.. image:: https://coveralls.io/repos/interop-dev/django-netjsongraph/badge.svg
-  :target: https://coveralls.io/r/interop-dev/django-netjsongraph
+.. image:: https://coveralls.io/repos/netjson/django-netjsongraph/badge.svg
+  :target: https://coveralls.io/r/netjson/django-netjsongraph
 
-.. image:: https://requires.io/github/interop-dev/django-netjsongraph/requirements.svg?branch=master
-   :target: https://requires.io/github/interop-dev/django-netjsongraph/requirements/?branch=master
+.. image:: https://requires.io/github/netjson/django-netjsongraph/requirements.svg?branch=master
+   :target: https://requires.io/github/netjson/django-netjsongraph/requirements/?branch=master
    :alt: Requirements Status
 
 .. image:: https://badge.fury.io/py/django-netjsongraph.svg
@@ -18,9 +18,9 @@ django-netjsongraph
 
 Reusable django app for collecting and visualizing network topology.
 
-.. image:: https://raw.githubusercontent.com/interop-dev/django-netjsongraph/master/docs/images/visualizer.png
+.. image:: https://raw.githubusercontent.com/netjson/django-netjsongraph/master/docs/images/visualizer.png
 
-.. image:: https://raw.githubusercontent.com/interop-dev/django-netjsongraph/master/docs/images/admin.png
+.. image:: https://raw.githubusercontent.com/netjson/django-netjsongraph/master/docs/images/admin.png
 
 .. contents:: **Table of Contents**:
    :backlinks: none
@@ -38,7 +38,7 @@ Current features
     - BMX6 (q6m)
     - CNML 1.0
     - additional formats can be added by `specifying custom parsers <#netjsongraph-parsers>`_
-* **network topology visualizer** based on `netjsongraph.js <https://github.com/interop-dev/netjsongraph.js>`_
+* **network topology visualizer** based on `netjsongraph.js <https://github.com/netjson/netjsongraph.js>`_
 * **simple HTTP API** that exposes data in `NetJSON <http://netjson.org>`__ *NetworkGraph* format
 * **admin interface** that allows to easily manage, audit and debug topologies and their relative data (nodes, links)
 * **receive topology** from multiple nodes
@@ -71,13 +71,13 @@ Install tarball:
 
 .. code-block:: shell
 
-    pip install https://github.com/interop-dev/django-netjsongraph/tarball/master
+    pip install https://github.com/netjson/django-netjsongraph/tarball/master
 
 Alternatively you can install via pip using git:
 
 .. code-block:: shell
 
-    pip install -e git+git://github.com/interop-dev/django-netjsongraph#egg=django-netjsongraph
+    pip install -e git+git://github.com/netjson/django-netjsongraph#egg=django-netjsongraph
 
 If you want to contribute, install your cloned fork:
 
@@ -144,7 +144,7 @@ Logging
 The ``update_topology`` management command will automatically try to log errors.
 
 For a good default ``LOGGING`` configuration refer to the `test settings
-<https://github.com/interop-dev/django-netjsongraph/blob/master/tests/settings.py#L66>`_.
+<https://github.com/netjson/django-netjsongraph/blob/master/tests/settings.py#L66>`_.
 
 Strategies
 ----------
@@ -295,7 +295,7 @@ avoid misunderstandings.
 1. Ensure your changes meet the `Project Goals`_
 2. If you found a bug please send a failing test with a patch
 3. If you want to add a new feature, announce your intentions in the
-   `issue tracker <https://github.com/interop-dev/django-netjsongraph/issues>`_
+   `issue tracker <https://github.com/netjson/django-netjsongraph/issues>`_
 4. Fork this repo and install it by following the instructions in
    `Installing for development`_
 5. Follow `PEP8, Style Guide for Python Code`_
@@ -312,13 +312,13 @@ avoid misunderstandings.
 Changelog
 ---------
 
-See `CHANGES <https://github.com/interop-dev/django-netjsongraph/blob/master/CHANGES.rst>`_.
+See `CHANGES <https://github.com/netjson/django-netjsongraph/blob/master/CHANGES.rst>`_.
 
 License
 -------
 
-See `LICENSE <https://github.com/interop-dev/django-netjsongraph/blob/master/LICENSE>`_.
+See `LICENSE <https://github.com/netjson/django-netjsongraph/blob/master/LICENSE>`_.
 
 This projects bundles third-party javascript libraries in its source code:
 
-- `D3.js (BSD-3-Clause) <https://github.com/interop-dev/django-netjsongraph/blob/master/django_netjsongraph/static/netjsongraph/lib/d3.min.js>`_
+- `D3.js (BSD-3-Clause) <https://github.com/netjson/django-netjsongraph/blob/master/django_netjsongraph/static/netjsongraph/lib/d3.min.js>`_
