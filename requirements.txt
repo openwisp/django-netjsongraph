@@ -1,5 +1,5 @@
 django>=1.9,<1.11
-djangorestframework>=3.3,<3.6
+djangorestframework>=3.3,<3.7
 django-model-utils
 netdiff>=0.4.7,<=5.0
 jsonfield
