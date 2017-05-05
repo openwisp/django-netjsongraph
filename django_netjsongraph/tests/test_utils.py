@@ -1,15 +1,15 @@
 import json
-import responses
 from datetime import timedelta
 
-from django.test import TestCase, override_settings
+import responses
 from django.core.management import call_command
+from django.test import TestCase
 from django.utils.timezone import now
 
-from ..models import Topology, Link, Node
-from ..utils import update_topology
 from .. import settings
-from .utils import StringIO, LoadMixin, redirect_stdout
+from ..models import Link, Node, Topology
+from ..utils import update_topology
+from .utils import LoadMixin, StringIO, redirect_stdout
 
 
 class TestUtils(TestCase, LoadMixin):

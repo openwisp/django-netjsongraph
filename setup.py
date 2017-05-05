@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-import sys
 import os
-from setuptools import setup, find_packages
+import sys
+
 from django_netjsongraph import get_version
+from setuptools import find_packages, setup
 
 
 def get_install_requires():

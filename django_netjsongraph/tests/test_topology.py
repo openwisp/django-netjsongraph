@@ -1,12 +1,12 @@
-import six
-import responses
 from time import sleep
 
-from django.test import TestCase
+import responses
+import six
 from django.core.exceptions import ValidationError
+from django.test import TestCase
 from netdiff import OlsrParser
 
-from ..models import Topology, Link, Node
+from ..models import Link, Node, Topology
 from .utils import LoadMixin
 
 

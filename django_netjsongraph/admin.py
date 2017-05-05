@@ -1,11 +1,10 @@
+from django.contrib import admin, messages
 from django.db.models import Q
-from django.contrib import admin
-from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Topology, Node, Link
 from .base import TimeStampedEditableAdmin
 from .contextmanagers import log_failure
+from .models import Link, Node, Topology
 
 
 class TopologyAdmin(TimeStampedEditableAdmin):

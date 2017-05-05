@@ -1,7 +1,7 @@
 from django.test import TestCase
-from ..models import Topology, Link, Node
 
-from .utils import UnpublishMixin, LoadMixin
+from ..models import Link, Node, Topology
+from .utils import LoadMixin, UnpublishMixin
 
 
 class TestRestFramework(TestCase, UnpublishMixin, LoadMixin):
