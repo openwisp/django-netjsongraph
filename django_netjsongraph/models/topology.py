@@ -1,23 +1,22 @@
 import json
-from datetime import timedelta
 from collections import OrderedDict
+from datetime import timedelta
 
-from django.db import models
-from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.module_loading import import_string
-from django.utils.functional import cached_property
+from django.core.urlresolvers import reverse
+from django.db import models
 from django.utils.crypto import get_random_string
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.functional import cached_property
+from django.utils.module_loading import import_string
 from django.utils.timezone import now
-
+from django.utils.translation import ugettext_lazy as _
+from netdiff import NetJsonParser, diff
 from rest_framework.utils.encoders import JSONEncoder
-from netdiff import diff, NetJsonParser
 
 from ..base import TimeStampedEditableModel
-from ..settings import PARSERS, TIMEOUT
 from ..contextmanagers import log_failure
+from ..settings import PARSERS, TIMEOUT
 
 
 def get_random_key():
@@ -61,8 +60,8 @@ class BaseTopology(TimeStampedEditableModel):
     expiration_time = models.PositiveIntegerField(
         _('expiration time'),
         default=0,
-        help_text=_('"Expiration Time" in seconds: setting this to 0 will immediately mark missing links as down; '
-                    'a value higher than 0 will delay marking missing links as down until the '
+        help_text=_('"Expiration Time" in seconds: setting this to 0 will immediately mark missing links '
+                    'as down; a value higher than 0 will delay marking missing links as down until the '
                     '"modified" field of a link is older than "Expiration Time"')
     )
     published = models.BooleanField(

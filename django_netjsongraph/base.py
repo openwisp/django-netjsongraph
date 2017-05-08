@@ -1,9 +1,8 @@
 import uuid
 
+from django.contrib.admin import ModelAdmin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.admin import ModelAdmin
-
 from model_utils.fields import AutoCreatedField, AutoLastModifiedField
 
 

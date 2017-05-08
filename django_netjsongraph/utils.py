@@ -1,14 +1,14 @@
 import sys
-
 from datetime import timedelta
-from django.utils.timezone import now
-from django.shortcuts import get_object_or_404
-from django.http import Http404
-from django.core.exceptions import ValidationError
 
-from .contextmanagers import log_failure
-from .models import Topology, Link
+from django.core.exceptions import ValidationError
+from django.http import Http404
+from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
+
 from . import settings
+from .contextmanagers import log_failure
+from .models import Link, Topology
 
 
 def print_info(message):  # pragma no cover

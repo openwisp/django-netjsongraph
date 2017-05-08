@@ -1,8 +1,9 @@
+import logging
 import os
 import sys
-import logging
-from django.test.runner import DiscoverRunner
 from contextlib import contextmanager
+
+from django.test.runner import DiscoverRunner
 
 try:
     from cStringIO import StringIO  # noqa

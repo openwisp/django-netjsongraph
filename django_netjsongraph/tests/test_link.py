@@ -1,6 +1,6 @@
 import six
-from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django.test import TestCase
 
 from ..models import Link, Node, Topology
 

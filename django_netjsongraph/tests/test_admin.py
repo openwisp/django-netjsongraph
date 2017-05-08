@@ -1,10 +1,9 @@
 import responses
-
-from django.test import TestCase
-from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
+from django.test import TestCase
 
-from ..models import Topology, Node, Link
+from ..models import Link, Node, Topology
 from .utils import LoadMixin
 
 

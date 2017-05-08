@@ -1,14 +1,13 @@
+from django.utils.translation import ugettext_lazy as _
+from netdiff.exceptions import NetdiffException
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from django.utils.translation import ugettext_lazy as _
-from netdiff.exceptions import NetdiffException
-
 from ..models import Topology
 from ..utils import get_topology_or_404
-from .serializers import NetworkGraphSerializer
 from .parsers import TextParser
+from .serializers import NetworkGraphSerializer
 
 
 class NetworkCollectionView(generics.ListAPIView):
@@ -18,6 +17,7 @@ class NetworkCollectionView(generics.ListAPIView):
     """
     queryset = Topology.objects.filter(published=True)
     serializer_class = NetworkGraphSerializer
+
 
 network_collection = NetworkCollectionView.as_view()
 
@@ -29,6 +29,7 @@ class NetworkGraphView(generics.RetrieveAPIView):
     """
     queryset = Topology.objects.filter(published=True)
     serializer_class = NetworkGraphSerializer
+
 
 network_graph = NetworkGraphView.as_view()
 
@@ -69,5 +70,6 @@ class ReceiveTopologyView(APIView):
                                               e.__class__.__name__, e)
             return Response({'detail': error}, status=400)
         return Response({'detail': _('data received successfully')})
+
 
 receive_topology = ReceiveTopologyView.as_view()
