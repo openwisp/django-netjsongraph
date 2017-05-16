@@ -85,6 +85,15 @@ class TestAdmin(TestCase, LoadMixin):
         self.assertContains(response, 'View on site')
         self.assertContains(response, t.get_absolute_url())
 
+    def test_topology_receive_url(self):
+        t = Topology.objects.first()
+        t.strategy = 'receive'
+        t.save()
+        path = reverse('admin:django_netjsongraph_topology_change', args=[t.pk])
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'field-receive_url')
+
     def test_node_change_form(self):
         n = Node.objects.first()
         path = reverse('admin:django_netjsongraph_node_change', args=[n.pk])

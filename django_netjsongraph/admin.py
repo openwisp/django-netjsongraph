@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.contrib.admin.templatetags.admin_static import static
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
@@ -6,12 +7,31 @@ from .base import TimeStampedEditableAdmin
 from .contextmanagers import log_failure
 from .models import Link, Node, Topology
 
+try:
+    from django.urls import reverse
+except:
+    # django < 1.10
+    from django.core.urlresolvers import reverse
+
 
 class TopologyAdmin(TimeStampedEditableAdmin):
     list_display = ('label', 'parser', 'strategy', 'published', 'created', 'modified')
-    readonly_fields = ['protocol', 'version', 'revision', 'metric']
+    readonly_fields = ['protocol', 'version', 'revision', 'metric', 'receive_url']
     list_filter = ('parser', 'strategy')
     actions = ['update_selected', 'unpublish_selected', 'publish_selected']
+    fields = ['label', 'parser', 'strategy', 'url', 'key',
+              'expiration_time', 'receive_url', 'published', 'protocol',
+              'version', 'revision', 'metric', 'created']
+
+    class Media:
+        css = {'all': [static('netjsongraph/admin.css')]}
+        js = [static('netjsongraph/receive-url.js')]
+
+    def receive_url(self, obj):
+        url = reverse('receive_topology', kwargs={'pk': obj.pk})
+        return '{0}?key={1}'.format(url, obj.key)
+
+    receive_url.short_description = _('receive url')
 
     def get_actions(self, request):
         """ move delete action to last position """
