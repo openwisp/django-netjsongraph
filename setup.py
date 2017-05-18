@@ -41,6 +41,7 @@ setup(
     author='Federico Capoano',
     author_email='nemesis@ninux.org',
     description='Reusable django app for collecting and visualizing network topology',
+    long_description=open('README.rst').read(),
     url='http://netjson.org',
     download_url='https://github.com/interop-dev/django-netjsongraph/releases',
     platforms=['Platform Indipendent'],
