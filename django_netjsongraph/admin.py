@@ -84,7 +84,8 @@ class NodeAdmin(TimeStampedEditableAdmin):
     list_filter = ('topology',)
     search_fields = ('addresses', 'label', 'properties')
 
-    def change_view(self, request, object_id, form_url='', extra_context={}):
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
         extra_context.update({
             'node_links': Link.objects.select_related('source', 'target')
                                       .only('source__label',
