@@ -6,3 +6,9 @@ recursive-include django_netjsongraph *
 recursive-exclude * *.pyc
 recursive-exclude * *.swp
 recursive-exclude * __pycache__
+recursive-exclude tests *
+include tests/__init__.py
+include tests/manage.py
+include tests/settings.py
+include tests/local_settings.example.py
+include tests/urls.py
