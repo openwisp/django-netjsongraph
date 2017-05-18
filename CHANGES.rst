@@ -1,9 +1,17 @@
 Changelog
 =========
 
-Version 0.2.3 [unreleased]
+Version 0.2.3 [2017-05-18]
+--------------------------
 
-WIP
+- `#17 <https://github.com/interop-dev/django-netjsongraph/issues/17>`_:
+  Updated django-rest-framework version requirement
+- `#22 <https://github.com/interop-dev/django-netjsongraph/issues/22>`_:
+  Added support for Django 1.11
+- `#18 <https://github.com/interop-dev/django-netjsongraph/issues/18>`_:
+  [QA] Added flake8 and isort checks to travis-ci build
+- `#9 <https://github.com/interop-dev/django-netjsongraph/issues/9>`_:
+  Added a way to easily copy API endpoint URL when using RECEIVE strategy
 
 Version 0.2.2 [2016-12-14]
 --------------------------
