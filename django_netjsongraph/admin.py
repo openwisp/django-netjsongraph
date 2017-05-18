@@ -86,14 +86,15 @@ class NodeAdmin(TimeStampedEditableAdmin):
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
+        link_model = self.model.source_link_set.field.model
         extra_context.update({
-            'node_links': Link.objects.select_related('source', 'target')
-                                      .only('source__label',
-                                            'target__label',
-                                            'cost',
-                                            'status')
-                                      .filter(Q(source_id=object_id) |
-                                              Q(target_id=object_id))
+            'node_links': link_model.objects.select_related('source', 'target')
+                                            .only('source__label',
+                                                  'target__label',
+                                                  'cost',
+                                                  'status')
+                                            .filter(Q(source_id=object_id) |
+                                                    Q(target_id=object_id))
         })
         return super(NodeAdmin, self).change_view(request, object_id, form_url, extra_context)
 
