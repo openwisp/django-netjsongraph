@@ -2,6 +2,7 @@ from time import sleep
 
 import responses
 import six
+
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from netdiff import OlsrParser

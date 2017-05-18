@@ -4,9 +4,8 @@ from collections import OrderedDict
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
-from rest_framework.utils.encoders import JSONEncoder
-
 from jsonfield import JSONField
+from rest_framework.utils.encoders import JSONEncoder
 
 from ..base import TimeStampedEditableModel
 

@@ -6,10 +6,9 @@ import uuid
 
 import django.db.models.deletion
 import django.utils.timezone
+import jsonfield.fields
 import model_utils.fields
 from django.db import migrations, models
-
-import jsonfield.fields
 
 
 class Migration(migrations.Migration):

@@ -6,11 +6,10 @@ from django.db import models
 from django.db.models import Q
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from jsonfield import JSONField
 from model_utils import Choices
 from model_utils.fields import StatusField
 from rest_framework.utils.encoders import JSONEncoder
-
-from jsonfield import JSONField
 
 from ..base import TimeStampedEditableModel
 
