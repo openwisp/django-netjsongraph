@@ -25,7 +25,8 @@ class TopologyAdmin(TimeStampedEditableAdmin):
 
     class Media:
         css = {'all': [static('netjsongraph/admin.css')]}
-        js = [static('netjsongraph/receive-url.js')]
+        js = [static('netjsongraph/receive-url.js'),
+              static('netjsongraph/strategy-switcher.js')]
 
     def receive_url(self, obj):
         url = reverse('receive_topology', kwargs={'pk': obj.pk})
