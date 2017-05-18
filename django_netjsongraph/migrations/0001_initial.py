@@ -76,12 +76,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='link',
             name='source',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='source_node_set', to='django_netjsongraph.Node'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='source_link_set', to='django_netjsongraph.Node'),
         ),
         migrations.AddField(
             model_name='link',
             name='target',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='target_node_set', to='django_netjsongraph.Node'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='target_link_set', to='django_netjsongraph.Node'),
         ),
         migrations.AddField(
             model_name='link',

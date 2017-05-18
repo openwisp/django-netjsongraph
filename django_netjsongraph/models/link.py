@@ -22,9 +22,9 @@ class BaseLink(TimeStampedEditableModel):
     """
     topology = models.ForeignKey('django_netjsongraph.Topology')
     source = models.ForeignKey('django_netjsongraph.Node',
-                               related_name='source_node_set')
+                               related_name='source_link_set')
     target = models.ForeignKey('django_netjsongraph.Node',
-                               related_name='target_node_set')
+                               related_name='target_link_set')
     cost = models.FloatField()
     cost_text = models.CharField(max_length=24, blank=True)
     STATUS = Choices('up', 'down')
