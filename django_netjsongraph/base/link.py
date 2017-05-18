@@ -1,21 +1,25 @@
 import json
 from collections import OrderedDict
+from datetime import timedelta
 
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from jsonfield import JSONField
 from model_utils import Choices
 from model_utils.fields import StatusField
 from rest_framework.utils.encoders import JSONEncoder
 
-from ..base import TimeStampedEditableModel
+from .. import settings
+from ..utils import print_info
+from .base import TimeStampedEditableModel
 
 
 @python_2_unicode_compatible
-class BaseLink(TimeStampedEditableModel):
+class AbstractLink(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Link Object implementation
     """
@@ -87,3 +91,20 @@ class BaseLink(TimeStampedEditableModel):
              Q(source__addresses__contains=target,
                target__addresses__contains=source))
         return cls.objects.filter(q).filter(topology=topology).first()
+
+    @classmethod
+    def delete_expired_links(cls):
+        """
+        deletes links that have been down for more than
+        ``NETJSONGRAPH_LINK_EXPIRATION`` days
+        """
+        LINK_EXPIRATION = settings.LINK_EXPIRATION
+        if LINK_EXPIRATION not in [False, None]:
+            expiration_date = now() - timedelta(days=int(LINK_EXPIRATION))
+            expired_links = cls.objects.filter(status='down',
+                                               modified__lt=expiration_date)
+            expired_links_length = len(expired_links)
+            if expired_links_length:
+                print_info('Deleting {0} expired links'.format(expired_links_length))
+                for link in expired_links:
+                    link.delete()

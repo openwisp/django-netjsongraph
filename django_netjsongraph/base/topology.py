@@ -5,7 +5,6 @@ from datetime import timedelta
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.utils.crypto import get_random_string
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.module_loading import import_string
@@ -14,13 +13,10 @@ from django.utils.translation import ugettext_lazy as _
 from netdiff import NetJsonParser, diff
 from rest_framework.utils.encoders import JSONEncoder
 
-from ..base import TimeStampedEditableModel
 from ..contextmanagers import log_failure
 from ..settings import PARSERS, TIMEOUT
-
-
-def get_random_key():
-    return get_random_string(length=32)
+from ..utils import get_random_key, print_info
+from .base import TimeStampedEditableModel
 
 
 STRATEGIES = (
@@ -30,7 +26,7 @@ STRATEGIES = (
 
 
 @python_2_unicode_compatible
-class BaseTopology(TimeStampedEditableModel):
+class AbstractTopology(TimeStampedEditableModel):
     label = models.CharField(_('label'), max_length=64)
     parser = models.CharField(_('format'),
                               choices=PARSERS,
@@ -282,3 +278,20 @@ class BaseTopology(TimeStampedEditableModel):
                 if link:
                     link.save()
         self.update(data)
+
+    @classmethod
+    def update_all(cls, label=None):
+        """
+        - updates topologies
+        - logs failures
+        - calls delete_expired_links()
+        """
+        queryset = cls.objects.filter(published=True, strategy='fetch')
+        if label:
+            queryset = queryset.filter(label__icontains=label)
+        for topology in queryset:
+            print_info('Updating topology {0}'.format(topology))
+            with log_failure('update', topology):
+                topology.update()
+        Link = cls().link_model
+        Link.delete_expired_links()

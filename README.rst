@@ -238,6 +238,143 @@ If a link is down for more days than this number, it will be deleted by the
 
 Setting this to ``False`` will disable this feature.
 
+Extending django-netjsongraph
+-----------------------------
+
+*django-netjsongraph* provides a set of models, admin classes and generic views which can be imported, extended and reused by third party apps.
+
+To extend *django-netjsongraph*, **you MUST NOT** add it to ``settings.INSTALLED_APPS``, but you must create your own app (which goes into ``settings.INSTALLED_APPS``), import the base classes from django-netjsongraph and add your customizations.
+
+Extending models
+~~~~~~~~~~~~~~~~
+
+This example provides an example of how to extend the base models of
+*django-netjsongraph*.
+
+.. code-block:: python
+    
+    # models.py of your custom ``network`` app
+    from django.db import models    
+
+    from django_netjsongraph.base.link import AbstractLink
+    from django_netjsongraph.base.node import AbstractNode
+    from django_netjsongraph.base.topology import AbstractTopology
+
+
+    class OrganizationMixin(models.Model):
+        organization = models.ForeignKey('organization.Organization')
+
+        class Meta:
+            abstract = True
+
+
+    class Topology(OrganizationMixin, AbstractTopology):
+        def clean(self):
+            # your own logic here
+            pass
+        
+        class Meta:
+            abstract = False
+
+
+    class Node(AbstractNode):
+        class Meta(AbstractNode.Meta):
+            abstract = False
+
+
+    class Link(AbstractLink):
+        class Meta(AbstractLink.Meta):
+            abstract = False
+
+Extending the admin
+~~~~~~~~~~~~~~~~~~~
+
+Following the above example, you can avoid duplicating the admin code by importing the base admin classes and registering your models with.
+
+.. code-block:: python
+    
+    # admin.py of your app
+    from django.contrib import admin
+    from django_netjsongraph.base.admin import (AbstractLinkAdmin,
+                                                AbstractNodeAdmin,
+                                                AbstractTopologyAdmin)
+    # these are you custom models
+    from .models import Link, Node, Topology
+
+
+    class TopologyAdmin(AbstractTopologyAdmin):
+        model = Topology
+
+
+    class NodeAdmin(AbstractNodeAdmin):
+        model = Node
+
+
+    class LinkAdmin(AbstractLinkAdmin):
+        model = Link
+
+
+    admin.site.register(Link, LinkAdmin)
+    admin.site.register(Node, NodeAdmin)
+    admin.site.register(Topology, TopologyAdmin)
+
+Extending API views
+~~~~~~~~~~~~~~~~~~~
+
+If your use case doesn't vary much from the base, you may also want to try to reuse the API views:
+
+.. code-block:: python
+
+    # your app.api.views
+    from ..models import Topology
+    from django_netjsongraph.api.generics import (BaseNetworkCollectionView,
+                                                  BaseNetworkGraphView,
+                                                  BaseReceiveTopologyView)
+
+
+    class NetworkCollectionView(BaseNetworkCollectionView):
+        queryset = Topology.objects.filter(published=True)
+
+
+    class NetworkGraphView(BaseNetworkGraphView):
+        queryset = Topology.objects.filter(published=True)
+
+
+    class ReceiveTopologyView(BaseReceiveTopologyView):
+        model = Topology
+
+
+network_collection = NetworkCollectionView.as_view()
+network_graph = NetworkGraphView.as_view()
+receive_topology = ReceiveTopologyView.as_view()
+
+
+API URLs
+~~~~~~~~
+
+If you are not making drastic changes to the api views, you can avoid duplicating the URL logic by using the ``get_api_urls`` function. Put this in your api ``urls.py``:
+
+.. code-block:: python
+
+    # your app.api.urls
+    from django_netjsongraph.utils import get_api_urls
+    from . import views
+
+    urlpatterns = get_api_urls(views)
+
+Extending AppConfig
+~~~~~~~~~~~~~~~~~~~
+
+You may want to reuse the ``AppConfig`` class of *django-netjsongraph* too:
+
+.. code-block:: python
+
+    from django_netjsongraph.apps import DjangoNetjsongraphConfig
+
+    class MyOwnConfig(DjangoNetjsongraphConfig):
+        name = 'yourapp'
+        label = 'yourapp'
+
 Installing for development
 --------------------------
 

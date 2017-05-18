@@ -7,11 +7,11 @@ from django.utils.functional import cached_property
 from jsonfield import JSONField
 from rest_framework.utils.encoders import JSONEncoder
 
-from ..base import TimeStampedEditableModel
+from .base import TimeStampedEditableModel
 
 
 @python_2_unicode_compatible
-class BaseNode(TimeStampedEditableModel):
+class AbstractNode(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Node Object implementation
     """
@@ -36,7 +36,7 @@ class BaseNode(TimeStampedEditableModel):
 
     def save(self, *args, **kwargs):
         self._format_addresses()
-        super(BaseNode, self).save(*args, **kwargs)
+        super(AbstractNode, self).save(*args, **kwargs)
 
     def _format_addresses(self):
         """

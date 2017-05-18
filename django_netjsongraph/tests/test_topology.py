@@ -2,9 +2,9 @@ from time import sleep
 
 import responses
 import six
-
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+
 from netdiff import OlsrParser
 
 from ..models import Link, Node, Topology
@@ -106,7 +106,7 @@ class TestTopology(TestCase, LoadMixin):
         })
 
     @responses.activate
-    def test_update_topology_attributes(self):
+    def test_update_all_attributes(self):
         t = Topology.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()

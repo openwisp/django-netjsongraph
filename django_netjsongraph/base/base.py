@@ -1,6 +1,5 @@
 import uuid
 
-from django.contrib.admin import ModelAdmin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from model_utils.fields import AutoCreatedField, AutoLastModifiedField
@@ -17,12 +16,3 @@ class TimeStampedEditableModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class TimeStampedEditableAdmin(ModelAdmin):
-    """
-    ModelAdmin for TimeStampedEditableModel
-    """
-    def __init__(self, *args, **kwargs):
-        self.readonly_fields += ('created', 'modified',)
-        super(TimeStampedEditableAdmin, self).__init__(*args, **kwargs)

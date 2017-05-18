@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response
 
 from ..models import Topology
-from ..utils import get_topology_or_404
+from ..utils import get_object_or_404
 
 
 def topology_list(request):
@@ -11,6 +11,6 @@ def topology_list(request):
 
 
 def topology_detail(request, pk):
-    topology = get_topology_or_404(pk)
+    topology = get_object_or_404(Topology, pk)
     return render_to_response('netjsongraph/detail.html',
                               {'topology': topology})

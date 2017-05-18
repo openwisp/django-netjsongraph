@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from ...utils import update_topology
+from ...models import Topology
 
 
 class Command(BaseCommand):
@@ -13,4 +13,4 @@ class Command(BaseCommand):
                             help='Will update topologies containing label')
 
     def handle(self, *args, **options):
-        update_topology(options['label'])
+        Topology.update_all(options['label'])

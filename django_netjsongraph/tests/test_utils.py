@@ -2,14 +2,12 @@ import json
 from datetime import timedelta
 
 import responses
-
 from django.core.management import call_command
 from django.test import TestCase
 from django.utils.timezone import now
 
 from .. import settings
 from ..models import Link, Node, Topology
-from ..utils import update_topology
 from .utils import LoadMixin, StringIO, redirect_stdout
 
 
@@ -24,7 +22,7 @@ class TestUtils(TestCase, LoadMixin):
     maxDiff = None
 
     @responses.activate
-    def test_update_topology_func(self):
+    def test_update_all_method(self):
         t = Topology.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
@@ -33,7 +31,7 @@ class TestUtils(TestCase, LoadMixin):
                       body=self._load('static/netjson-1-link.json'),
                       content_type='application/json')
         Node.objects.all().delete()
-        update_topology('testnetwork')
+        Topology.update_all('testnetwork')
         self.assertEqual(Node.objects.count(), 2)
         self.assertEqual(Link.objects.count(), 1)
         # test exception
@@ -48,7 +46,7 @@ class TestUtils(TestCase, LoadMixin):
         # capture output
         output = StringIO()
         with redirect_stdout(output):
-            update_topology()
+            Topology.update_all()
 
         self.assertEqual(Node.objects.count(), 1)
         self.assertEqual(Link.objects.count(), 0)
@@ -64,7 +62,7 @@ class TestUtils(TestCase, LoadMixin):
                       body=self._load('static/netjson-1-link.json'),
                       content_type='application/json')
         Node.objects.all().delete()
-        update_topology()
+        Topology.update_all()
         self.assertEqual(Node.objects.count(), 2)
         self.assertEqual(Link.objects.count(), 1)
         # test exception
@@ -86,7 +84,7 @@ class TestUtils(TestCase, LoadMixin):
         self.assertIn('Failed to', output.getvalue())
 
     @responses.activate
-    def test_update_topology_func_unpublished(self):
+    def test_update_all_method_unpublished(self):
         t = Topology.objects.first()
         t.published = False
         t.parser = 'netdiff.NetJsonParser'
@@ -96,7 +94,7 @@ class TestUtils(TestCase, LoadMixin):
                       body=self._load('static/netjson-1-link.json'),
                       content_type='application/json')
         Node.objects.all().delete()
-        update_topology()
+        Topology.update_all()
         self.assertEqual(Node.objects.count(), 0)
         self.assertEqual(Link.objects.count(), 0)
 
@@ -126,14 +124,14 @@ class TestUtils(TestCase, LoadMixin):
                       'http://127.0.0.1:9090',
                       body=empty_topology,
                       content_type='application/json')
-        update_topology('testnetwork')
+        Topology.update_all('testnetwork')
         self.assertEqual(Node.objects.count(), 2)
         self.assertEqual(Link.objects.count(), 1)
         # should delete
         expired_date = now() - timedelta(days=settings.LINK_EXPIRATION+10)
         Link.objects.filter(pk=l.pk).update(created=expired_date,
                                             modified=expired_date)
-        update_topology('testnetwork')
+        Topology.update_all('testnetwork')
         self.assertEqual(Node.objects.count(), 2)
         self.assertEqual(Link.objects.count(), 0)
 
@@ -164,7 +162,7 @@ class TestUtils(TestCase, LoadMixin):
                       content_type='application/json')
         ORIGINAL_LINK_EXPIRATION = int(settings.LINK_EXPIRATION)
         settings.LINK_EXPIRATION = False
-        update_topology('testnetwork')
+        Topology.update_all('testnetwork')
         self.assertEqual(Node.objects.count(), 2)
         self.assertEqual(Link.objects.count(), 1)
         settings.LINK_EXPIRATION = ORIGINAL_LINK_EXPIRATION
