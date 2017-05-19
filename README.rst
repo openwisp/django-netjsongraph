@@ -246,15 +246,15 @@ Extending django-netjsongraph
 To extend *django-netjsongraph*, **you MUST NOT** add it to ``settings.INSTALLED_APPS``, but you must create your own app (which goes into ``settings.INSTALLED_APPS``), import the base classes from django-netjsongraph and add your customizations.
 
 Extending models
-~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^
 
 This example provides an example of how to extend the base models of
 *django-netjsongraph*.
 
 .. code-block:: python
-    
+
     # models.py of your custom ``network`` app
-    from django.db import models    
+    from django.db import models
 
     from django_netjsongraph.base.link import AbstractLink
     from django_netjsongraph.base.node import AbstractNode
@@ -272,7 +272,7 @@ This example provides an example of how to extend the base models of
         def clean(self):
             # your own logic here
             pass
-        
+
         class Meta:
             abstract = False
 
@@ -287,12 +287,12 @@ This example provides an example of how to extend the base models of
             abstract = False
 
 Extending the admin
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 Following the above example, you can avoid duplicating the admin code by importing the base admin classes and registering your models with.
 
 .. code-block:: python
-    
+
     # admin.py of your app
     from django.contrib import admin
     from django_netjsongraph.base.admin import (AbstractLinkAdmin,
@@ -319,7 +319,7 @@ Following the above example, you can avoid duplicating the admin code by importi
     admin.site.register(Topology, TopologyAdmin)
 
 Extending API views
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 If your use case doesn't vary much from the base, you may also want to try to reuse the API views:
 
@@ -350,7 +350,7 @@ receive_topology = ReceiveTopologyView.as_view()
 
 
 API URLs
-~~~~~~~~
+^^^^^^^^
 
 If you are not making drastic changes to the api views, you can avoid duplicating the URL logic by using the ``get_api_urls`` function. Put this in your api ``urls.py``:
 
@@ -363,7 +363,7 @@ If you are not making drastic changes to the api views, you can avoid duplicatin
     urlpatterns = get_api_urls(views)
 
 Extending AppConfig
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 You may want to reuse the ``AppConfig`` class of *django-netjsongraph* too:
 
