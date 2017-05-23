@@ -14,7 +14,7 @@ from model_utils.fields import StatusField
 from rest_framework.utils.encoders import JSONEncoder
 
 from .. import settings
-from ..utils import print_info
+from ..utils import link_status_changed, print_info
 from .base import TimeStampedEditableModel
 
 
@@ -39,6 +39,16 @@ class AbstractLink(TimeStampedEditableModel):
 
     class Meta:
         abstract = True
+
+    def __init__(self, *args, **kwargs):
+        super(AbstractLink, self).__init__(*args, **kwargs)
+        self._initial_status = self.status
+
+    def save(self, *args, **kwargs):
+        super(AbstractLink, self).save(*args, **kwargs)
+        if self.status != self._initial_status:
+            self.send_status_changed_signal()
+        self._initial_status = self.status
 
     def __str__(self):
         return '{0} - {1}'.format(self.source.name, self.target.name)
@@ -72,6 +82,9 @@ class AbstractLink(TimeStampedEditableModel):
         if dict:
             return netjson
         return json.dumps(netjson, cls=JSONEncoder, **kwargs)
+
+    def send_status_changed_signal(self):
+        link_status_changed.send(sender=self.__class__, link=self)
 
     @classmethod
     def get_from_nodes(cls, source, target, topology):

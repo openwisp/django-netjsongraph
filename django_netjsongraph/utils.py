@@ -2,9 +2,13 @@ import sys
 
 from django.conf.urls import url
 from django.core.exceptions import ValidationError
+from django.dispatch import Signal
 from django.http import Http404
 from django.shortcuts import get_object_or_404 as get_obj_or_404
 from django.utils.crypto import get_random_string
+
+
+link_status_changed = Signal(providing_args=["link"])
 
 
 def print_info(message):  # pragma no cover

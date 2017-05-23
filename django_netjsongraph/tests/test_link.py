@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from ..models import Link, Node, Topology
+from ..utils import link_status_changed
 
 
 class TestLink(TestCase):
@@ -83,3 +84,24 @@ class TestLink(TestCase):
         self.assertIsInstance(l, Link)
         l = Link.get_from_nodes('wrong', 'wrong', t)
         self.assertIsNone(l)
+
+    def test_status_change_signal_sent(self):
+        self.signal_was_called = False
+        l = Link(topology_id="a083b494-8e16-4054-9537-fb9eba914861",
+                 source_id="d083b494-8e16-4054-9537-fb9eba914861",
+                 target_id="d083b494-8e16-4054-9537-fb9eba914862",
+                 cost=1.0,
+                 status='up')
+        l.save()
+
+        def handler(sender, link, **kwargs):
+            self.signal_was_called = True
+            self.assertEqual(link.pk, l.pk)
+            self.assertEqual(link.status, 'down')
+
+        link_status_changed.connect(handler)
+        l.status = 'down'
+        l.save()
+
+        self.assertTrue(self.signal_was_called)
+        link_status_changed.disconnect(handler)
