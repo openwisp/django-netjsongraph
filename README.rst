@@ -250,6 +250,14 @@ Setting this to ``False`` will disable this feature.
 Path of the visualizer css file. Allows customization of css according to user's
 preferences.
 
+Overriding visualizer templates
+-------------------------------
+The following steps can be followed for overriding the visualizer's default templates.
+
+* Create a directory in the project and put it in ``TEMPLATES['DIRS']``, which can be found in settings.py file.
+* Create a sub directory named ``netjsongraph`` and add all the templates which shall override the default ``netjsongraph/*`` templates.
+* The name of the template file should be the same as the one it shall override.
+
 Extending django-netjsongraph
 -----------------------------
 
