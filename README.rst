@@ -238,6 +238,18 @@ If a link is down for more days than this number, it will be deleted by the
 
 Setting this to ``False`` will disable this feature.
 
+``NETJSONGRAPH_VISUALIZER_CSS``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
++--------------+---------------------------------+
+| **type**:    | ``str``                         |
++--------------+---------------------------------+
+| **default**: | ``netjsongraph/style.css``      |
++--------------+---------------------------------+
+
+Path of the visualizer css file. Allows customization of css according to user's
+preferences.
+
 Extending django-netjsongraph
 -----------------------------
 
