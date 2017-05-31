@@ -280,6 +280,9 @@ This example provides an example of how to extend the base models of
     from django_netjsongraph.base.node import AbstractNode
     from django_netjsongraph.base.topology import AbstractTopology
 
+    # the model ``organizations.Organization`` is omitted for brevity
+    # if you are curious to see a real implementation, check out django-organizations
+    # https://github.com/bennylope/django-organizations
 
     class OrganizationMixin(models.Model):
         organization = models.ForeignKey('organization.Organization')
@@ -290,20 +293,28 @@ This example provides an example of how to extend the base models of
 
     class Topology(OrganizationMixin, AbstractTopology):
         def clean(self):
-            # your own logic here
+            # your own validation logic here
             pass
+
+        class Meta(AbstractTopology.Meta):
+            abstract = False
+
+
+    class Node(AbstractNode):
+        topology = models.ForeignKey('Topology')
 
         class Meta:
             abstract = False
 
 
-    class Node(AbstractNode):
-        class Meta(AbstractNode.Meta):
-            abstract = False
-
-
     class Link(AbstractLink):
-        class Meta(AbstractLink.Meta):
+        topology = models.ForeignKey('Topology')
+        source = models.ForeignKey('Node',
+                                   related_name='source_link_set')
+        target = models.ForeignKey('Node',
+                                   related_name='source_target_set')
+
+        class Meta:
             abstract = False
 
 Extending the admin
