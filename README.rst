@@ -375,9 +375,9 @@ If your use case doesn't vary much from the base, you may also want to try to re
         model = Topology
 
 
-network_collection = NetworkCollectionView.as_view()
-network_graph = NetworkGraphView.as_view()
-receive_topology = ReceiveTopologyView.as_view()
+    network_collection = NetworkCollectionView.as_view()
+    network_graph = NetworkGraphView.as_view()
+    receive_topology = ReceiveTopologyView.as_view()
 
 
 API URLs
