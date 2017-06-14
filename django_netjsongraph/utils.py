@@ -53,3 +53,18 @@ def get_api_urls(views_module):
             name='receive_topology'),
     ]
     return urls
+
+
+def get_visualizer_urls(views_module):
+    """
+    used by third party apps to reduce boilerplate
+    """
+    urls = [
+        url(r'^$',
+            views_module.topology_list,
+            name='topology_list'),
+        url(r'^topology/(?P<pk>[^/]+)/$',
+            views_module.topology_detail,
+            name='topology_detail'),
+    ]
+    return urls

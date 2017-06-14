@@ -393,6 +393,41 @@ If you are not making drastic changes to the api views, you can avoid duplicatin
 
     urlpatterns = get_api_urls(views)
 
+Extending Visualizer Views
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+If your use case doesn't vary much from the base, you may also want to try to reuse the Visualizer views:
+
+.. code-block:: python
+
+    # your app.visualizer.views
+    from ..models import Topology
+    from .generics import BaseTopologyDetailView, BaseTopologyListView
+
+
+    class TopologyListView(BaseTopologyListView):
+        topology_model = Topology
+
+
+    class TopologyDetailView(BaseTopologyDetailView):
+        topology_model = Topology
+
+
+    topology_list = TopologyListView.as_view()
+    topology_detail = TopologyDetailView.as_view()
+
+
+Visualizer URLs
+^^^^^^^^^^^^^^^
+If you are not making any drastic changes to visualizer views, you can avoid duplicating the URL logic by using ``get_visualizer_urls`` function. Put this in your visualizer ``urls.py``
+
+.. code-block:: python
+
+    # your app.visualizer.urls
+    from django_netjsongraph.utils import get_visualizer_urls
+    from . import views
+
+    urlpatterns = get_visualizer_urls(views)
+
 Extending AppConfig
 ^^^^^^^^^^^^^^^^^^^
 

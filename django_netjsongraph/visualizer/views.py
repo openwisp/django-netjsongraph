@@ -1,19 +1,14 @@
-from django.shortcuts import render_to_response
-
 from ..models import Topology
-from ..settings import VISUALIZER_CSS
-from ..utils import get_object_or_404
+from .generics import BaseTopologyDetailView, BaseTopologyListView
 
 
-def topology_list(request):
-    topologies = Topology.objects.filter(published=True)
-    return render_to_response('netjsongraph/list.html',
-                              {'topologies': topologies,
-                               'VISUALIZER_CSS': VISUALIZER_CSS})
+class TopologyListView(BaseTopologyListView):
+    topology_model = Topology
 
 
-def topology_detail(request, pk):
-    topology = get_object_or_404(Topology, pk)
-    return render_to_response('netjsongraph/detail.html',
-                              {'topology': topology,
-                               'VISUALIZER_CSS': VISUALIZER_CSS})
+class TopologyDetailView(BaseTopologyDetailView):
+    topology_model = Topology
+
+
+topology_list = TopologyListView.as_view()
+topology_detail = TopologyDetailView.as_view()
