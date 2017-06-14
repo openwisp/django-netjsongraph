@@ -30,9 +30,9 @@ class BaseAdmin(TimeStampedEditableAdmin):
 
 
 class AbstractTopologyAdmin(BaseAdmin):
-    list_display = ('label', 'parser', 'strategy', 'published', 'created', 'modified')
+    list_display = ['label', 'parser', 'strategy', 'published', 'created', 'modified']
     readonly_fields = ['protocol', 'version', 'revision', 'metric', 'receive_url']
-    list_filter = ('parser', 'strategy')
+    list_filter = ['parser', 'strategy']
     actions = ['update_selected', 'unpublish_selected', 'publish_selected']
     fields = ['label', 'parser', 'strategy', 'url', 'key',
               'expiration_time', 'receive_url', 'published', 'protocol',
@@ -92,9 +92,9 @@ class AbstractTopologyAdmin(BaseAdmin):
 
 
 class AbstractNodeAdmin(BaseAdmin):
-    list_display = ('name', 'topology', 'addresses')
-    list_filter = ('topology',)
-    search_fields = ('addresses', 'label', 'properties')
+    list_display = ['name', 'topology', 'addresses']
+    list_filter = ['topology']
+    search_fields = ['addresses', 'label', 'properties']
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
@@ -112,13 +112,13 @@ class AbstractNodeAdmin(BaseAdmin):
 
 
 class AbstractLinkAdmin(BaseAdmin):
-    raw_id_fields = ('source', 'target')
-    list_display = ('__str__', 'topology', 'status', 'cost', 'cost_text')
-    list_filter = ('status', 'topology')
-    search_fields = (
+    raw_id_fields = ['source', 'target']
+    list_display = ['__str__', 'topology', 'status', 'cost', 'cost_text']
+    list_filter = ['status', 'topology']
+    search_fields = [
         'source__label',
         'target__label',
         'source__addresses',
         'target__addresses',
         'properties',
-    )
+    ]
