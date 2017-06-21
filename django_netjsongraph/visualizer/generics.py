@@ -1,13 +1,8 @@
 from django.shortcuts import render_to_response
+from django.views import View
 
 from ..settings import VISUALIZER_CSS
 from ..utils import get_object_or_404
-
-try:
-    from django.views import View
-except:
-    # Support to django<1.10
-    from django.views.generic import View
 
 
 class BaseTopologyListView(View):

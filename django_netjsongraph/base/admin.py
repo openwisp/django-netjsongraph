@@ -2,15 +2,10 @@ from django.contrib import messages
 from django.contrib.admin import ModelAdmin
 from django.contrib.admin.templatetags.admin_static import static
 from django.db.models import Q
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from ..contextmanagers import log_failure
-
-try:
-    from django.urls import reverse
-except:
-    # django < 1.10
-    from django.core.urlresolvers import reverse
 
 
 class TimeStampedEditableAdmin(ModelAdmin):
