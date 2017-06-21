@@ -18,7 +18,6 @@ from ..settings import PARSERS, TIMEOUT
 from ..utils import get_random_key, print_info
 from .base import TimeStampedEditableModel
 
-
 STRATEGIES = (
     ('fetch', _('FETCH')),
     ('receive', _('RECEIVE'))
