@@ -12,20 +12,22 @@
     max-width: 400px;
     min-width: 200px;
     padding: 0 15px;
-    right: 10px;
     top: 10px;
+    right: 10px;
     width: auto;
 }
 
 .njg-metadata{
-    top: 10px;
     left: 10px;
     right: auto;
     max-width: 500px;
     min-width: 200px;
     padding-bottom: 10px
 }
-.njg-overlay{ padding-top: 10px; padding-bottom: 10px }
+.njg-overlay{
+    padding-top: 10px;
+    padding-bottom: 10px
+}
 
 .njg-metadata h3 {
     font-family: "Georgia", serif;
@@ -67,7 +69,7 @@
 
 .njg-tooltip{ fill: #fff; opacity: 0.8 }
 
-body {
+body.frontend {
     overflow: hidden;
     font-family: Arial, sans-serif;
     line-height: 20px;

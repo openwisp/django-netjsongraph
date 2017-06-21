@@ -1,11 +1,14 @@
+from django.conf.urls import url
 from django.contrib import messages
 from django.contrib.admin import ModelAdmin
 from django.contrib.admin.templatetags.admin_static import static
 from django.db.models import Q
+from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from ..contextmanagers import log_failure
+from ..utils import get_object_or_404
 
 
 class TimeStampedEditableAdmin(ModelAdmin):
@@ -18,10 +21,17 @@ class TimeStampedEditableAdmin(ModelAdmin):
 
 
 class BaseAdmin(TimeStampedEditableAdmin):
+    save_on_top = True
+
     class Media:
-        css = {'all': [static('netjsongraph/admin.css')]}
-        js = [static('netjsongraph/receive-url.js'),
-              static('netjsongraph/strategy-switcher.js')]
+        css = {'all': [static('netjsongraph/css/src/netjsongraph.css'),
+                       static('netjsongraph/css/style.css'),
+                       static('netjsongraph/css/admin.css')]}
+        js = [static('netjsongraph/js/lib/d3.min.js'),
+              static('netjsongraph/js/src/netjsongraph.js'),
+              static('netjsongraph/js/receive-url.js'),
+              static('netjsongraph/js/strategy-switcher.js'),
+              static('netjsongraph/js/visualize.js')]
 
 
 class AbstractTopologyAdmin(BaseAdmin):
@@ -48,6 +58,26 @@ class AbstractTopologyAdmin(BaseAdmin):
         del actions['delete_selected']
         actions['delete_selected'] = delete
         return actions
+
+    def get_extra_context(self, pk=None):
+        ctx = {}
+        prefix = 'admin:{0}_{1}'.format(self.opts.app_label, self.model.__name__.lower())
+        if pk:
+            ctx.update({'visualize_url': reverse('{0}_visualize'.format(prefix), args=[pk])})
+        return ctx
+
+    def change_view(self, request, pk, form_url='', extra_context=None):
+        extra_content = self.get_extra_context(pk)
+        return super(AbstractTopologyAdmin, self).change_view(request, pk, form_url, extra_content)
+
+    def get_urls(self):
+        options = getattr(self.model, '_meta')
+        url_prefix = '{0}_{1}'.format(options.app_label, options.model_name)
+        return [
+            url(r'^visualize/(?P<pk>[^/]+)/$',
+                self.admin_site.admin_view(self.visualize_view),
+                name='{0}_visualize'.format(url_prefix))
+        ] + super(AbstractTopologyAdmin, self).get_urls()
 
     def _message(self, request, rows, suffix, level=messages.SUCCESS):
         if rows == 1:
@@ -84,6 +114,19 @@ class AbstractTopologyAdmin(BaseAdmin):
         rows_updated = queryset.update(published=False)
         self._message(request, rows_updated, _('successfully unpublished'))
     unpublish_selected.short_description = _('Unpublish selected items')
+
+    def visualize_view(self, request, pk):
+        topology = get_object_or_404(self.model, pk)
+        context = self.admin_site.each_context(request)
+        opts = self.model._meta
+        context.update({
+            'is_popup': True,
+            'opts': opts,
+            'change': False,
+            'media': self.media,
+            'topology': topology
+        })
+        return TemplateResponse(request, 'admin/%s/visualize.html' % opts.app_label, context)
 
 
 class AbstractNodeAdmin(BaseAdmin):

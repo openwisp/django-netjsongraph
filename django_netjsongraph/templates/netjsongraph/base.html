@@ -4,15 +4,15 @@
     <title>{% block title %}{% endblock %}</title>
     <meta charset="utf-8">
     {% block style %}
-        <link href="{% static 'netjsongraph/src/netjsongraph.css' %}" rel="stylesheet">
+        <link href="{% static 'netjsongraph/css/src/netjsongraph.css' %}" rel="stylesheet">
         <link href="{% static VISUALIZER_CSS %}" rel="stylesheet">
     {% endblock %}
 </head>
-<body>
+<body class="frontend">
     {% block body %}{% endblock %}
     {% block script %}
-        <script src="{% static 'netjsongraph/lib/d3.min.js' %}"></script>
-        <script src="{% static 'netjsongraph/src/netjsongraph.js' %}"></script>
+        <script src="{% static 'netjsongraph/js/lib/d3.min.js' %}"></script>
+        <script src="{% static 'netjsongraph/js/src/netjsongraph.js' %}"></script>
     {% endblock %}
 </body>
 </html>

@@ -1,0 +1,12 @@
+<script>
+    var graph = d3.netJsonGraph("{% url 'network_graph' topology.pk %}", {
+        linkClassProperty: "status",
+        defaultStyle: false,
+        labelDy: "-1.5em",
+        circleRadius: 7,
+        charge: -300,
+        gravity: 0.1,
+        linkDistance: 70,
+        linkStrength: 0.1
+    });
+</script>
