@@ -9,11 +9,11 @@ WIP
 Version 0.3.0 [2017-05-31]
 --------------------------
 
-- `#24 <https://github.com/interop-dev/django-netjsongraph/issues/24>`_:
+- `#24 <https://github.com/netjson/django-netjsongraph/issues/24>`_:
   Provided base classes to improve reusability
-- `#27 <https://github.com/interop-dev/django-netjsongraph/issues/27>`_:
+- `#27 <https://github.com/netjson/django-netjsongraph/issues/27>`_:
   [link] Added ``link_status_changed`` signal
-- `#15 <https://github.com/interop-dev/django-netjsongraph/issues/15>`_:
+- `#15 <https://github.com/netjson/django-netjsongraph/issues/15>`_:
   Added ``NETJSONGRAPH_VISUALIZER_CSS`` setting and instructions to override default templates
 
 Version 0.2.3 [2017-05-18]
