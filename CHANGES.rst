@@ -1,10 +1,13 @@
 Changelog
 =========
 
-Version 0.3.1 [unreleased]
+Version 0.3.1 [2017-06-22]
 --------------------------
 
-WIP
+- `fefbce5 <https://github.com/netjson/django-netjsongraph/commit/fefbce5>`_:
+  [visualizer] Provided base classes to improve reusability
+- `a0c4cc7 <https://github.com/netjson/django-netjsongraph/commit/a0c4cc7>`_:
+  Added netjsongraph.js visualization to admin site
 
 Version 0.3.0 [2017-05-31]
 --------------------------
