@@ -1,0 +1,15 @@
+{% load i18n admin_urls %}
+{% load static %}
+
+{% block content %}
+<div>
+    <a class="close" href="#">&times; {% trans 'Close' %}</a>
+</div>
+<div id="legend">
+    <p><span class="link up">&nbsp;</span>link up</p>
+    <p><span class="link down">&nbsp;</span>link down</p>
+</div>
+{% block script %}
+    {% include '../../netjsongraph/netjsongraph-script.html' %}
+{% endblock %}
+{% endblock %}

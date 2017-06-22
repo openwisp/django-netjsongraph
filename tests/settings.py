@@ -21,11 +21,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_netjsongraph',
     'django.contrib.admin',
 
     # rest framework
-    'rest_framework',
-    'django_netjsongraph'
+    'rest_framework'
 ]
 
 MIDDLEWARE_CLASSES = [

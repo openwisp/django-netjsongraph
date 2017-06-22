@@ -40,7 +40,7 @@ Current features
     - additional formats can be added by `specifying custom parsers <#netjsongraph-parsers>`_
 * **network topology visualizer** based on `netjsongraph.js <https://github.com/netjson/netjsongraph.js>`_
 * **simple HTTP API** that exposes data in `NetJSON <http://netjson.org>`__ *NetworkGraph* format
-* **admin interface** that allows to easily manage, audit and debug topologies and their relative data (nodes, links)
+* **admin interface** that allows to easily manage, audit, visualize and debug topologies and their relative data (nodes, links)
 * **receive topology** from multiple nodes
 
 Project goals
@@ -241,11 +241,11 @@ Setting this to ``False`` will disable this feature.
 ``NETJSONGRAPH_VISUALIZER_CSS``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-+--------------+---------------------------------+
-| **type**:    | ``str``                         |
-+--------------+---------------------------------+
-| **default**: | ``netjsongraph/style.css``      |
-+--------------+---------------------------------+
++--------------+--------------------------------+
+| **type**:    | ``str``                        |
++--------------+--------------------------------+
+| **default**: | ``netjsongraph/css/style.css`` |
++--------------+--------------------------------+
 
 Path of the visualizer css file. Allows customization of css according to user's
 preferences.

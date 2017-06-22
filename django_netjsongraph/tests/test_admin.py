@@ -104,3 +104,15 @@ class TestAdmin(TestCase, LoadMixin):
         path = reverse('admin:django_netjsongraph_node_add')
         response = self.client.get(path)
         self.assertNotContains(response, 'Links to other nodes')
+
+    def test_topology_visualize_button(self):
+        t = Topology.objects.first()
+        path = reverse('admin:django_netjsongraph_topology_change', args=[t.pk])
+        response = self.client.get(path)
+        self.assertContains(response, 'View topology graph')
+
+    def test_topology_visualize_view(self):
+        t = Topology.objects.first()
+        path = reverse('admin:django_netjsongraph_topology_visualize', args=[t.pk])
+        response = self.client.get(path)
+        self.assertContains(response, 'var graph = d3.netJsonGraph')
