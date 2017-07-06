@@ -28,7 +28,7 @@ def get_object_or_404(model, pk, **kwargs):
     })
     try:
         return get_obj_or_404(model, **kwargs)
-    except (ValidationError, ValueError):
+    except ValidationError:
         raise Http404()
 
 

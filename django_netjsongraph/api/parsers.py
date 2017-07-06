@@ -1,5 +1,6 @@
 import six
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import JSONParser
 
@@ -16,5 +17,5 @@ class TextParser(JSONParser):
 
         try:
             return stream.read().decode(encoding)
-        except ValueError as e:  # pragma: nocover
+        except ValidationError as e:  # pragma: nocover
             raise ParseError('text/plain parse error - %s' % six.text_type(e))
