@@ -1,10 +1,13 @@
 Changelog
 =========
 
-Version 0.3.2 [unreleased]
+Version 0.3.2 [2017-07-10]
 --------------------------
 
-WIP
+- `#39 <https://github.com/netjson/django-netjsongraph/pull/39>`_:
+  Upgraded to django 1.11
+- `891e58 <https://github.com/netjson/django-netjsongraph/commit/891e58>`_:
+  [admin] Moved submit_line.html to openwisp_utils
 
 Version 0.3.1 [2017-06-22]
 --------------------------
