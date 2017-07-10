@@ -23,18 +23,6 @@ class TimeStampedEditableAdmin(ModelAdmin):
 class BaseAdmin(TimeStampedEditableAdmin):
     save_on_top = True
 
-    def get_extra_context(self):
-        return {'submit_line': 'admin/django_netjsongraph/submit_line.html'}
-
-    def add_view(self, request, form_url='', extra_context=None):
-        extra_context = self.get_extra_context()
-        return super(BaseAdmin, self).add_view(request, form_url, extra_context)
-
-    def change_view(self, request, pk, form_url='', extra_context=None):
-        extra_context = extra_context or {}
-        extra_context.update(self.get_extra_context())
-        return super(BaseAdmin, self).change_view(request, pk, form_url, extra_context)
-
     class Media:
         css = {'all': [static('netjsongraph/css/src/netjsongraph.css'),
                        static('netjsongraph/css/style.css'),
@@ -74,7 +62,18 @@ class AbstractTopologyAdmin(BaseAdmin):
     def change_view(self, request, pk, form_url='', extra_context=None):
         extra_context = extra_context or {}
         prefix = 'admin:{0}_{1}'.format(self.opts.app_label, self.model.__name__.lower())
-        extra_context['visualize_url'] = reverse('{0}_visualize'.format(prefix), args=[pk])
+        text = _('View topology graph')
+        extra_context.update({
+            'additional_buttons': [
+                {
+                    'type': 'button',
+                    'url': reverse('{0}_visualize'.format(prefix), args=[pk]),
+                    'class': 'visualizelink',
+                    'value': text,
+                    'title': '{0} (ALT+P)'.format(text)
+                }
+            ]
+        })
         return super(AbstractTopologyAdmin, self).change_view(request, pk, form_url, extra_context)
 
     def get_urls(self):

@@ -97,6 +97,7 @@ Add ``rest_framework`` and ``django_netjsongraph`` to ``INSTALLED_APPS``:
     INSTALLED_APPS = [
         # other apps
         'rest_framework',
+        'openwisp_utils.admin_theme',
         'django_netjsongraph'
         # ...
     ]
