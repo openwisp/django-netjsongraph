@@ -7,7 +7,7 @@ from .settings import SIGNALS
 class DjangoNetjsongraphConfig(AppConfig):
     name = 'django_netjsongraph'
     label = 'django_netjsongraph'
-    verbose_name = _('Network Graph')
+    verbose_name = _('Network Topology')
 
     def ready(self):
         if SIGNALS:  # pragma: nocover
