@@ -1,9 +1,11 @@
 from django.test import TestCase
 
+from ..models import Topology
 from .utils import UnpublishMixin
 
 
 class TestVisualizer(TestCase, UnpublishMixin):
+    topology_model = Topology
     fixtures = [
         'test_topologies.json',
         'test_nodes.json'

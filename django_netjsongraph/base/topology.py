@@ -164,6 +164,18 @@ class AbstractTopology(TimeStampedEditableModel):
             return netjson
         return json.dumps(netjson, cls=JSONEncoder, **kwargs)
 
+    def _create_node(self, **kwargs):
+        options = dict(topology=self)
+        options.update(kwargs)
+        node = self.node_model(**options)
+        return node
+
+    def _create_link(self, **kwargs):
+        options = dict(topology=self)
+        options.update(kwargs)
+        link = self.link_model(**options)
+        return link
+
     def update(self, data=None):
         """
         Updates topology
@@ -197,9 +209,8 @@ class AbstractTopology(TimeStampedEditableModel):
             addresses = '{0};'.format(node_dict['id'])
             addresses += ';'.join(node_dict.get('local_addresses', []))
             properties = node_dict.get('properties', {})
-            node = Node(addresses=addresses,
-                        properties=properties,
-                        topology=self)
+            node = self._create_node(addresses=addresses,
+                                     properties=properties)
             node.truncate_addresses()
             node.full_clean()
             node.save()
@@ -217,11 +228,11 @@ class AbstractTopology(TimeStampedEditableModel):
                 if not link:
                     source = Node.get_from_address(link_dict['source'], self)
                     target = Node.get_from_address(link_dict['target'], self)
-                    link = Link(source=source,
-                                target=target,
-                                cost=link_dict['cost'],
-                                properties=link_dict.get('properties', {}),
-                                topology=self)
+                    link = self._create_link(source=source,
+                                             target=target,
+                                             cost=link_dict['cost'],
+                                             properties=link_dict.get('properties', {}),
+                                             topology=self)
                     changed = True
                 # if status of link is changed
                 if self.link_status_changed(link, status[section]):
