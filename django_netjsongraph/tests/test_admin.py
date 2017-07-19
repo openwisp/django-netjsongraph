@@ -1,118 +1,17 @@
-import responses
-from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
 from django.test import TestCase
 
+from . import CreateGraphObjectsMixin
 from ..models import Link, Node, Topology
-from .utils import LoadMixin
+from .utils import TestAdminMixin
 
 
-class TestAdmin(TestCase, LoadMixin):
-    fixtures = [
-        'test_topologies.json',
-        'test_nodes.json',
-        'test_users.json'
-    ]
+class TestAdmin(TestAdminMixin, TestCase, CreateGraphObjectsMixin):
+    topology_model = Topology
+    link_model = Link
+    node_model = Node
 
     def setUp(self):
-        user_model = get_user_model()
-        self.client.force_login(user_model.objects.get(username='admin'))
-        self.changelist_path = reverse('admin:django_netjsongraph_topology_changelist')
-
-    def test_unpublish_selected(self):
-        t = Topology.objects.first()
-        self.assertEqual(t.published, True)
-        self.client.post(self.changelist_path, {
-            'action': 'unpublish_selected',
-            '_selected_action': str(t.pk)
-        })
-        t.refresh_from_db()
-        self.assertEqual(t.published, False)
-
-    def test_publish_selected(self):
-        t = Topology.objects.first()
-        t.published = False
-        t.save()
-        self.client.post(self.changelist_path, {
-            'action': 'publish_selected',
-            '_selected_action': str(t.pk)
-        })
-        t.refresh_from_db()
-        self.assertEqual(t.published, True)
-
-    @responses.activate
-    def test_update_selected(self):
-        t = Topology.objects.first()
-        t.parser = 'netdiff.NetJsonParser'
-        t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=self._load('static/netjson-1-link.json'),
-                      content_type='application/json')
-        Node.objects.all().delete()
-        self.client.post(self.changelist_path, {
-            'action': 'update_selected',
-            '_selected_action': str(t.pk)
-        })
-        self.assertEqual(Node.objects.count(), 2)
-        self.assertEqual(Link.objects.count(), 1)
-
-    @responses.activate
-    def test_update_selected_failed(self):
-        t = Topology.objects.first()
-        t.parser = 'netdiff.NetJsonParser'
-        t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body='{"error": "not found"}',
-                      status=404,
-                      content_type='application/json')
-        Node.objects.all().delete()
-        response = self.client.post(self.changelist_path, {
-            'action': 'update_selected',
-            '_selected_action': str(t.pk)
-        }, follow=True)
-        self.assertEqual(Node.objects.count(), 0)
-        self.assertEqual(Link.objects.count(), 0)
-        message = list(response.context['messages'])[0]
-        self.assertEqual(message.tags, 'error')
-        self.assertIn('not updated', message.message)
-
-    def test_topology_viewonsite(self):
-        t = Topology.objects.first()
-        path = reverse('admin:django_netjsongraph_topology_change', args=[t.pk])
-        response = self.client.get(path)
-        self.assertContains(response, 'View on site')
-        self.assertContains(response, t.get_absolute_url())
-
-    def test_topology_receive_url(self):
-        t = Topology.objects.first()
-        t.strategy = 'receive'
-        t.save()
-        path = reverse('admin:django_netjsongraph_topology_change', args=[t.pk])
-        response = self.client.get(path)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'field-receive_url')
-
-    def test_node_change_form(self):
-        n = Node.objects.first()
-        path = reverse('admin:django_netjsongraph_node_change', args=[n.pk])
-        response = self.client.get(path)
-        self.assertContains(response, 'Links to other nodes')
-
-    def test_node_add(self):
-        path = reverse('admin:django_netjsongraph_node_add')
-        response = self.client.get(path)
-        self.assertNotContains(response, 'Links to other nodes')
-
-    def test_topology_visualize_button(self):
-        t = Topology.objects.first()
-        path = reverse('admin:django_netjsongraph_topology_change', args=[t.pk])
-        response = self.client.get(path)
-        self.assertContains(response, 'View topology graph')
-
-    def test_topology_visualize_view(self):
-        t = Topology.objects.first()
-        path = reverse('admin:django_netjsongraph_topology_visualize', args=[t.pk])
-        response = self.client.get(path)
-        self.assertContains(response, 'var graph = d3.netJsonGraph')
+        t = self._create_topology()
+        self._create_node(label="node1", addresses="192.168.0.1;", topology=t)
+        self._create_node(label="node2", addresses="192.168.0.2;", topology=t)
+        super(TestAdmin, self).setUp()
