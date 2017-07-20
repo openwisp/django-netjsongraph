@@ -55,6 +55,15 @@ Project goals
 * provide ways to extend the default behaviour
 * encourage new features to be published as extensions
 
+Deploy it in production
+-----------------------
+
+An automated installer is provided by the `OpenWISP <http://openwisp.org>`_ project:
+`ansible-openwisp2 <https://github.com/openwisp/ansible-openwisp2>`_.
+
+Ensure to follow the instructions explained in the following section: `Enabling the network topology
+module <https://github.com/openwisp/ansible-openwisp2#enabling-the-network-topology-module>`_.
+
 Install stable version from pypi
 --------------------------------
 
