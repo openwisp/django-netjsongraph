@@ -38,6 +38,7 @@ class AbstractTopologyAdmin(BaseAdmin):
     list_display = ['label', 'parser', 'strategy', 'published', 'created', 'modified']
     readonly_fields = ['protocol', 'version', 'revision', 'metric', 'receive_url']
     list_filter = ['parser', 'strategy']
+    search_fields = ['label', 'id']
     actions = ['update_selected', 'unpublish_selected', 'publish_selected']
     fields = ['label', 'parser', 'strategy', 'url', 'key',
               'expiration_time', 'receive_url', 'published', 'protocol',
