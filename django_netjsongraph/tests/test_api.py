@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from . import CreateGraphObjectsMixin
 from ..models import Link, Node, Topology
-from .utils import TestApiMixin
+from .base.api import TestApiMixin
 
 
 class TestApi(TestCase, TestApiMixin, CreateGraphObjectsMixin):
