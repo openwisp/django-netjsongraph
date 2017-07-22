@@ -1,11 +1,19 @@
 Changelog
 =========
 
-Version 0.3.3 [unreleased]
+Version 0.3.3 [2017-07-22]
 --------------------------
 
-WIP
-
+- `#42 <https://github.com/netjson/django-netjsongraph/pull/42>`_:
+  Made test-api, topology update function and update command reusable
+- `#44 <https://github.com/netjson/django-netjsongraph/pull/44>`_:
+  Made test-utils reusable
+- `#45 <https://github.com/netjson/django-netjsongraph/pull/45>`_:
+  Made test-admin reusable
+- `e5642c <https://github.com/netjson/django-netjsongraph/commit/e5642c>`_:
+  [admin] Added search for Topology model
+- `#48 <https://github.com/netjson/django-netjsongraph/pull/48>`_:
+   Moved all the reusable tests to tests.base and separated into files
 
 Version 0.3.2 [2017-07-10]
 --------------------------
