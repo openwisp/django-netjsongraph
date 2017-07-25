@@ -303,5 +303,4 @@ class AbstractTopology(TimeStampedEditableModel):
             print_info('Updating topology {0}'.format(topology))
             with log_failure('update', topology):
                 topology.update()
-        Link = cls().link_model
-        Link.delete_expired_links()
+        cls().link_model.delete_expired_links()
