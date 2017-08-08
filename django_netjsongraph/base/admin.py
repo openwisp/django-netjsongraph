@@ -144,6 +144,7 @@ class AbstractNodeAdmin(BaseAdmin):
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         link_model = self.model.source_link_set.field.model
+        admin_url = 'admin:{0}_link_change'.format(self.opts.app_label)
         extra_context.update({
             'node_links': link_model.objects.select_related('source', 'target')
                                             .only('source__label',
@@ -151,7 +152,8 @@ class AbstractNodeAdmin(BaseAdmin):
                                                   'cost',
                                                   'status')
                                             .filter(Q(source_id=object_id) |
-                                                    Q(target_id=object_id))
+                                                    Q(target_id=object_id)),
+            'admin_url': admin_url
         })
         return super(AbstractNodeAdmin, self).change_view(request, object_id, form_url, extra_context)
 
