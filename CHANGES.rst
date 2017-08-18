@@ -1,10 +1,13 @@
 Changelog
 =========
 
-Version 0.3.4 [unreleased]
+Version 0.3.4 [2017-08-19]
 --------------------------
 
-WIP
+- `7ea174 <https://github.com/netjson/django-netjsongraph/commit/7ea174>`_:
+  Minor simplification in update_all
+- `#51 <https://github.com/netjson/django-netjsongraph/pull/51>`_:
+  [templates] Made node template reusable
 
 Version 0.3.3 [2017-07-22]
 --------------------------
