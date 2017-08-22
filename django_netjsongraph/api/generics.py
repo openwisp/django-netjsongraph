@@ -1,3 +1,5 @@
+import json
+
 from django.utils.translation import ugettext_lazy as _
 from netdiff.exceptions import NetdiffException
 from rest_framework import generics
@@ -23,6 +25,28 @@ class BaseNetworkGraphView(generics.RetrieveAPIView):
     in NetJSON NetworkGraph format
     """
     serializer_class = NetworkGraphSerializer
+
+
+class BaseNetworkGraphHistoryView(APIView):
+    """
+    History of a specific topology returned
+    in NetJSON NetworkGraph format
+    """
+
+    def get(self, request, pk, format=None):
+        topology = get_object_or_404(self.topology_model, pk)
+        date = request.query_params.get('date')
+        options = dict(topology=topology, date=date)
+        # missing date: 400
+        if not date:
+            return Response({'detail': _('missing required "date" parameter')},
+                            status=400)
+        try:
+            s = self.snapshot_model.objects.get(**options)
+            return Response(json.loads(s.data))
+        except:
+            return Response({'detail': _('wrong date')},
+                            status=403)
 
 
 class BaseReceiveTopologyView(APIView):

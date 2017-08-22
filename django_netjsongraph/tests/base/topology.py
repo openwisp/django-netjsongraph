@@ -379,3 +379,13 @@ class TestTopologyMixin(LoadMixin):
         t.receive(data)
         n = self.node_model.get_from_address('2001:4e12:452a:1:172::10', t)
         self.assertEqual(len(n.addresses), 485)
+
+    def test_save_snapshot(self):
+        t = self._set_receive()
+        t.save_snapshot()
+        s = t.snapshot_set.model.objects.first()
+        self.assertEqual(s.data, t.json())
+        self.assertEqual(s.topology, t)
+        t.save_snapshot()
+        s = t.snapshot_set.model.objects.first()
+        self.assertFalse(s.created == s.modified)

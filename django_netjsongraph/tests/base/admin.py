@@ -11,13 +11,14 @@ class TestAdminMixin(LoadMixin):
         'test_users.json'
     ]
 
+    @property
     def prefix(self):
         return 'admin:{0}'.format(appconfig.label)
 
     def setUp(self):
         user_model = get_user_model()
         self.client.force_login(user_model.objects.get(username='admin'))
-        self.changelist_path = reverse('{0}_topology_changelist'.format(self.prefix()))
+        self.changelist_path = reverse('{0}_topology_changelist'.format(self.prefix))
 
     def test_unpublish_selected(self):
         t = self.topology_model.objects.first()
@@ -80,7 +81,7 @@ class TestAdminMixin(LoadMixin):
 
     def test_topology_viewonsite(self):
         t = self.topology_model.objects.first()
-        path = reverse('{0}_topology_change'.format(self.prefix()), args=[t.pk])
+        path = reverse('{0}_topology_change'.format(self.prefix), args=[t.pk])
         response = self.client.get(path)
         self.assertContains(response, 'View on site')
         self.assertContains(response, t.get_absolute_url())
@@ -89,30 +90,40 @@ class TestAdminMixin(LoadMixin):
         t = self.topology_model.objects.first()
         t.strategy = 'receive'
         t.save()
-        path = reverse('{0}_topology_change'.format(self.prefix()), args=[t.pk])
+        path = reverse('{0}_topology_change'.format(self.prefix), args=[t.pk])
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'field-receive_url')
 
     def test_node_change_form(self):
         n = self.node_model.objects.first()
-        path = reverse('{0}_node_change'.format(self.prefix()), args=[n.pk])
+        path = reverse('{0}_node_change'.format(self.prefix), args=[n.pk])
         response = self.client.get(path)
         self.assertContains(response, 'Links to other nodes')
 
     def test_node_add(self):
-        path = reverse('{0}_node_add'.format(self.prefix()))
+        path = reverse('{0}_node_add'.format(self.prefix))
         response = self.client.get(path)
         self.assertNotContains(response, 'Links to other nodes')
 
     def test_topology_visualize_button(self):
         t = self.topology_model.objects.first()
-        path = reverse('{0}_topology_change'.format(self.prefix()), args=[t.pk])
+        path = reverse('{0}_topology_change'.format(self.prefix), args=[t.pk])
         response = self.client.get(path)
         self.assertContains(response, 'View topology graph')
 
     def test_topology_visualize_view(self):
         t = self.topology_model.objects.first()
-        path = reverse('{0}_topology_visualize'.format(self.prefix()), args=[t.pk])
+        path = reverse('{0}_topology_visualize'.format(self.prefix), args=[t.pk])
         response = self.client.get(path)
         self.assertContains(response, 'var graph = d3.netJsonGraph')
+
+    def test_topology_visualize_history_view(self):
+        t = self.topology_model.objects.first()
+        t.save_snapshot()
+        date = t.snapshot_model.objects.first().date
+        api_url = '{0}?date={1}'.format(reverse('network_graph_history', args=[t.pk]), date)
+        admin_url = reverse('{0}_topology_visualize_history'.format(self.prefix), args=[t.pk])
+        path = '{0}?date={1}'.format(admin_url, date)
+        response = self.client.get(path)
+        self.assertContains(response, 'var graph = d3.netJsonGraph("{0}"'.format(api_url))

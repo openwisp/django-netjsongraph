@@ -1,5 +1,6 @@
 from .base.link import AbstractLink
 from .base.node import AbstractNode
+from .base.snapshot import AbstractSnapshot
 from .base.topology import AbstractTopology
 
 
@@ -9,8 +10,15 @@ class Topology(AbstractTopology):
 
 
 class Node(AbstractNode):
-    pass
+    class Meta(AbstractNode.Meta):
+        abstract = False
 
 
 class Link(AbstractLink):
-    pass
+    class Meta(AbstractLink.Meta):
+        abstract = False
+
+
+class Snapshot(AbstractSnapshot):
+    class Meta(AbstractSnapshot.Meta):
+        abstract = False

@@ -9,6 +9,11 @@
     <p><span class="link up">&nbsp;</span>link up</p>
     <p><span class="link down">&nbsp;</span>link down</p>
 </div>
+<div class="switcher" graph-url='{{graph_url}}'>
+    <label for="dp">Date</label>
+    <input type="text" id="dp" onclick="$('#dp').datepicker();$('#dp').datepicker('show');">
+    <button id="submit">Submit</button>
+</div>
 {% block script %}
     {% include '../../netjsongraph/netjsongraph-script.html' %}
 {% endblock %}

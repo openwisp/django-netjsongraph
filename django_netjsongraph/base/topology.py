@@ -1,6 +1,6 @@
 import json
 from collections import OrderedDict
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -103,6 +103,10 @@ class AbstractTopology(TimeStampedEditableModel):
     @property
     def node_model(self):
         return self.node_set.model
+
+    @property
+    def snapshot_model(self):
+        return self.snapshot_set.model
 
     def get_topology_data(self, data=None):
         """
@@ -248,6 +252,21 @@ class AbstractTopology(TimeStampedEditableModel):
                         link.full_clean()
                         link.save()
 
+    def save_snapshot(self, **kwargs):
+        """
+        Saves the snapshot of topology
+        """
+        Snapshot = self.snapshot_model
+        date = datetime.now().date()
+        options = dict(topology=self, date=date)
+        options.update(kwargs)
+        try:
+            s = Snapshot.objects.get(**options)
+        except:
+            s = Snapshot(**options)
+        s.data = self.json()
+        s.save()
+
     def link_status_changed(self, link, status):
         """
         determines if link status has changed,
@@ -304,3 +323,17 @@ class AbstractTopology(TimeStampedEditableModel):
             with log_failure('update', topology):
                 topology.update()
         cls().link_model.delete_expired_links()
+
+    @classmethod
+    def save_snapshot_all(cls, label=None):
+        """
+        - save snapshots of topoogies
+        - logs failures
+        """
+        queryset = cls.objects.filter(published=True)
+        if label:
+            queryset = queryset.filter(label__icontains=label)
+        for topology in queryset:
+            print_info('Saving topology {0}'.format(topology))
+            with log_failure('save_snapshot', topology):
+                topology.save_snapshot()

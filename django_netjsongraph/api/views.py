@@ -1,6 +1,6 @@
-from ..models import Topology
-from .generics import (BaseNetworkCollectionView, BaseNetworkGraphView,
-                       BaseReceiveTopologyView)
+from ..models import Snapshot, Topology
+from .generics import (BaseNetworkCollectionView, BaseNetworkGraphHistoryView,
+                       BaseNetworkGraphView, BaseReceiveTopologyView)
 
 
 class NetworkCollectionView(BaseNetworkCollectionView):
@@ -15,6 +15,12 @@ class ReceiveTopologyView(BaseReceiveTopologyView):
     model = Topology
 
 
+class NetworkGraphHistoryView(BaseNetworkGraphHistoryView):
+    topology_model = Topology
+    snapshot_model = Snapshot
+
+
 network_collection = NetworkCollectionView.as_view()
 network_graph = NetworkGraphView.as_view()
+network_graph_history = NetworkGraphHistoryView.as_view()
 receive_topology = ReceiveTopologyView.as_view()

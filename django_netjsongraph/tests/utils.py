@@ -204,3 +204,18 @@ class TestUtilsMixin(LoadMixin):
         self.assertEqual(self.node_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.count(), 1)
         settings.LINK_EXPIRATION = ORIGINAL_LINK_EXPIRATION
+
+    def test_save_snapshot_all_method(self, **kwargs):
+        self.assertEqual(self.snapshot_model.objects.count(), 0)
+        self.topology_model.save_snapshot_all('testnetwork')
+        self.assertEqual(self.snapshot_model.objects.count(), 1)
+        self._create_topology(**kwargs)
+        self.topology_model.save_snapshot_all()
+        self.assertEqual(self.snapshot_model.objects.count(), 2)
+
+    def test_save_snapshot_command(self):
+        self.assertEqual(self.snapshot_model.objects.count(), 0)
+        output = StringIO()
+        with redirect_stdout(output):
+            call_command('save_snapshot')
+        self.assertEqual(self.snapshot_model.objects.count(), 1)

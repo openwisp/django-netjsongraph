@@ -1,5 +1,5 @@
 <script>
-    var graph = d3.netJsonGraph("{% url 'network_graph' topology.pk %}", {
+    var graph = d3.netJsonGraph("{{ api_url }}", {
         linkClassProperty: "status",
         defaultStyle: false,
         labelDy: "-1.5em",

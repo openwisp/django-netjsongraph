@@ -1,4 +1,5 @@
 .njg-overlay,
+.switcher,
 .njg-metadata{
     background: #fbfbfb;
     border-radius: 3px;
@@ -24,6 +25,7 @@
     min-width: 200px;
     padding-bottom: 10px
 }
+
 .njg-overlay{
     padding-top: 10px;
     padding-bottom: 10px
@@ -38,6 +40,15 @@
 .njg-overlay p,
 .njg-metadata p{
     margin: 8px 0;
+}
+
+.switcher{
+    top: auto;
+    bottom: 10px;
+}
+
+.switcher #dp{
+    margin: 5px;
 }
 
 .njg-node{
@@ -130,3 +141,9 @@ body.frontend {
 }
 #legend .up{ border-color: #3acc38 }
 #legend .down{ border-color: red }
+
+.switcher{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}

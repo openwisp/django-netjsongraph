@@ -1,13 +1,14 @@
 from django.test import TestCase
 
 from . import CreateGraphObjectsMixin
-from ..models import Node, Topology
+from ..models import Node, Snapshot, Topology
 from .base.visualizer import TestVisualizerMixin
 
 
 class TestVisualizer(TestVisualizerMixin, CreateGraphObjectsMixin, TestCase):
     topology_model = Topology
     node_model = Node
+    snapshot_model = Snapshot
 
     def setUp(self):
         t = self._create_topology()

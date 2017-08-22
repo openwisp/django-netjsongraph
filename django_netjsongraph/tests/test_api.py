@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from . import CreateGraphObjectsMixin
-from ..models import Link, Node, Topology
+from ..models import Link, Node, Snapshot, Topology
 from .base.api import TestApiMixin
 
 
@@ -9,6 +9,7 @@ class TestApi(TestCase, TestApiMixin, CreateGraphObjectsMixin):
     topology_model = Topology
     node_model = Node
     link_model = Link
+    snapshot_model = Snapshot
 
     def setUp(self):
         t = self._create_topology()
