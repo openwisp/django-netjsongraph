@@ -22,6 +22,7 @@ class BaseTopologyDetailView(View):
         return render_to_response('netjsongraph/detail.html',
                                   {'api_url': api_url,
                                    'graph_url': graph_url,
+                                   'topology': topology,
                                    'VISUALIZER_CSS': VISUALIZER_CSS})
 
 
