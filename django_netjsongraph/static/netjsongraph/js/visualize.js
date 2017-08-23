@@ -2,7 +2,7 @@ django.jQuery(function($) {
     var overlay = $('.djnjg-overlay'),
         body = $('body'),
         inner = overlay.find('.inner'),
-        visualize_url = $('.visualizelink').attr('data-url');
+        visualizeUrl = $('.visualizelink').attr('data-url');
 
     var d = new Date(),
         month = d.getMonth() + 1,
@@ -16,7 +16,7 @@ django.jQuery(function($) {
 
     var openOverlay = function() {
         // show overlay
-        $.get(visualize_url, function(html) {
+        $.get(visualizeUrl, function(html) {
             inner.html(html);
             $('svg').appendTo(inner);
             $('.njg-overlay').appendTo(inner);
@@ -89,7 +89,7 @@ django.jQuery(function($) {
         }
         date = date.join('-');
         graph_url = $('.switcher').attr('graph-url') + '?date=' + date;
-        if(date == current_date) graph_url = visualize_url;
+        if(date == current_date) graph_url = visualizeUrl;
         $.get(graph_url, function(html) {
             inner.html(html);
             $('svg').appendTo(inner);
