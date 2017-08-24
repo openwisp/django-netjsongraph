@@ -1,5 +1,6 @@
 import json
 
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from netdiff.exceptions import NetdiffException
 from rest_framework import generics
@@ -44,8 +45,11 @@ class BaseNetworkGraphHistoryView(APIView):
         try:
             s = self.snapshot_model.objects.get(**options)
             return Response(json.loads(s.data))
-        except:
-            return Response({'detail': _('wrong date')},
+        except self.snapshot_model.DoesNotExist:
+            return Response({'detail': _('no snapshot found for this date')},
+                            status=404)
+        except ValidationError:
+            return Response({'detail': _('invalid date supplied')},
                             status=403)
 
 

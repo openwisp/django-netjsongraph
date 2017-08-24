@@ -119,9 +119,16 @@ class TestApiMixin(UnpublishMixin, LoadMixin):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data['detail'], 'missing required "date" parameter')
 
-    def test_snapshot_wrong_date_403(self):
+    def test_snapshot_invalid_date_403(self):
         date = self.snapshot_date
-        wrong_url = self.snapshot_url.replace('?date={0}'.format(date), '?date=wrong-date')
-        response = self.client.get(wrong_url)
+        url = self.snapshot_url.replace('?date={0}'.format(date), '?date=wrong-date')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.data['detail'], 'wrong date')
+        self.assertEqual(response.data['detail'], 'invalid date supplied')
+
+    def test_snapshot_no_snapshot_404(self):
+        date = self.snapshot_date
+        url = self.snapshot_url.replace('?date={0}'.format(date), '?date=2001-01-01')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+        self.assertIn('no snapshot found', response.data['detail'])
