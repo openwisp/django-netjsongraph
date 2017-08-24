@@ -46,5 +46,6 @@ input[type=text].readonly{
 
 .njg-overlay{
     top: auto;
-    bottom: 50px;
+    bottom: 5px;
+    right: 5px;
 }
