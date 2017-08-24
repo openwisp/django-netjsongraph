@@ -32,7 +32,7 @@ class BaseAdmin(TimeStampedEditableAdmin):
               static('netjsongraph/js/src/netjsongraph.js'),
               static('netjsongraph/js/receive-url.js'),
               static('netjsongraph/js/strategy-switcher.js'),
-              static('netjsongraph/js/topology-switcher.js'),
+              static('netjsongraph/js/topology-history.js'),
               static('netjsongraph/js/visualize.js')]
 
 
