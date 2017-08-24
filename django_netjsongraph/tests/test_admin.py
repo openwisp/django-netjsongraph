@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from . import CreateGraphObjectsMixin
 from ..models import Link, Node, Topology
-from .base.admin import TestAdminMixin
+from .base.test_admin import TestAdminMixin
 
 
 class TestAdmin(TestAdminMixin, TestCase, CreateGraphObjectsMixin):

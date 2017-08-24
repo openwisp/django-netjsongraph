@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from . import CreateGraphObjectsMixin
 from ..models import Node, Snapshot, Topology
-from .base.visualizer import TestVisualizerMixin
+from .base.test_visualizer import TestVisualizerMixin
 
 
 class TestVisualizer(TestVisualizerMixin, CreateGraphObjectsMixin, TestCase):
