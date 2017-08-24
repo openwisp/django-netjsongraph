@@ -28,7 +28,6 @@ class BaseAdmin(TimeStampedEditableAdmin):
                        static('netjsongraph/css/style.css'),
                        static('netjsongraph/css/admin.css')]}
         js = [static('netjsongraph/js/lib/d3.min.js'),
-              static('netjsongraph/js/lib/jquery.min.js'),
               static('netjsongraph/js/lib/jquery-ui.min.js'),
               static('netjsongraph/js/src/netjsongraph.js'),
               static('netjsongraph/js/receive-url.js'),
