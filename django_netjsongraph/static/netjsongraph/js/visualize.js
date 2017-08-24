@@ -17,16 +17,6 @@ django.jQuery(function($) {
                 closeOverlay();
             })
         })
-        .error(function(xhr) {
-            if (xhr.status == 400) {
-                $('#content-main form').trigger('submit');
-            }
-            else {
-                var message = 'Error while generating network topology graph';
-                if (gettext) { message = gettext(message); }
-                alert(message + ':\n\n' + xhr.responseText);
-            }
-        });
         $(document).keydown(disableArrowKeys);
     };
 
