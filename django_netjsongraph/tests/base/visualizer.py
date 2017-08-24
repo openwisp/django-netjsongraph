@@ -12,6 +12,9 @@ class TestVisualizerMixin(UnpublishMixin):
         t = self.topology_model.objects.first()
         response = self.client.get(reverse('topology_detail', args=[t.pk]))
         self.assertContains(response, t.pk)
+        # ensure switcher is present
+        self.assertContains(response, 'switcher')
+        self.assertContains(response, 'dp')
 
     def test_list_unpublished(self):
         self._unpublish()
@@ -31,16 +34,3 @@ class TestVisualizerMixin(UnpublishMixin):
         t = self.topology_model.objects.first()
         response = self.client.get(reverse('topology_detail', args=['{0}-wrong'.format(t.pk)]))
         self.assertEqual(response.status_code, 404)
-
-    def test_switcher_button(self):
-        t = self.topology_model.objects.first()
-        response = self.client.get(reverse('topology_detail', args=[t.pk]))
-        self.assertContains(response, 'switcher')
-        self.assertContains(response, 'dp')
-
-    def test_topology_history(self):
-        t = self.topology_model.objects.first()
-        t.save_snapshot()
-        date = t.snapshot_set.model.objects.first().date
-        response = self.client.get('{0}?date={1}'.format(reverse('topology_history', args=[t.pk]), date))
-        self.assertEqual(response.status_code, 200)

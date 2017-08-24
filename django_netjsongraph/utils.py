@@ -68,8 +68,5 @@ def get_visualizer_urls(views_module):
         url(r'^topology/(?P<pk>[^/]+)/$',
             views_module.topology_detail,
             name='topology_detail'),
-        url(r'^topology/(?P<pk>[^/]+)/history/$',
-            views_module.topology_history,
-            name='topology_history'),
     ]
     return urls

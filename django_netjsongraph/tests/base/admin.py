@@ -116,14 +116,4 @@ class TestAdminMixin(LoadMixin):
         t = self.topology_model.objects.first()
         path = reverse('{0}_topology_visualize'.format(self.prefix), args=[t.pk])
         response = self.client.get(path)
-        self.assertContains(response, 'var graph = d3.netJsonGraph')
-
-    def test_topology_visualize_history_view(self):
-        t = self.topology_model.objects.first()
-        t.save_snapshot()
-        date = t.snapshot_model.objects.first().date
-        api_url = '{0}?date={1}'.format(reverse('network_graph_history', args=[t.pk]), date)
-        admin_url = reverse('{0}_topology_visualize_history'.format(self.prefix), args=[t.pk])
-        path = '{0}?date={1}'.format(admin_url, date)
-        response = self.client.get(path)
-        self.assertContains(response, 'var graph = d3.netJsonGraph("{0}"'.format(api_url))
+        self.assertContains(response, 'd3.netJsonGraph(')

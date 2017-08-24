@@ -32,6 +32,7 @@ class BaseAdmin(TimeStampedEditableAdmin):
               static('netjsongraph/js/src/netjsongraph.js'),
               static('netjsongraph/js/receive-url.js'),
               static('netjsongraph/js/strategy-switcher.js'),
+              static('netjsongraph/js/topology-switcher.js'),
               static('netjsongraph/js/visualize.js')]
 
 
@@ -85,9 +86,6 @@ class AbstractTopologyAdmin(BaseAdmin):
             url(r'^visualize/(?P<pk>[^/]+)/$',
                 self.admin_site.admin_view(self.visualize_view),
                 name='{0}_visualize'.format(url_prefix)),
-            url(r'^visualize/history/(?P<pk>[^/]+)/$',
-                self.admin_site.admin_view(self.visualize_history_view),
-                name='{0}_visualize_history'.format(url_prefix))
         ] + super(AbstractTopologyAdmin, self).get_urls()
 
     def _message(self, request, rows, suffix, level=messages.SUCCESS):
@@ -127,35 +125,17 @@ class AbstractTopologyAdmin(BaseAdmin):
     unpublish_selected.short_description = _('Unpublish selected items')
 
     def visualize_view(self, request, pk):
-        api_url = reverse('network_graph', args=[pk])
+        graph_url = reverse('network_graph', args=[pk])
+        history_url = reverse('network_graph_history', args=[pk])
         context = self.admin_site.each_context(request)
         opts = self.model._meta
-        prefix = 'admin:{0}_{1}'.format(self.opts.app_label, self.model.__name__.lower())
-        graph_url = reverse('{0}_visualize_history'.format(prefix), args=[pk])
         context.update({
             'is_popup': True,
             'opts': opts,
             'change': False,
             'media': self.media,
-            'api_url': api_url,
-            'graph_url': graph_url
-        })
-        return TemplateResponse(request, 'admin/%s/visualize.html' % opts.app_label, context)
-
-    def visualize_history_view(self, request, pk):
-        date = request.GET.get('date', '')
-        api_url = '{0}?date={1}'.format(reverse('network_graph_history', args=[pk]), date)
-        context = self.admin_site.each_context(request)
-        opts = self.model._meta
-        prefix = 'admin:{0}_{1}'.format(self.opts.app_label, self.model.__name__.lower())
-        graph_url = reverse('{0}_visualize_history'.format(prefix), args=[pk])
-        context.update({
-            'is_popup': True,
-            'opts': opts,
-            'change': False,
-            'media': self.media,
-            'api_url': api_url,
-            'graph_url': graph_url
+            'graph_url': graph_url,
+            'history_url': history_url
         })
         return TemplateResponse(request, 'admin/%s/visualize.html' % opts.app_label, context)
 
