@@ -10,8 +10,12 @@ window.initTopologyHistory = function($){
             url = apiUrl + '?date=' + date;
         // load latest data when looking currentDate
         if(datepicker.datepicker('getDate').getTime() == today.getTime()){
-            url = undefined
+            url = window.__njg_default_url__;
         }
-        window.graph = window.loadNetJsonGraph(url);
+        $.getJSON(url).done(function(data){
+            window.graph = window.loadNetJsonGraph(data);
+        }).error(function(xhr){
+            alert(xhr.responseJSON.detail);
+        });
     });
 };
