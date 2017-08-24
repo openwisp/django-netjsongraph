@@ -13,8 +13,8 @@ class TestVisualizerMixin(UnpublishMixin):
         response = self.client.get(reverse('topology_detail', args=[t.pk]))
         self.assertContains(response, t.pk)
         # ensure switcher is present
-        self.assertContains(response, 'switcher')
-        self.assertContains(response, 'dp')
+        self.assertContains(response, 'njg-switcher')
+        self.assertContains(response, 'njg-datepicker')
 
     def test_list_unpublished(self):
         self._unpublish()

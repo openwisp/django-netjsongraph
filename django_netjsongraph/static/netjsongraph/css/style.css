@@ -1,6 +1,11 @@
+body.frontend{
+    margin: 0;
+    padding: 8px
+}
+
 .njg-overlay,
-.switcher,
-.njg-metadata{
+.njg-metadata,
+.njg-switcher{
     background: #fbfbfb;
     border-radius: 3px;
     border: 1px solid #ccc;
@@ -40,15 +45,6 @@
 .njg-overlay p,
 .njg-metadata p{
     margin: 8px 0;
-}
-
-.switcher{
-    top: auto;
-    bottom: 10px;
-}
-
-.switcher #dp{
-    margin: 5px;
 }
 
 .njg-node{
@@ -142,8 +138,30 @@ body.frontend {
 #legend .up{ border-color: #3acc38 }
 #legend .down{ border-color: red }
 
-.switcher{
+.njg-switcher{
     position: absolute;
     bottom: 5px;
     right: 5px;
+    top: auto;
+    padding: 10px 15px;
+    min-width: auto;
+}
+
+#njg-datepicker{
+    margin: 0 0 0 5px !important;
+    font-size: 13px;
+    padding: 5px 10px;
+    width: 75px;
+}
+
+#ui-datepicker-div{
+    font-size: 15px;
+    line-height: initial
+}
+
+.ui-datepicker thead th{
+    line-height: normal;
+    text-transform: uppercase;
+    font-size: 11px;
+    background: #f6f6f6;
 }
