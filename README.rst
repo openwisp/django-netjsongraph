@@ -303,17 +303,28 @@ the new ``<project_path>/templates/netjsongraph/`` directory, eg:
 
     <!-- <project_path>/templates/netjsongraph/netjsongraph-script.html -->
     <script>
-        var graph = d3.netJsonGraph("{% url 'network_graph' topology.pk %}", {
-            linkClassProperty: "status",
-            defaultStyle: false,
-            labelDy: "-1.4em",
-            circleRadius: 8,
-            charge: -100,
-            gravity: 0.3,
-            linkDistance: 100,
-            linkStrength: 0.2,
-            # more customisations here ...
-        });
+        window.__njg_el__ = window.__njg_el__ || "body";
+        window.__njg_default_url__ = "{{ graph_url }}";
+        window.loadNetJsonGraph = function(graph){
+            graph = graph || window.__njg_default_url__;
+            d3.select("svg").remove();
+            d3.select(".njg-overlay").remove();
+            d3.select(".njg-metadata").remove();
+            return d3.netJsonGraph(graph, {
+                el: window.__njg_el__,
+                // customizations of netjsongraph.js
+                linkClassProperty: "status",
+                defaultStyle: false,
+                labelDy: "-1.4em",
+                circleRadius: 8,
+                charge: -100,
+                gravity: 0.3,
+                linkDistance: 100,
+                linkStrength: 0.2,
+            });
+        };
+        window.graph = window.loadNetJsonGraph();
+        window.initTopologyHistory(jQuery);
     </script>
 
 Extending django-netjsongraph
