@@ -112,10 +112,8 @@ class AbstractTopology(TimeStampedEditableModel):
         """
         gets latest topology data
         """
-        # fetch data from URL unless data is passed as argument
-        if data is None:
-            data = self.url
-        latest = self.parser_class(data, timeout=TIMEOUT)
+        # if data is ``None`` it will be fetched from ``self.url``
+        latest = self.parser_class(data=data, url=self.url, timeout=TIMEOUT)
         # update topology attributes if needed
         changed = False
         for attr in ['protocol', 'version', 'metric']:
