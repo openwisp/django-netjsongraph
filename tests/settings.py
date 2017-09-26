@@ -24,10 +24,18 @@ INSTALLED_APPS = [
     'openwisp_utils.admin_theme',
     'django_netjsongraph',
     'django.contrib.admin',
-
     # rest framework
-    'rest_framework'
+    'rest_framework',
+    # channels (websockets)
+    'channels'
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "django_netjsongraph.routing.channel_routing",
+    },
+}
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',

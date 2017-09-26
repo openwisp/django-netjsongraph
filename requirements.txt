@@ -3,5 +3,6 @@ djangorestframework>=3.3,<3.7
 django-model-utils
 netdiff>=0.5.0,<=6.0
 openwisp-utils>=0.1.2,<0.2
+channels>=1.1.8,<1.2.0
 jsonfield
 six

@@ -26,4 +26,10 @@
     };
     window.graph = window.loadNetJsonGraph();
     window.initTopologyHistory(jQuery);
+    // websocket
+    ws = new WebSocket("ws://" + window.location.host + "/netjsongraph/");
+    ws.onmessage = function(e) {
+        var link = JSON.parse(e.data);
+        d3.select('#link-' + link.id).attr('class', 'njg-link ' + link.status);
+    }
 </script>

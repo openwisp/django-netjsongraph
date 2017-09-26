@@ -10,5 +10,6 @@ class DjangoNetjsongraphConfig(AppConfig):
     verbose_name = _('Network Topology')
 
     def ready(self):
+        __import__('django_netjsongraph.receivers')
         if SIGNALS:  # pragma: nocover
             __import__(SIGNALS)

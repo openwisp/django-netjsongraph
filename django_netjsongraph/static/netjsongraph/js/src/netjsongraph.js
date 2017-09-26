@@ -394,6 +394,12 @@
                                      }
                                      return baseClass;
                                  })
+                                 // TODO: this feature should be sent upstream to netjsongraph.js
+                                 .attr("id", function(link){
+                                     if (true) {
+                                         return 'link-' + link.uuid;
+                                     }
+                                 })
                                  .on("click", opts.onClickLink),
                     groups = panner.selectAll(".node")
                                    .data(nodes)

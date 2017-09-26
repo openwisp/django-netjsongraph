@@ -41,6 +41,7 @@ class TestLinkMixin(object):
         l = t._create_link(source=node1, target=node2, cost=1.0,
                            cost_text='100mbit/s', properties='{"pretty": true}')
         self.assertEqual(dict(l.json(dict=True)), {
+            'uuid': l.id.hex,
             'source': '192.168.0.1',
             'target': '192.168.0.2',
             'cost': 1.0,

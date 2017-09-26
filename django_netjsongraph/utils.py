@@ -70,3 +70,6 @@ def get_visualizer_urls(views_module):
             name='topology_detail'),
     ]
     return urls
+
+
+channel_group_name = 'netjsongraph'

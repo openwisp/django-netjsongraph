@@ -64,6 +64,7 @@ class AbstractLink(TimeStampedEditableModel):
         returns a NetJSON NetworkGraph Link object
         """
         netjson = OrderedDict((
+            ('uuid', self.pk.hex),
             ('source', self.source.netjson_id),
             ('target', self.target.netjson_id),
             ('cost', self.cost),
