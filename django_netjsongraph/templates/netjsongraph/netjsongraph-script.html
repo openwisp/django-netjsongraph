@@ -3,6 +3,8 @@
     window.__njg_el__ = window.__njg_el__ || "body";
     // default API url
     window.__njg_default_url__ = "{{ graph_url }}";
+    // reference to graph data
+    window.__njg_graph_data__ = {}
     // loadGraph wrapper is used to reload
     // the graph with data from older snapshots
     window.loadNetJsonGraph = function(graph){
@@ -24,12 +26,19 @@
             linkStrength: 0.1
         });
     };
-    window.graph = window.loadNetJsonGraph();
+    window.loadNetJsonGraph();
     window.initTopologyHistory(jQuery);
-    // websocket
+    // websocket code to update link status
     ws = new WebSocket("ws://" + window.location.host + "/netjsongraph/");
     ws.onmessage = function(e) {
         var link = JSON.parse(e.data);
         d3.select('#link-' + link.id).attr('class', 'njg-link ' + link.status);
+        // update link status in graph
+        for(var i = 0; i < window.__njg_graph_data__.links.length; i++) {
+            if (link.id == window.__njg_graph_data__.links[i].uuid){
+                window.__njg_graph_data__.links[i].properties.status = link.status;
+                break;
+            }
+        }
     }
 </script>

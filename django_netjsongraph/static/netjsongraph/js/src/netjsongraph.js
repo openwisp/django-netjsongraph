@@ -522,7 +522,7 @@
                     opts.onEnd(url, opts);
                 });
 
-                return force;
+                window.__njg_graph_data__ = graph;
             };
 
         if(typeof(url) === "object") {
