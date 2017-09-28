@@ -32,7 +32,10 @@ INSTALLED_APPS = [
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
         "ROUTING": "django_netjsongraph.routing.channel_routing",
     },
 }
