@@ -6,6 +6,7 @@ DEFAULT_PARSERS = [
     ('netdiff.BmxParser', 'BMX6 (q6m)'),
     ('netdiff.NetJsonParser', 'NetJSON NetworkGraph'),
     ('netdiff.CnmlParser', 'CNML 1.0'),
+    ('netdiff.OpenvpnParser', 'OpenVPN')
 ]
 
 PARSERS = DEFAULT_PARSERS + getattr(settings, 'NETJSONGRAPH_PARSERS', [])
