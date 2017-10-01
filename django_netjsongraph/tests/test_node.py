@@ -8,7 +8,7 @@ from .base.test_node import TestNodeMixin
 class TestNode(TestNodeMixin, CreateGraphObjectsMixin, TestCase):
     topology_model = Topology
     node_model = Node
-    maxDiff = 0
+    maxDiff = None
 
     def setUp(self):
         t = self._create_topology()

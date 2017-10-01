@@ -97,8 +97,8 @@ class AbstractLink(TimeStampedEditableModel):
         :param topology: Topology instance
         :returns: Link object or None
         """
-        source = '{0};'.format(source)
-        target = '{0};'.format(target)
+        source = ';{0};'.format(source)
+        target = ';{0};'.format(target)
         q = (Q(source__addresses__contains=source,
                target__addresses__contains=target) |
              Q(source__addresses__contains=target,

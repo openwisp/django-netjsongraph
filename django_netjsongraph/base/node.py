@@ -40,15 +40,15 @@ class AbstractNode(TimeStampedEditableModel):
 
     def _format_addresses(self):
         """
-        Ensure address format is correct:
-            addr1; addr2; addr3;
+        Ensure address format is correct: ";addr1;addr2;addr3;"
         """
         self.addresses = self.addresses.replace(',', ';')\
                                        .replace(' ', '')\
-                                       .replace(';', '; ')
-        if not self.addresses.endswith('; '):
-            self.addresses += '; '
-        self.addresses = self.addresses[0:-1]
+                                       .replace(';', ';')
+        if not self.addresses.startswith(';'):
+            self.addresses = ';' + self.addresses
+        if not self.addresses.endswith(';'):
+            self.addresses += ';'
 
     def truncate_addresses(self):
         """
@@ -59,13 +59,16 @@ class AbstractNode(TimeStampedEditableModel):
             return
         addresses = self.address_list
         # +1 stands for the character added in self._format_address()
-        while len('; '.join(addresses))+1 > max_length:
+        while len(';'.join(addresses)) + 2 > max_length:
             addresses.pop()
-        self.addresses = '; '.join(addresses)
+        self.addresses = ';'.join(addresses)
 
     @cached_property
     def address_list(self):
-        return self.addresses.replace(' ', '')[0:-1].split(';')
+        addresses = self.addresses.replace(' ', '')
+        if addresses.startswith(';'):
+            addresses = addresses[1:]
+        return addresses[0:-1].split(';')
 
     @property
     def netjson_id(self):
@@ -106,7 +109,7 @@ class AbstractNode(TimeStampedEditableModel):
         :param topology: Topology instance
         :returns: Node object or None
         """
-        address = '{0};'.format(address)
+        address = ';{0};'.format(address)
         return cls.objects.filter(topology=topology,
                                   addresses__contains=address).first()
 
@@ -118,6 +121,6 @@ class AbstractNode(TimeStampedEditableModel):
         :param topology: Topology instance
         :returns: int
         """
-        address = '{0};'.format(address)
+        address = ';{0};'.format(address)
         return cls.objects.filter(topology=topology,
                                   addresses__contains=address).count()
