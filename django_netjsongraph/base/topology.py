@@ -12,6 +12,9 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from netdiff import NetJsonParser, diff
 from rest_framework.utils.encoders import JSONEncoder
+from netdiff.utils import _netjson_networkgraph as to_netjson
+from netjson_robustness.analyser import ParsedGraph
+
 
 from ..contextmanagers import log_failure
 from ..settings import PARSERS, TIMEOUT
@@ -21,6 +24,13 @@ from .base import TimeStampedEditableModel
 STRATEGIES = (
     ('fetch', _('FETCH')),
     ('receive', _('RECEIVE'))
+)
+
+# TODO export these in the configuration
+# First element is default
+SNAPSHOT_KINDS = (
+    ('normal', _('NORMAL')),
+    ('block_cut_tree', _('BLOCK_CUT_TREE'))
 )
 
 
@@ -254,16 +264,34 @@ class AbstractTopology(TimeStampedEditableModel):
         """
         Saves the snapshot of topology
         """
-        Snapshot = self.snapshot_model
-        date = datetime.now().date()
-        options = dict(topology=self, date=date)
-        options.update(kwargs)
-        try:
-            s = Snapshot.objects.get(**options)
-        except:
-            s = Snapshot(**options)
-        s.data = self.json()
-        s.save()
+        for kind in SNAPSHOT_KINDS:
+            Snapshot = self.snapshot_model
+            date = datetime.now().date()
+            options = dict(topology=self, date=date, kind=kind[0])
+            options.update(kwargs)
+            try:
+                s = Snapshot.objects.get(**options)
+            except:
+                s = Snapshot(**options)
+
+            if kind[0] == "block_cut_tree":
+                s.data = self.compute_cut_block_tree()
+            elif kind[0] == "normal":
+                s.data = self.json()
+            s.save()
+
+    def compute_cut_block_tree(self):
+        """
+        transform a given topology in a cut-block tree for better
+        visualization of the critical nodes
+        """
+        netjson = NetJsonParser(self.json(dict=True, omit_down=True))
+        p = ParsedGraph(netjson)
+        p.condensate_graph()
+        return json.dumps(to_netjson(p.netJSON.protocol, p.netJSON.version,
+                          p.netJSON.revision, p.netJSON.metric,
+                          p.condensed_graph.nodes(data=True),
+                          p.condensed_graph.edges(data=True), dict=True))
 
     def link_status_changed(self, link, status):
         """
