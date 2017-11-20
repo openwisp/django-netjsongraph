@@ -2,11 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from .base import TimeStampedEditableModel
-
-KINDS = (
-    ('normal', _('NORMAL')),
-    ('block_cut_tree', _('BLOCK_CUT_TREE'))
-)
+from .topology import SNAPSHOT_KINDS
 
 
 class AbstractSnapshot(TimeStampedEditableModel):
@@ -18,8 +14,8 @@ class AbstractSnapshot(TimeStampedEditableModel):
     date = models.DateField(auto_now=True)
     kind = models.CharField(_('kind'),
                             max_length=16,
-                            choices=KINDS,
-                            default='normal',
+                            choices=SNAPSHOT_KINDS,
+                            default=SNAPSHOT_KINDS[0],
                             db_index=True)
 
     class Meta:
