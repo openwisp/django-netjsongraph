@@ -4,7 +4,13 @@
     <p><span class="link down">&nbsp;</span> {% trans 'link down' %}</p>
 </div>
 <div class="njg-switcher">
+    <form id="v_kind">
+    <legend>Choose Visualization</legend>
     <label for="njg-datepicker">{% trans 'date' %}:</label>
     <input type="text" id="njg-datepicker"
-           data-history-api="{{ history_url }}">
+                       data-history-api="{{ history_url }}"><br/>
+    <input type="radio" name="visualization_kind" id="normal" value="normal"><label for="normal">{% trans 'normal' %}</label><br/>
+    <input type="radio" name="visualization_kind" id="block_cut_tree" value="block_cut_tree"><label for="block_cut_tree">{% trans 'block-cut-tree' %}</label><br/>
+    </form>
+
 </div>
