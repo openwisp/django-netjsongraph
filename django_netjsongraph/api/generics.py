@@ -37,7 +37,10 @@ class BaseNetworkGraphHistoryView(APIView):
     def get(self, request, pk, format=None):
         topology = get_object_or_404(self.topology_model, pk)
         date = request.query_params.get('date')
-        options = dict(topology=topology, date=date)
+        kind = request.query_params.get('kind')
+        if not kind:
+            kind = "normal"
+        options = dict(topology=topology, date=date, kind=kind)
         # missing date: 400
         if not date:
             return Response({'detail': _('missing required "date" parameter')},
