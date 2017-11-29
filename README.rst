@@ -13,6 +13,9 @@ django-netjsongraph
 
 .. image:: https://badge.fury.io/py/django-netjsongraph.svg
    :target: http://badge.fury.io/py/django-netjsongraph
+   
+.. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
+   :target: https://gitter.im/openwisp/general
 
 ------------
 
