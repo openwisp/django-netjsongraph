@@ -32,7 +32,7 @@ class CreateGraphObjectsMixin(object):
                        cost_text='one',
                        properties={})
         options.update(kwargs)
-        l = self.link_model(**options)
-        l.full_clean()
-        l.save()
-        return l
+        link = self.link_model(**options)
+        link.full_clean()
+        link.save()
+        return link

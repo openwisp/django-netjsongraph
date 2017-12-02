@@ -141,13 +141,13 @@ class TestUtilsMixin(LoadMixin):
         almost_expired_date = now() - timedelta(days=settings.LINK_EXPIRATION-10)
         n1 = self.node_model.objects.all()[0]
         n2 = self.node_model.objects.all()[1]
-        l = self._create_link(source=n1,
-                              target=n2,
-                              cost=1,
-                              status='down',
-                              topology=t)
-        self.link_model.objects.filter(pk=l.pk).update(created=almost_expired_date,
-                                                       modified=almost_expired_date)
+        link = self._create_link(source=n1,
+                                 target=n2,
+                                 cost=1,
+                                 status='down',
+                                 topology=t)
+        self.link_model.objects.filter(pk=link.pk).update(created=almost_expired_date,
+                                                          modified=almost_expired_date)
         empty_topology = json.dumps({
             "type": "NetworkGraph",
             "protocol": "OLSR",
@@ -165,8 +165,8 @@ class TestUtilsMixin(LoadMixin):
         self.assertEqual(self.link_model.objects.count(), 1)
         # should delete
         expired_date = now() - timedelta(days=settings.LINK_EXPIRATION+10)
-        self.link_model.objects.filter(pk=l.pk).update(created=expired_date,
-                                                       modified=expired_date)
+        self.link_model.objects.filter(pk=link.pk).update(created=expired_date,
+                                                          modified=expired_date)
         self.topology_model.update_all('testnetwork')
         self.assertEqual(self.node_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.count(), 0)
@@ -178,14 +178,14 @@ class TestUtilsMixin(LoadMixin):
         t.save()
         n1 = self.node_model.objects.all()[0]
         n2 = self.node_model.objects.all()[1]
-        l = self._create_link(source=n1,
-                              target=n2,
-                              cost=1,
-                              status='down',
-                              topology=t)
+        link = self._create_link(source=n1,
+                                 target=n2,
+                                 cost=1,
+                                 status='down',
+                                 topology=t)
         expired_date = now() - timedelta(days=settings.LINK_EXPIRATION+10)
-        self.link_model.objects.filter(pk=l.pk).update(created=expired_date,
-                                                       modified=expired_date)
+        self.link_model.objects.filter(pk=link.pk).update(created=expired_date,
+                                                          modified=expired_date)
         empty_topology = json.dumps({
             "type": "NetworkGraph",
             "protocol": "OLSR",

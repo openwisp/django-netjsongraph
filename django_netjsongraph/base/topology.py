@@ -260,7 +260,7 @@ class AbstractTopology(TimeStampedEditableModel):
         options.update(kwargs)
         try:
             s = Snapshot.objects.get(**options)
-        except:
+        except Snapshot.DoesNotExist:
             s = Snapshot(**options)
         s.data = self.json()
         s.save()

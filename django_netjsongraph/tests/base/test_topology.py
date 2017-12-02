@@ -54,8 +54,8 @@ class TestTopologyMixin(LoadMixin):
         t = self.topology_model.objects.first()
         node3 = t._create_node(addresses='192.168.0.3', label='node3')
         node3.save()
-        l = t._create_link(source=node1, target=node2, cost=1)
-        l.save()
+        link = t._create_link(source=node1, target=node2, cost=1)
+        link.save()
         l2 = t._create_link(source=node1, target=node3, cost=1)
         l2.save()
         graph = t.json(dict=True)
@@ -75,7 +75,7 @@ class TestTopologyMixin(LoadMixin):
                 dict(node3.json(dict=True))
             ],
             'links': [
-                dict(l.json(dict=True)),
+                dict(link.json(dict=True)),
                 dict(l2.json(dict=True))
             ]
         })
@@ -202,13 +202,13 @@ class TestTopologyMixin(LoadMixin):
         t.save()
         n1 = self.node_model.objects.all()[0]
         n2 = self.node_model.objects.all()[1]
-        l = t._create_link(source=n1,
-                           target=n2,
-                           cost=1,
-                           status='down',
-                           properties={'pretty': True})
-        l.full_clean()
-        l.save()
+        link = t._create_link(source=n1,
+                              target=n2,
+                              cost=1,
+                              status='down',
+                              properties={'pretty': True})
+        link.full_clean()
+        link.save()
         responses.add(responses.GET,
                       'http://127.0.0.1:9090',
                       body=self._load('static/netjson-1-link.json'),
@@ -216,8 +216,8 @@ class TestTopologyMixin(LoadMixin):
         t.update()
         self.assertEqual(self.node_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.count(), 1)
-        l.refresh_from_db()
-        self.assertEqual(l.status, 'up')
+        link.refresh_from_db()
+        self.assertEqual(link.status, 'up')
 
     def test_topology_url_empty(self):
         t = self.topology_model(label='test',
@@ -297,19 +297,19 @@ class TestTopologyMixin(LoadMixin):
         t = self._set_receive()
         n1 = self.node_model.objects.all()[0]
         n2 = self.node_model.objects.all()[1]
-        l = t._create_link(source=n1,
-                           target=n2,
-                           cost=1,
-                           status='down',
-                           properties={'pretty': True})
-        l.full_clean()
-        l.save()
+        link = t._create_link(source=n1,
+                              target=n2,
+                              cost=1,
+                              status='down',
+                              properties={'pretty': True})
+        link.full_clean()
+        link.save()
         data = self._load('static/netjson-1-link.json')
         t.receive(data)
         self.assertEqual(self.node_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.count(), 1)
-        l.refresh_from_db()
-        self.assertEqual(l.status, 'up')
+        link.refresh_from_db()
+        self.assertEqual(link.status, 'up')
 
     def test_multiple_receive_added(self):
         self._test_receive_added(expiration_time=50)
