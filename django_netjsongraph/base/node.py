@@ -15,7 +15,8 @@ class AbstractNode(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Node Object implementation
     """
-    topology = models.ForeignKey('django_netjsongraph.Topology')
+    topology = models.ForeignKey('django_netjsongraph.Topology',
+                                 on_delete=models.CASCADE)
     label = models.CharField(max_length=64, blank=True)
     # netjson ID and local_addresses
     addresses = models.CharField(max_length=510, db_index=True)

@@ -1,6 +1,6 @@
 import responses
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from ...apps import DjangoNetjsongraphConfig as appconfig
 from ..utils import LoadMixin

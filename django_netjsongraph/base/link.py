@@ -23,11 +23,14 @@ class AbstractLink(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Link Object implementation
     """
-    topology = models.ForeignKey('django_netjsongraph.Topology')
+    topology = models.ForeignKey('django_netjsongraph.Topology',
+                                 on_delete=models.CASCADE)
     source = models.ForeignKey('django_netjsongraph.Node',
-                               related_name='source_link_set')
+                               related_name='source_link_set',
+                               on_delete=models.CASCADE)
     target = models.ForeignKey('django_netjsongraph.Node',
-                               related_name='target_link_set')
+                               related_name='target_link_set',
+                               on_delete=models.CASCADE)
     cost = models.FloatField()
     cost_text = models.CharField(max_length=24, blank=True)
     STATUS = Choices('up', 'down')
