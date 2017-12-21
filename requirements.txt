@@ -1,4 +1,4 @@
-django>=1.11,<1.12
+django>=1.11,<2.1
 djangorestframework>=3.3,<3.8
 django-model-utils
 netdiff>=0.5.1,<=6.0

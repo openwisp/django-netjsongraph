@@ -62,7 +62,7 @@ class AbstractTopologyAdmin(BaseAdmin):
         actions['delete_selected'] = delete
         return actions
 
-    def change_view(self, request, pk, form_url='', extra_context=None):
+    def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         prefix = 'admin:{0}_{1}'.format(self.opts.app_label, self.model.__name__.lower())
         text = _('View topology graph')
@@ -70,14 +70,14 @@ class AbstractTopologyAdmin(BaseAdmin):
             'additional_buttons': [
                 {
                     'type': 'button',
-                    'url': reverse('{0}_visualize'.format(prefix), args=[pk]),
+                    'url': reverse('{0}_visualize'.format(prefix), args=[object_id]),
                     'class': 'visualizelink',
                     'value': text,
                     'title': '{0} (ALT+P)'.format(text)
                 }
             ]
         })
-        return super(AbstractTopologyAdmin, self).change_view(request, pk, form_url, extra_context)
+        return super(AbstractTopologyAdmin, self).change_view(request, object_id, form_url, extra_context)
 
     def get_urls(self):
         options = getattr(self.model, '_meta')

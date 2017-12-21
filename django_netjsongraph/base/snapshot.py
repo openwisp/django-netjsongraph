@@ -8,7 +8,8 @@ class AbstractSnapshot(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Snapshot implementation
     """
-    topology = models.ForeignKey('django_netjsongraph.topology')
+    topology = models.ForeignKey('django_netjsongraph.topology',
+                                 on_delete=models.CASCADE)
     data = models.TextField(blank=False)
     date = models.DateField(auto_now=True)
 

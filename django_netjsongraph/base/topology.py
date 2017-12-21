@@ -3,8 +3,8 @@ from collections import OrderedDict
 from datetime import datetime, timedelta
 
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.module_loading import import_string
