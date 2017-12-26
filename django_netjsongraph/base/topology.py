@@ -213,6 +213,8 @@ class AbstractTopology(TimeStampedEditableModel):
             properties = node_dict.get('properties', {})
             node = self._create_node(addresses=addresses,
                                      properties=properties)
+            if 'label' in node_dict:
+                node.label = node_dict.get('label')
             node.truncate_addresses()
             node.full_clean()
             node.save()

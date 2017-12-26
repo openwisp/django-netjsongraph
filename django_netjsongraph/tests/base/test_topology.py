@@ -14,9 +14,9 @@ class TestTopologyMixin(LoadMixin):
     def _get_nodes(self):
         return self.node_model.objects.all()
 
-    def _set_receive(self, expiration_time=0):
+    def _set_receive(self, expiration_time=0, parser='netdiff.NetJsonParser'):
         t = self.topology_model.objects.first()
-        t.parser = 'netdiff.NetJsonParser'
+        t.parser = parser
         t.strategy = 'receive'
         t.key = 'test'
         t.expiration_time = expiration_time
@@ -389,3 +389,17 @@ class TestTopologyMixin(LoadMixin):
         t.save_snapshot()
         s = t.snapshot_set.model.objects.first()
         self.assertFalse(s.created == s.modified)
+
+    def test_label_addition(self):
+        t = self._set_receive(parser='netdiff.OpenvpnParser')
+        t.save()
+        t.node_set.all().delete()
+        data = self._load('static/openvpn.txt')
+        t.receive(data)
+        self.assertEqual(t.node_set.count(), 4)
+        labels = []
+        for node in t.node_set.all():
+            labels.append(node.label)
+        self.assertIn('Syskrack', labels)
+        self.assertIn('Kali-Matera', labels)
+        self.assertIn('pomezia', labels)
