@@ -1,10 +1,26 @@
 Changelog
 =========
 
-Version 0.4.0 [unreleased]
+Version 0.4.0 [2017-12-28]
 --------------------------
 
-WIP
+
+- `#72 <https://github.com/netjson/django-netjsongraph/pull/72>`_:
+  [requirements] Upgrade netdiff to 0.6.0
+- `e67286 <https://github.com/netjson/django-netjsongraph/commit/e67286>`_:
+  [topology] Add labels when creating nodes
+- `#70 <https://github.com/netjson/django-netjsongraph/pull/70>`_:
+  Added support to Django 2.0
+- `#67 <https://github.com/netjson/django-netjsongraph/pull/67>`_:
+  [QA] Fixed flake8 errors in Travis build
+- `#64 <https://github.com/netjson/django-netjsongraph/pull/64>`_:
+  [requirements] Updated rest framework version
+- `#60 <https://github.com/netjson/django-netjsongraph/pull/60>`_:
+  [netdiff] Added support to OpenVPN parser
+- `#53 <https://github.com/netjson/django-netjsongraph/pull/53>`_:
+  Improved the UI of the way back machine
+- `#49 <https://github.com/netjson/django-netjsongraph/pull/49>`_:
+  Added Topology history feature
 
 Version 0.3.4 [2017-08-19]
 --------------------------
