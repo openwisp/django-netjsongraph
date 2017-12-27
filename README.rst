@@ -151,6 +151,19 @@ topology labels, eg::
 
     ./manage.py update_topology --label mytopology
 
+``save_snapshot``
+^^^^^^^^^^^^^^^^^
+
+The ``save_snapshot`` management command can be used to save the topology graph data which
+could be used to view the network topology graph sometime in future::
+
+    ./manage.py save_snapshot
+
+The management command accepts a ``--label`` argument that will be used to search in
+topology labels, eg::
+
+    ./manage.py save_snapshot --label mytopology
+
 Logging
 -------
 
@@ -280,8 +293,7 @@ documentation <https://docs.djangoproject.com/en/dev/ref/templates/>`_.
 Example: overriding the ``<script>`` tag
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Here's a step by step guide on how to change the javascript options passed to `netjsongraph.js
-<https://github.com/netjson/netjsongraph.js>`_, remember to replace ``<project_path>`` with the
+Here's a step by step guide on how to change the javascript options passed to `netjsongraph.js <https://github.com/netjson/netjsongraph.js>`_, remember to replace ``<project_path>`` with the
 absolute filesytem path of your project.
 
 **Step 1**: create a directory in ``<project_path>/templates/netjsongraph``
@@ -350,8 +362,8 @@ This example provides an example of how to extend the base models of
 
     from django_netjsongraph.base.link import AbstractLink
     from django_netjsongraph.base.node import AbstractNode
+    from django_netjsongraph.base.snapshot import AbstractSnapshot
     from django_netjsongraph.base.topology import AbstractTopology
-
     # the model ``organizations.Organization`` is omitted for brevity
     # if you are curious to see a real implementation, check out django-organizations
     # https://github.com/bennylope/django-organizations
@@ -387,6 +399,12 @@ This example provides an example of how to extend the base models of
                                    related_name='source_target_set')
 
         class Meta:
+            abstract = False
+
+    class Snapshot(OrgMixin, AbstractSnapshot):
+        topology = models.ForeignKey('topology.Topology', on_delete=models.CASCADE)
+
+        class Meta(AbstractSnapshot.Meta):
             abstract = False
 
 Extending the admin
@@ -429,10 +447,9 @@ If your use case doesn't vary much from the base, you may also want to try to re
 .. code-block:: python
 
     # your app.api.views
-    from ..models import Topology
-    from django_netjsongraph.api.generics import (BaseNetworkCollectionView,
-                                                  BaseNetworkGraphView,
-                                                  BaseReceiveTopologyView)
+    from ..models import Snapshot, Topology
+    from django_netjsongraph.api.generics import (BaseNetworkCollectionView, BaseNetworkGraphHistoryView,
+                                                  BaseNetworkGraphView, BaseReceiveTopologyView)
 
 
     class NetworkCollectionView(BaseNetworkCollectionView):
@@ -447,8 +464,13 @@ If your use case doesn't vary much from the base, you may also want to try to re
         model = Topology
 
 
+    class NetworkGraphHistoryView(BaseNetworkGraphHistoryView):
+        topology_model = Topology
+        snapshot_model = Snapshot
+
     network_collection = NetworkCollectionView.as_view()
     network_graph = NetworkGraphView.as_view()
+    network_graph_history = NetworkGraphHistoryView.as_view()
     receive_topology = ReceiveTopologyView.as_view()
 
 API URLs
