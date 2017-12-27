@@ -1,7 +1,7 @@
 django>=1.11,<2.1
 djangorestframework>=3.3,<3.8
 django-model-utils
-netdiff>=0.5.2,<=6.0
+netdiff>=0.6.0,<0.7
 openwisp-utils>=0.1.2,<0.2
 jsonfield
 six
