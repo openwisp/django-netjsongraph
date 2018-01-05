@@ -49,7 +49,8 @@ class TestLinkMixin(object):
                 'pretty': True,
                 'status': 'up',
                 'created': link.created,
-                'modified': link.modified
+                'modified': link.modified,
+                'status_changed': link.status_changed,
             }
         })
         self.assertIsInstance(link.json(), six.string_types)

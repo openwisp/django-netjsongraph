@@ -39,6 +39,7 @@ class AbstractLink(TimeStampedEditableModel):
                            blank=True,
                            load_kwargs={'object_pairs_hook': OrderedDict},
                            dump_kwargs={'indent': 4})
+    status_changed = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
@@ -51,6 +52,7 @@ class AbstractLink(TimeStampedEditableModel):
         super(AbstractLink, self).save(*args, **kwargs)
         if self.status != self._initial_status:
             self.send_status_changed_signal()
+            self.status_changed = now()
         self._initial_status = self.status
 
     def __str__(self):
@@ -82,6 +84,7 @@ class AbstractLink(TimeStampedEditableModel):
         netjson['properties'] = properties
         netjson['properties']['created'] = self.created
         netjson['properties']['modified'] = self.modified
+        netjson['properties']['status_changed'] = self.status_changed
         if dict:
             return netjson
         return json.dumps(netjson, cls=JSONEncoder, **kwargs)
