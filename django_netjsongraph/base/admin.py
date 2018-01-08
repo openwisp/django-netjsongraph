@@ -98,21 +98,33 @@ class AbstractTopologyAdmin(BaseAdmin):
     def update_selected(self, request, queryset):
         items = list(queryset)
         failed = []
+        ignored = []
         for item in items:
-            try:
-                item.update()
-            except Exception as e:
-                failed.append('{0}: {1}'.format(item.label, str(e)))
-                with log_failure('update topology admin action', item):
-                    raise e
+            if item.strategy == 'fetch':
+                try:
+                    item.update()
+                except Exception as e:
+                    failed.append('{0}: {1}'.format(item.label, str(e)))
+                    with log_failure('update topology admin action', item):
+                        raise e
+            else:
+                ignored.append(item)
+        # remove item from items if ignored.
+        for item in ignored:
+            if item in items:
+                items.remove(item)
         failures = len(failed)
         successes = len(items) - failures
+        total_ignored = len(ignored)
         if successes > 0:
             self._message(request, successes, _('successfully updated'))
         if failures > 0:
             message = _('not updated. %s') % '; '.join(failed)
             self._message(request, failures, message, level=messages.ERROR)
-    update_selected.short_description = _('Update selected topologies')
+        if total_ignored > 0:
+            message = _("ignored as they don't use FETCH strategy")
+            self._message(request, total_ignored, message, level=messages.WARNING)
+    update_selected.short_description = _('Update selected topologies (FETCH strategy only)')
 
     def publish_selected(self, request, queryset):
         rows_updated = queryset.update(published=True)
