@@ -248,6 +248,12 @@
                     html = "<p><b>source</b>: " + (l.source.label || l.source.id) + "</p>";
                     html += "<p><b>target</b>: " + (l.target.label || l.target.id) + "</p>";
                     html += "<p><b>cost</b>: " + l.cost + "</p>";
+                    // calculate difference in seconds between now and status_changed
+                    diff = (new Date() - new Date(l.properties.status_changed)) / 1000
+                    var days = Math.floor(diff / 86400);
+                    var hours = Math.floor(diff / 3600) % 24;
+                    var minutes = Math.floor(diff / 60) % 60;
+                    l.properties.status_changed = days+" Days "+hours+" Hours "+minutes+" Minutes"
                 if(l.properties) {
                     for(var key in l.properties) {
                         if(!l.properties.hasOwnProperty(key)) { continue; }
