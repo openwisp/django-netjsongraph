@@ -3,14 +3,11 @@
     "document",
     "navigator",
     "console",
-    "window",
+    "alert",
     "django",
-    "gettext",
-    "windowname_to_id",
-    "jQuery",
-    "WebSocket",
-    "$",
-    "alert"
+    "window",
+    "closeOverlay",
+    "setTimeout"
   ],
 
   "adsafe":     false,
@@ -39,11 +36,11 @@
   "vars":       true,
   "white":      false,
   "validthis":  true,
-  "strict_mode":true,
+  "strict_mode":false,
 
   "browser":    false,
   "devel":      false,
-  "node":       false,
+  "node":       true,
   "rhino":      false,
   "widget":     false,
   "windows":    false,
