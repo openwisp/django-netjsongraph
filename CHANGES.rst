@@ -1,10 +1,19 @@
 Changelog
 =========
 
-Version 0.4.1 [unreleased]
+Version 0.4.1 [2017-02-19]
 --------------------------
 
-WIP
+- `#82 <https://github.com/netjson/django-netjsongraph/pull/82>`_:
+  [ci] Add JSLint
+- `#81 <https://github.com/netjson/django-netjsongraph/pull/81>`_:
+  [ci] Add pending migration check
+- `#75 <https://github.com/netjson/django-netjsongraph/pull/72>`_:
+  [qa] Added JSLint check
+- `#73 <https://github.com/netjson/django-netjsongraph/pull/73>`_:
+  [models] Added link status up/down time
+- `115066 <https://github.com/netjson/django-netjsongraph/commit/115066>`_:
+  Added forgotten migration
 
 Version 0.4.0 [2017-12-28]
 --------------------------
