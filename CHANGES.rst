@@ -1,10 +1,10 @@
 Changelog
 =========
 
-Version 0.4.2 [unreleased]
+Version 0.4.2 [2017-02-19]
 --------------------------
 
-WIP
+- [requirements] openwisp-utils>=0.2,<0.3
 
 Version 0.4.1 [2017-02-19]
 --------------------------
@@ -22,7 +22,6 @@ Version 0.4.1 [2017-02-19]
 
 Version 0.4.0 [2017-12-28]
 --------------------------
-
 
 - `#72 <https://github.com/netjson/django-netjsongraph/pull/72>`_:
   [requirements] Upgrade netdiff to 0.6.0
