@@ -378,7 +378,7 @@ class TestTopologyMixin(LoadMixin):
         data = self._load('static/very-long-addresses.json')
         t.receive(data)
         n = self.node_model.get_from_address('2001:4e12:452a:1:172::10', t)
-        self.assertEqual(len(n.addresses), 485)
+        self.assertEqual(len(n.addresses), 493)
 
     def test_save_snapshot(self):
         t = self._set_receive()
@@ -403,3 +403,12 @@ class TestTopologyMixin(LoadMixin):
         self.assertIn('Syskrack', labels)
         self.assertIn('Kali-Matera', labels)
         self.assertIn('pomezia', labels)
+
+    def test_issue_58(self):
+        self.node_model.objects.all().delete()
+        self.link_model.objects.all().delete()
+        t = self._set_receive()
+        data = self._load('static/issue-58.json')
+        t.receive(data)
+        self.assertEqual(t.node_set.all().count(), 13)
+        self.assertEqual(t.link_set.all().count(), 11)
