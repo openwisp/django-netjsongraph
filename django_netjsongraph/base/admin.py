@@ -122,7 +122,7 @@ class AbstractTopologyAdmin(BaseAdmin):
             message = _('not updated. %s') % '; '.join(failed)
             self._message(request, failures, message, level=messages.ERROR)
         if total_ignored > 0:
-            message = _("ignored as they don't use FETCH strategy")
+            message = _("ignored (not using FETCH strategy)")
             self._message(request, total_ignored, message, level=messages.WARNING)
     update_selected.short_description = _('Update selected topologies (FETCH strategy only)')
 
