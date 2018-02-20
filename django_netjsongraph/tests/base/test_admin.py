@@ -117,3 +117,16 @@ class TestAdminMixin(LoadMixin):
         path = reverse('{0}_topology_visualize'.format(self.prefix), args=[t.pk])
         response = self.client.get(path)
         self.assertContains(response, 'd3.netJsonGraph(')
+
+    def test_update_selected_receive_topology(self):
+        self.topology_model.objects.create(label='test receive',
+                                           parser='netdiff.NetJsonParser',
+                                           strategy='receive', url='asd.asd')
+        t = self.topology_model.objects.filter(strategy='receive')[0]
+        response = self.client.post(self.changelist_path, {
+            'action': 'update_selected',
+            '_selected_action': str(t.pk)
+        }, follow=True)
+        message = list(response.context['messages'])[0]
+        self.assertEqual('warning', message.tags)
+        self.assertIn("ignored as they don't use FETCH strategy", message.message)
