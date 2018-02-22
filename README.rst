@@ -13,7 +13,7 @@ django-netjsongraph
 
 .. image:: https://badge.fury.io/py/django-netjsongraph.svg
    :target: http://badge.fury.io/py/django-netjsongraph
-   
+
 .. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
    :target: https://gitter.im/openwisp/general
 
@@ -40,11 +40,13 @@ Current features
     - batman-adv (jsondoc/txtinfo)
     - BMX6 (q6m)
     - CNML 1.0
+    - OpenVPN
     - additional formats can be added by `specifying custom parsers <#netjsongraph-parsers>`_
 * **network topology visualizer** based on `netjsongraph.js <https://github.com/netjson/netjsongraph.js>`_
 * **simple HTTP API** that exposes data in `NetJSON <http://netjson.org>`__ *NetworkGraph* format
 * **admin interface** that allows to easily manage, audit, visualize and debug topologies and their relative data (nodes, links)
 * **receive topology** from multiple nodes
+* **topology history**: allows saving daily snapshots of each topology that can be viewed in the frontend
 
 Project goals
 -------------
