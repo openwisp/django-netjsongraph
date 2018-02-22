@@ -129,4 +129,4 @@ class TestAdminMixin(LoadMixin):
         }, follow=True)
         message = list(response.context['messages'])[0]
         self.assertEqual('warning', message.tags)
-        self.assertIn("ignored as they don't use FETCH strategy", message.message)
+        self.assertIn('1 topology was ignored', message.message)
