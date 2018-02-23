@@ -13,7 +13,7 @@ django-netjsongraph
 
 .. image:: https://badge.fury.io/py/django-netjsongraph.svg
    :target: http://badge.fury.io/py/django-netjsongraph
-   
+
 .. image:: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
    :target: https://gitter.im/openwisp/general
 
@@ -275,6 +275,20 @@ Setting this to ``False`` will disable this feature.
 
 Path of the visualizer css file. Allows customization of css according to user's
 preferences.
+
+``NETJSONGRAPH_NODE_EXPIRATION``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
++--------------+--------------------------------+
+| **type**:    | ``int``                        |
++--------------+--------------------------------+
+| **default**: | ``False``                      |
++--------------+--------------------------------+
+
+If a node has not been modified since the days specified and if it has no links,
+it will be deleted by the ``update_topology`` management command. This depends on
+``NETJSONGRAPH_LINK_EXPIRATION`` being enabled.
+Replace ``False`` with an integer to enable the feature.
 
 Overriding visualizer templates
 -------------------------------

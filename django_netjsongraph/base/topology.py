@@ -323,6 +323,7 @@ class AbstractTopology(TimeStampedEditableModel):
             with log_failure('update', topology):
                 topology.update()
         cls().link_model.delete_expired_links()
+        cls().node_model.delete_expired_nodes()
 
     @classmethod
     def save_snapshot_all(cls, label=None):

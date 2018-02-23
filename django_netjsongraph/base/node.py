@@ -1,12 +1,16 @@
 import json
 from collections import OrderedDict
+from datetime import timedelta
 
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
+from django.utils.timezone import now
 from jsonfield import JSONField
 from rest_framework.utils.encoders import JSONEncoder
 
+from .. import settings
+from ..utils import print_info
 from .base import TimeStampedEditableModel
 
 
@@ -122,3 +126,22 @@ class AbstractNode(TimeStampedEditableModel):
         address = '{0};'.format(address)
         return cls.objects.filter(topology=topology,
                                   addresses__contains=address).count()
+
+    @classmethod
+    def delete_expired_nodes(cls):
+        """
+        deletes nodes that have not been  connected to the network
+        for more than ``NETJSONGRAPH__EXPIRATION`` days
+        """
+        NODE_EXPIRATION = settings.NODE_EXPIRATION
+        LINK_EXPIRATION = settings.LINK_EXPIRATION
+        if NODE_EXPIRATION not in [False, None] and LINK_EXPIRATION not in [False, None]:
+            expiration_date = now() - timedelta(days=int(NODE_EXPIRATION))
+            expired_nodes = cls.objects.filter(modified__lt=expiration_date,
+                                               source_link_set__isnull=True,
+                                               target_link_set__isnull=True)
+            expired_nodes_length = len(expired_nodes)
+            if expired_nodes_length:
+                print_info('Deleting {0} expired nodes'.format(expired_nodes_length))
+                for node in expired_nodes:
+                    node.delete()

@@ -172,6 +172,51 @@ class TestUtilsMixin(LoadMixin):
         self.assertEqual(self.link_model.objects.count(), 0)
 
     @responses.activate
+    def test_delete_expired_nodes(self):
+        NODE_EXPIRATION = getattr(settings, 'NODE_EXPIRATION')
+        # Test with the default value(False)
+        # Should not delete
+        setattr(settings, 'NODE_EXPIRATION', False)
+        t = self.topology_model.objects.first()
+        t.parser = 'netdiff.NetJsonParser'
+        t.save()
+        expired_date = now() - timedelta(days=60)
+        n1 = self.node_model.objects.all()[0]
+        n2 = self.node_model.objects.all()[1]
+        self.node_model.objects.filter(pk=n1.pk).update(created=expired_date,
+                                                        modified=expired_date)
+        self.node_model.objects.filter(pk=n2.pk).update(created=expired_date,
+                                                        modified=expired_date)
+        empty_topology = json.dumps({
+            "type": "NetworkGraph",
+            "protocol": "OLSR",
+            "version": "0.8",
+            "metric": "ETX",
+            "nodes": [],
+            "links": []
+        })
+        responses.add(responses.GET,
+                      'http://127.0.0.1:9090',
+                      body=empty_topology,
+                      content_type='application/json')
+        self.topology_model.update_all('testnetwork')
+        self.assertEqual(self.node_model.objects.count(), 2)
+
+        # Test with a custom value
+        # Should delete
+        setattr(settings, 'NODE_EXPIRATION', 60)
+        expired_date = now() - timedelta(days=settings.NODE_EXPIRATION+10)
+        self.node_model.objects.filter(pk=n1.pk).update(created=expired_date,
+                                                        modified=expired_date)
+        self.node_model.objects.filter(pk=n2.pk).update(created=expired_date,
+                                                        modified=expired_date)
+        self.topology_model.update_all('testnetwork')
+        self.assertEqual(self.node_model.objects.count(), 0)
+        self.assertEqual(self.link_model.objects.count(), 0)
+        # Set the setting to it's original value
+        setattr(settings, 'NODE_EXPIRATION', NODE_EXPIRATION)
+
+    @responses.activate
     def test_delete_expired_disabled(self):
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
