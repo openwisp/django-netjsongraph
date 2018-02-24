@@ -9,7 +9,7 @@ Version 0.4.3 [2017-02-24]
 - `#77 <https://github.com/netjson/django-netjsongraph/pull/77>`_:
   [admin] Update topology action now ignores topologies with RECEIVE strategy
 - `#78 <https://github.com/netjson/django-netjsongraph/pull/78>`_:
-  [feature] Addd automatic removal of old nodes with ``NETJSONGRAPH_NODE_EXPIRATION``
+  [feature] Added automatic removal of old nodes with ``NETJSONGRAPH_NODE_EXPIRATION``
 
 Version 0.4.2 [2017-02-19]
 --------------------------
