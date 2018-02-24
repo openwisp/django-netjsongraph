@@ -278,6 +278,20 @@ Setting this to ``False`` will disable this feature.
 Path of the visualizer css file. Allows customization of css according to user's
 preferences.
 
+``NETJSONGRAPH_NODE_EXPIRATION``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
++--------------+--------------------------------+
+| **type**:    | ``int``                        |
++--------------+--------------------------------+
+| **default**: | ``False``                      |
++--------------+--------------------------------+
+
+If a node has not been modified since the days specified and if it has no links,
+it will be deleted by the ``update_topology`` management command. This depends on
+``NETJSONGRAPH_LINK_EXPIRATION`` being enabled.
+Replace ``False`` with an integer to enable the feature.
+
 Overriding visualizer templates
 -------------------------------
 
