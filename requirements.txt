@@ -1,5 +1,5 @@
-django>=1.11,<2.1
-djangorestframework>=3.3,<3.9
+django>=1.11,<2.2
+djangorestframework>=3.3,<3.10
 django-model-utils
 netdiff>=0.6.0,<0.7
 openwisp-utils>=0.2,<0.3
