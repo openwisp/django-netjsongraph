@@ -119,10 +119,11 @@ class TestAdminMixin(LoadMixin):
         self.assertContains(response, 'd3.netJsonGraph(')
 
     def test_update_selected_receive_topology(self):
-        self.topology_model.objects.create(label='test receive',
-                                           parser='netdiff.NetJsonParser',
-                                           strategy='receive', url='asd.asd')
-        t = self.topology_model.objects.filter(strategy='receive')[0]
+        t = self.topology_model.objects.first()
+        t.label = 'test receive'
+        t.parser = 'netdiff.NetJsonParser'
+        t.strategy = 'receive'
+        t.save()
         response = self.client.post(self.changelist_path, {
             'action': 'update_selected',
             '_selected_action': str(t.pk)
