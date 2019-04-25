@@ -3,7 +3,7 @@ sudo: false
 cache: pip
 
 python:
-  - "3.4"
+  - "3.5"
   - "2.7"
 
 branches:
@@ -12,13 +12,12 @@ branches:
 
 env:
   - DJANGO="django>=2.1,<2.2"
-  - DJANGO="django>=2.0,<2.1"
   - DJANGO="django>=1.11,<1.12"
 
 matrix:
   exclude:
     - python: "2.7"
-      env: DJANGO="django>=2.0,<2.1"
+      env: DJANGO="django>=2.1,<2.2"
 
 before_install:
   - pip install -U pip wheel setuptools
