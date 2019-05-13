@@ -1,8 +1,8 @@
 django-netjsongraph
 ===================
 
-.. image:: https://travis-ci.org/netjson/django-netjsongraph.svg
-   :target: https://travis-ci.org/netjson/django-netjsongraph
+.. image:: https://travis-ci.org/openwisp/django-netjsongraph.svg
+   :target: https://travis-ci.org/openwisp/django-netjsongraph
 
 .. image:: https://coveralls.io/repos/netjson/django-netjsongraph/badge.svg
   :target: https://coveralls.io/r/netjson/django-netjsongraph
