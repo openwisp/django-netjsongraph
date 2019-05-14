@@ -1,3 +1,4 @@
+dist: xenial
 language: python
 sudo: false
 cache: pip
@@ -11,13 +12,13 @@ branches:
     - master
 
 env:
-  - DJANGO="django>=2.1,<2.2"
+  - DJANGO="django>=2.1,<2.3"
   - DJANGO="django>=1.11,<1.12"
 
 matrix:
   exclude:
     - python: "2.7"
-      env: DJANGO="django>=2.1,<2.2"
+      env: DJANGO="django>=2.1,<2.3"
 
 before_install:
   - pip install -U pip wheel setuptools
