@@ -3,7 +3,6 @@ from collections import OrderedDict
 from datetime import timedelta
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.timezone import now
 from jsonfield import JSONField
@@ -14,7 +13,6 @@ from ..utils import print_info
 from .base import TimeStampedEditableModel
 
 
-@python_2_unicode_compatible
 class AbstractNode(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Node Object implementation
@@ -40,7 +38,7 @@ class AbstractNode(TimeStampedEditableModel):
             self.properties = {}
 
     def save(self, *args, **kwargs):
-        super(AbstractNode, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     @property
     def netjson_id(self):

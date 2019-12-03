@@ -14,7 +14,7 @@ class NetworkCollectionSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         return OrderedDict((
             ('type', 'NetworkCollection'),
-            ('collection', super(NetworkCollectionSerializer, self).to_representation(data))
+            ('collection', super().to_representation(data))
         ))
 
 

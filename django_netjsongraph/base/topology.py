@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.module_loading import import_string
 from django.utils.timezone import now
@@ -24,7 +23,6 @@ STRATEGIES = (
 )
 
 
-@python_2_unicode_compatible
 class AbstractTopology(TimeStampedEditableModel):
     label = models.CharField(_('label'), max_length=64)
     parser = models.CharField(_('format'),

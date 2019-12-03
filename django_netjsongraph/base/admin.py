@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.contrib import messages
 from django.contrib.admin import ModelAdmin
-from django.contrib.admin.templatetags.admin_static import static
+from django.templatetags.static import static
 from django.db.models import Q
 from django.template.response import TemplateResponse
 from django.urls import reverse
@@ -16,7 +16,7 @@ class TimeStampedEditableAdmin(ModelAdmin):
     """
     def __init__(self, *args, **kwargs):
         self.readonly_fields += ('created', 'modified',)
-        super(TimeStampedEditableAdmin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class BaseAdmin(TimeStampedEditableAdmin):
@@ -56,7 +56,7 @@ class AbstractTopologyAdmin(BaseAdmin):
         """
         move delete action to last position
         """
-        actions = super(AbstractTopologyAdmin, self).get_actions(request)
+        actions = super().get_actions(request)
         delete = actions['delete_selected']
         del actions['delete_selected']
         actions['delete_selected'] = delete
@@ -77,7 +77,7 @@ class AbstractTopologyAdmin(BaseAdmin):
                 }
             ]
         })
-        return super(AbstractTopologyAdmin, self).change_view(request, object_id, form_url, extra_context)
+        return super().change_view(request, object_id, form_url, extra_context)
 
     def get_urls(self):
         options = getattr(self.model, '_meta')
@@ -86,7 +86,7 @@ class AbstractTopologyAdmin(BaseAdmin):
             url(r'^visualize/(?P<pk>[^/]+)/$',
                 self.admin_site.admin_view(self.visualize_view),
                 name='{0}_visualize'.format(url_prefix)),
-        ] + super(AbstractTopologyAdmin, self).get_urls()
+        ] + super().get_urls()
 
     def _message(self, request, rows, suffix, level=messages.SUCCESS):
         if rows == 1:
@@ -171,7 +171,7 @@ class AbstractNodeAdmin(BaseAdmin):
                                                     Q(target_id=object_id)),
             'admin_url': admin_url
         })
-        return super(AbstractNodeAdmin, self).change_view(request, object_id, form_url, extra_context)
+        return super().change_view(request, object_id, form_url, extra_context)
 
 
 class AbstractLinkAdmin(BaseAdmin):

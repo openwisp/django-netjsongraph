@@ -3,22 +3,15 @@ language: python
 cache: pip
 
 python:
-  - "3.5"
-  - "2.7"
+  - "3.6"
+  - "3.7"
 
 branches:
   only:
     - master
 
 env:
-  - DJANGO="django>=2.1,<2.3"
-  - DJANGO="django>=1.11,<1.12"
-
-matrix:
-  exclude:
-    - python: "2.7"
-      env: DJANGO="django>=2.1,<2.3"
-
+  - DJANGO="django>=2.2,<3.3"
 before_install:
   - pip install -U pip wheel setuptools
   - pip install --no-cache-dir -U -r requirements-test.txt
@@ -27,12 +20,11 @@ before_install:
 
 install:
   - pip install $DJANGO
-  - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then pip install -U "djangorestframework<3.10"; fi
   - python setup.py -q develop
 
 script:
   - coverage run --source=django_netjsongraph runtests.py
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then ./tests/manage.py makemigrations django_netjsongraph --dry-run | grep "No changes detected"; fi
+  - ./tests/manage.py makemigrations django_netjsongraph --dry-run | grep "No changes detected";
   - openwisp-utils-qa-checks --migration-path "./django_netjsongraph/migrations"
 
 after_success:

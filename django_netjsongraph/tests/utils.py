@@ -4,6 +4,7 @@ import os
 import sys
 from contextlib import contextmanager
 from datetime import timedelta
+from io import StringIO
 
 import responses
 from django.core.management import call_command
@@ -11,11 +12,6 @@ from django.test.runner import DiscoverRunner
 from django.utils.timezone import now
 
 from .. import settings
-
-try:
-    from cStringIO import StringIO  # noqa
-except ImportError:
-    from io import StringIO  # noqa
 
 
 @contextmanager
@@ -31,9 +27,9 @@ class LoggingDisabledTestRunner(DiscoverRunner):
     def run_tests(self, test_labels, extra_tests=None, **kwargs):
         # disable logging below CRITICAL while testing
         logging.disable(logging.CRITICAL)
-        return super(LoggingDisabledTestRunner, self).run_tests(test_labels,
-                                                                extra_tests,
-                                                                **kwargs)
+        return super().run_tests(test_labels,
+                                 extra_tests,
+                                 **kwargs)
 
 
 class UnpublishMixin(object):

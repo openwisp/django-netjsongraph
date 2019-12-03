@@ -5,7 +5,6 @@ from datetime import timedelta
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from jsonfield import JSONField
@@ -18,7 +17,6 @@ from ..utils import link_status_changed, print_info
 from .base import TimeStampedEditableModel
 
 
-@python_2_unicode_compatible
 class AbstractLink(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Link Object implementation
@@ -45,11 +43,11 @@ class AbstractLink(TimeStampedEditableModel):
         abstract = True
 
     def __init__(self, *args, **kwargs):
-        super(AbstractLink, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._initial_status = self.status
 
     def save(self, *args, **kwargs):
-        super(AbstractLink, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
         if self.status != self._initial_status:
             self.send_status_changed_signal()
             self.status_changed = now()
