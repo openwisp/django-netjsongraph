@@ -8,7 +8,7 @@ django-netjsongraph
   :target: https://coveralls.io/r/netjson/django-netjsongraph
 
 .. image:: https://requires.io/github/netjson/django-netjsongraph/requirements.svg?branch=master
-   :target: https://requires.io/github/netjson/django-netjsongraph/requirements/?branch=master
+   :target: https://requires.io/github/openwisp/django-netjsongraph/requirements/?branch=master
    :alt: Requirements Status
 
 .. image:: https://badge.fury.io/py/django-netjsongraph.svg
