@@ -4,10 +4,10 @@ django-netjsongraph
 .. image:: https://travis-ci.org/openwisp/django-netjsongraph.svg
    :target: https://travis-ci.org/openwisp/django-netjsongraph
 
-.. image:: https://coveralls.io/repos/netjson/django-netjsongraph/badge.svg
-  :target: https://coveralls.io/r/netjson/django-netjsongraph
+.. image:: https://coveralls.io/repos/openwisp/django-netjsongraph/badge.svg
+  :target: https://coveralls.io/r/openwisp/django-netjsongraph
 
-.. image:: https://requires.io/github/netjson/django-netjsongraph/requirements.svg?branch=master
+.. image:: https://requires.io/github/openwisp/django-netjsongraph/requirements.svg?branch=master
    :target: https://requires.io/github/openwisp/django-netjsongraph/requirements/?branch=master
    :alt: Requirements Status
 
@@ -21,9 +21,9 @@ django-netjsongraph
 
 Reusable django app for collecting and visualizing network topology.
 
-.. image:: https://raw.githubusercontent.com/netjson/django-netjsongraph/master/docs/images/visualizer.png
+.. image:: https://raw.githubusercontent.com/openwisp/django-netjsongraph/master/docs/images/visualizer.png
 
-.. image:: https://raw.githubusercontent.com/netjson/django-netjsongraph/master/docs/images/admin.png
+.. image:: https://raw.githubusercontent.com/openwisp/django-netjsongraph/master/docs/images/admin.png
 
 .. contents:: **Table of Contents**:
    :backlinks: none
@@ -42,7 +42,7 @@ Current features
     - CNML 1.0
     - OpenVPN
     - additional formats can be added by `specifying custom parsers <#netjsongraph-parsers>`_
-* **network topology visualizer** based on `netjsongraph.js <https://github.com/netjson/netjsongraph.js>`_
+* **network topology visualizer** based on `netjsongraph.js <https://github.com/openwisp/netjsongraph.js>`_
 * **simple HTTP API** that exposes data in `NetJSON <http://netjson.org>`__ *NetworkGraph* format
 * **admin interface** that allows to easily manage, audit, visualize and debug topologies and their relative data (nodes, links)
 * **receive topology** from multiple nodes
@@ -51,7 +51,7 @@ Current features
 Project goals
 -------------
 
-* make it easy to visualize network topology data for the formats supported by `netdiff <https://github.com/ninuxorg/netdiff>`_
+* make it easy to visualize network topology data for the formats supported by `netdiff <https://github.com/openwisp/netdiff>`_
 * expose topology data via RESTful resources in *NetJSON NetworkGraph* format
 * make it easy to integrate in larger django projects to improve reusability
 * make it easy to extend its models by providing abstract models (**needs improvement in this point**)
@@ -85,13 +85,13 @@ Install tarball:
 
 .. code-block:: shell
 
-    pip install https://github.com/netjson/django-netjsongraph/tarball/master
+    pip install https://github.com/openwisp/django-netjsongraph/tarball/master
 
 Alternatively you can install via pip using git:
 
 .. code-block:: shell
 
-    pip install -e git+git://github.com/netjson/django-netjsongraph#egg=django-netjsongraph
+    pip install -e git+git://github.com/openwisp/django-netjsongraph#egg=django-netjsongraph
 
 If you want to contribute, install your cloned fork:
 
@@ -172,7 +172,7 @@ Logging
 The ``update_topology`` management command will automatically try to log errors.
 
 For a good default ``LOGGING`` configuration refer to the `test settings
-<https://github.com/netjson/django-netjsongraph/blob/master/tests/settings.py#L66>`_.
+<https://github.com/openwisp/django-netjsongraph/blob/master/tests/settings.py#L66>`_.
 
 Strategies
 ----------
@@ -226,7 +226,7 @@ Settings
 | **default**: | ``[]``      |
 +--------------+-------------+
 
-Additional custom `netdiff parsers <https://github.com/ninuxorg/netdiff#parsers>`_.
+Additional custom `netdiff parsers <https://github.com/openwisp/netdiff#parsers>`_.
 
 ``NETJSONGRAPH_SIGNALS``
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -309,7 +309,7 @@ documentation <https://docs.djangoproject.com/en/dev/ref/templates/>`_.
 Example: overriding the ``<script>`` tag
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Here's a step by step guide on how to change the javascript options passed to `netjsongraph.js <https://github.com/netjson/netjsongraph.js>`_, remember to replace ``<project_path>`` with the
+Here's a step by step guide on how to change the javascript options passed to `netjsongraph.js <https://github.com/openwisp/netjsongraph.js>`_, remember to replace ``<project_path>`` with the
 absolute filesytem path of your project.
 
 **Step 1**: create a directory in ``<project_path>/templates/netjsongraph``
@@ -607,7 +607,7 @@ avoid misunderstandings.
 1. Ensure your changes meet the `Project Goals`_
 2. If you found a bug please send a failing test with a patch
 3. If you want to add a new feature, announce your intentions in the
-   `issue tracker <https://github.com/netjson/django-netjsongraph/issues>`_
+   `issue tracker <https://github.com/openwisp/django-netjsongraph/issues>`_
 4. Fork this repo and install it by following the instructions in
    `Installing for development`_
 5. Follow `PEP8, Style Guide for Python Code`_
@@ -619,18 +619,17 @@ avoid misunderstandings.
 11. Send pull request
 
 .. _PEP8, Style Guide for Python Code: http://www.python.org/dev/peps/pep-0008/
-.. _ninux-dev mailing list: http://ml.ninux.org/mailman/listinfo/ninux-dev
 
 Changelog
 ---------
 
-See `CHANGES <https://github.com/netjson/django-netjsongraph/blob/master/CHANGES.rst>`_.
+See `CHANGES <https://github.com/openwisp/django-netjsongraph/blob/master/CHANGES.rst>`_.
 
 License
 -------
 
-See `LICENSE <https://github.com/netjson/django-netjsongraph/blob/master/LICENSE>`_.
+See `LICENSE <https://github.com/openwisp/django-netjsongraph/blob/master/LICENSE>`_.
 
 This projects bundles third-party javascript libraries in its source code:
 
-- `D3.js (BSD-3-Clause) <https://github.com/netjson/django-netjsongraph/blob/master/django_netjsongraph/static/netjsongraph/lib/d3.min.js>`_
+- `D3.js (BSD-3-Clause) <https://github.com/openwisp/django-netjsongraph/blob/master/django_netjsongraph/static/netjsongraph/lib/d3.min.js>`_
