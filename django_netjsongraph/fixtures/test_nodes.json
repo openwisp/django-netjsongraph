@@ -5,7 +5,7 @@
         "fields":{
             "label":"node1",
             "topology":"a083b494-8e16-4054-9537-fb9eba914861",
-            "addresses": "192.168.0.1;",
+            "addresses": ["192.168.0.1"],
             "created":"2015-05-16T20:02:52.483Z",
             "modified":"2015-05-16T19:33:41.621Z",
             "properties": {}
@@ -17,7 +17,7 @@
         "fields":{
             "label":"node2",
             "topology":"a083b494-8e16-4054-9537-fb9eba914861",
-            "addresses": "192.168.0.2;",
+            "addresses": ["192.168.0.2"],
             "created":"2015-05-16T20:02:52.483Z",
             "modified":"2015-05-16T19:33:41.621Z",
             "properties": {}
