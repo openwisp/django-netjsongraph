@@ -29,11 +29,12 @@ before_install:
 
 install:
   - pip install $DJANGO
+  - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then pip install -U "djangorestframework<3.10"; fi
   - python setup.py -q develop
 
 script:
   - coverage run --source=django_netjsongraph runtests.py
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.4 ]]; then ./tests/manage.py makemigrations django_netjsongraph --dry-run | grep "No changes detected"; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.5 ]]; then ./tests/manage.py makemigrations django_netjsongraph --dry-run | grep "No changes detected"; fi
 
 after_success:
   coveralls
