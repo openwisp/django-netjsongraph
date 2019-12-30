@@ -1,8 +1,9 @@
-from time import sleep
+from datetime import timedelta
 
 import responses
 import six
 from django.core.exceptions import ValidationError
+from freezegun import freeze_time
 from netdiff import OlsrParser
 
 from ..utils import LoadMixin
@@ -318,29 +319,30 @@ class TestTopologyMixin(LoadMixin):
         self._test_receive_changed(expiration_time=50)
 
     def test_multiple_receive_removed(self):
-        t = self._set_receive(expiration_time=0.1)
-        data = self._load('static/netjson-2-links.json')
-        for sleep_time in [0, 0.2, 0.1]:
-            sleep(sleep_time)
+        with freeze_time() as frozen_time:
+            t = self._set_receive(expiration_time=0.1)
+            data = self._load('static/netjson-2-links.json')
+            for sleep_time in [0, 0.2, 0.1]:
+                frozen_time.tick(timedelta(seconds=sleep_time))
+                t.receive(data)
+                self.assertEqual(self.node_model.objects.count(), 3)
+                self.assertEqual(self.link_model.objects.count(), 2)
+                self.assertEqual(self.link_model.objects.filter(status='down').count(), 0)
+            # receive change
+            data = self._load('static/netjson-1-link.json')
             t.receive(data)
             self.assertEqual(self.node_model.objects.count(), 3)
             self.assertEqual(self.link_model.objects.count(), 2)
+            # expiration_time has not expired
             self.assertEqual(self.link_model.objects.filter(status='down').count(), 0)
-        # receive change
-        data = self._load('static/netjson-1-link.json')
-        t.receive(data)
-        self.assertEqual(self.node_model.objects.count(), 3)
-        self.assertEqual(self.link_model.objects.count(), 2)
-        # expiration_time has not expired
-        self.assertEqual(self.link_model.objects.filter(status='down').count(), 0)
-        # expiration_time has now expired for 1 link
-        sleep(0.2)
-        t.receive(data)
-        self.assertEqual(self.link_model.objects.filter(status='down').count(), 1)
-        link = self.link_model.objects.filter(status='down').first()
-        self.assertIn('192.168.0.3', [link.source.netjson_id,
-                                      link.target.netjson_id])
-        self.assertEqual(link.cost, 2.0)
+            # expiration_time has now expired for 1 link
+            frozen_time.tick(timedelta(seconds=0.2))
+            t.receive(data)
+            self.assertEqual(self.link_model.objects.filter(status='down').count(), 1)
+            link = self.link_model.objects.filter(status='down').first()
+            self.assertIn('192.168.0.3', [link.source.netjson_id,
+                                          link.target.netjson_id])
+            self.assertEqual(link.cost, 2.0)
 
     def test_multiple_receive_split_network(self):
         def _assert_split_topology(self, topology):
@@ -355,20 +357,21 @@ class TestTopologyMixin(LoadMixin):
             self.assertIsNotNone(link)
             self.assertEqual(link.status, 'up')
             self.assertEqual(link.cost, 1.1)
-        self.node_model.objects.all().delete()
-        t = self._set_receive(expiration_time=0.5)
-        network1 = self._load('static/netjson-1-link.json')
-        network2 = self._load('static/split-network.json')
-        t.receive(network1)
-        t.receive(network2)
-        _assert_split_topology(self, t)
-        for sleep_time in [0.1, 0.25, 0.3]:
-            sleep(sleep_time)
+        with freeze_time() as frozen_time:
+            self.node_model.objects.all().delete()
+            t = self._set_receive(expiration_time=0.5)
+            network1 = self._load('static/netjson-1-link.json')
+            network2 = self._load('static/split-network.json')
             t.receive(network1)
-            _assert_split_topology(self, t)
-            sleep(sleep_time)
             t.receive(network2)
             _assert_split_topology(self, t)
+            for sleep_time in [0.1, 0.25, 0.3]:
+                frozen_time.tick(timedelta(seconds=sleep_time))
+                t.receive(network1)
+                _assert_split_topology(self, t)
+                frozen_time.tick(timedelta(seconds=sleep_time))
+                t.receive(network2)
+                _assert_split_topology(self, t)
 
     def test_very_long_addresses(self):
         """
