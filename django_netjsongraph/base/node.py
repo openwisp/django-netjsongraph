@@ -23,7 +23,7 @@ class AbstractNode(TimeStampedEditableModel):
                                  on_delete=models.CASCADE)
     label = models.CharField(max_length=64, blank=True)
     # netjson ID and local_addresses
-    addresses = models.CharField(max_length=510, db_index=True)
+    addresses = JSONField(default=[])
     properties = JSONField(default=dict,
                            blank=True,
                            load_kwargs={'object_pairs_hook': OrderedDict},
@@ -40,50 +40,17 @@ class AbstractNode(TimeStampedEditableModel):
             self.properties = {}
 
     def save(self, *args, **kwargs):
-        self._format_addresses()
         super(AbstractNode, self).save(*args, **kwargs)
-
-    def _format_addresses(self):
-        """
-        Ensure address format is correct: ";addr1;addr2;addr3;"
-        """
-        self.addresses = self.addresses.replace(',', ';')\
-                                       .replace(' ', '')\
-                                       .replace(';', ';')
-        if not self.addresses.startswith(';'):
-            self.addresses = ';' + self.addresses
-        if not self.addresses.endswith(';'):
-            self.addresses += ';'
-
-    def truncate_addresses(self):
-        """
-        ensures "addresses" field is not too long
-        """
-        max_length = self._meta.get_field('addresses').max_length
-        if len(self.addresses) <= max_length:
-            return
-        addresses = self.address_list
-        # +1 stands for the character added in self._format_address()
-        while len(';'.join(addresses)) + 2 > max_length:
-            addresses.pop()
-        self.addresses = ';'.join(addresses)
-
-    @cached_property
-    def address_list(self):
-        addresses = self.addresses.replace(' ', '')
-        if addresses.startswith(';'):
-            addresses = addresses[1:]
-        return addresses[0:-1].split(';')
 
     @property
     def netjson_id(self):
-        if self.addresses:
-            return self.address_list[0]
+        if len(self.addresses) > 0:
+            return self.addresses[0]
 
     @cached_property
     def local_addresses(self):
-        if self.addresses and len(self.address_list) > 1:
-            return self.address_list[1:]
+        if len(self.addresses) > 1:
+            return self.addresses[1:]
 
     @property
     def name(self):
@@ -114,7 +81,7 @@ class AbstractNode(TimeStampedEditableModel):
         :param topology: Topology instance
         :returns: Node object or None
         """
-        address = ';{0};'.format(address)
+        address = '"{}"'.format(address)
         return cls.objects.filter(topology=topology,
                                   addresses__contains=address).first()
 
@@ -126,7 +93,7 @@ class AbstractNode(TimeStampedEditableModel):
         :param topology: Topology instance
         :returns: int
         """
-        address = ';{0};'.format(address)
+        address = '"{}"'.format(address)
         return cls.objects.filter(topology=topology,
                                   addresses__contains=address).count()
 

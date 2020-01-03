@@ -17,7 +17,7 @@ class CreateGraphObjectsMixin(object):
 
     def _create_node(self, **kwargs):
         options = dict(label='TestNode',
-                       addresses='192.168.0.1;',
+                       addresses=['192.168.0.1'],
                        created='2017-07-10T20:02:52.483Z',
                        modified='2017-07-14T20:02:52.483Z',
                        properties={})

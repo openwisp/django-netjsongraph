@@ -208,14 +208,13 @@ class AbstractTopology(TimeStampedEditableModel):
             if node:  # pragma no cover
                 continue
             # if node doesn't exist create new
-            addresses = '{0};'.format(node_dict['id'])
-            addresses += ';'.join(node_dict.get('local_addresses', []))
+            addresses = [node_dict['id']]
+            addresses += node_dict.get('local_addresses', [])
             properties = node_dict.get('properties', {})
             node = self._create_node(addresses=addresses,
                                      properties=properties)
             if 'label' in node_dict:
                 node.label = node_dict.get('label')
-            node.truncate_addresses()
             node.full_clean()
             node.save()
 
