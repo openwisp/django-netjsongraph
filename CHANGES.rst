@@ -1,10 +1,11 @@
 Changelog
 =========
 
-Version 0.4.4 [unreleased]
+Version 0.5.0 [2020-01-13]
 --------------------------
 
-WIP
+- Upgraded dependencies (django and django-rest-framework)
+- Changed implementation of node addresses
 
 Version 0.4.3 [2017-02-24]
 --------------------------
