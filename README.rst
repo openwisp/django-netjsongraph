@@ -279,7 +279,7 @@ Path of the visualizer css file. Allows customization of css according to user's
 preferences.
 
 ``NETJSONGRAPH_NODE_EXPIRATION``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +--------------+--------------------------------+
 | **type**:    | ``int``                        |
