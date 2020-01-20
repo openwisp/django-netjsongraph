@@ -1,6 +1,3 @@
-import six
-
-
 class TestNodeMixin(object):
     def test_str(self):
         n = self.node_model(addresses=['192.168.0.1'], label='test node')
@@ -62,7 +59,7 @@ class TestNodeMixin(object):
                 'modified': n.modified
             }
         })
-        self.assertIsInstance(n.json(), six.string_types)
+        self.assertIsInstance(n.json(), str)
 
     def test_get_from_address(self):
         t = self.topology_model.objects.first()
