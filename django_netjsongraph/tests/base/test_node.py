@@ -51,7 +51,7 @@ class TestNodeMixin(object):
         t = self.topology_model.objects.first()
         n = t._create_node(label='test node',
                            addresses=['192.168.0.1', '10.0.0.1'],
-                           properties='{"gateway": true}')
+                           properties={"gateway": True})
         self.assertEqual(dict(n.json(dict=True)), {
             'id': '192.168.0.1',
             'label': 'test node',

@@ -1,9 +1,9 @@
 from django.conf.urls import url
 from django.contrib import messages
 from django.contrib.admin import ModelAdmin
-from django.templatetags.static import static
 from django.db.models import Q
 from django.template.response import TemplateResponse
+from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 

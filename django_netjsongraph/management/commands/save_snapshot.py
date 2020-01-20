@@ -1,5 +1,5 @@
-from . import BaseSaveSnapshotCommand
 from ...models import Topology
+from . import BaseSaveSnapshotCommand
 
 
 class Command(BaseSaveSnapshotCommand):

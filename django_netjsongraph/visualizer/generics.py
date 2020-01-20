@@ -10,8 +10,8 @@ class BaseTopologyListView(View):
     def get(self, request):
         topologies = self.topology_model.objects.filter(published=True)
         return render(request, 'netjsongraph/list.html',
-                                  {'topologies': topologies,
-                                   'VISUALIZER_CSS': VISUALIZER_CSS})
+                      {'topologies': topologies,
+                       'VISUALIZER_CSS': VISUALIZER_CSS})
 
 
 class BaseTopologyDetailView(View):
