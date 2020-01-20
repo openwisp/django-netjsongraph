@@ -1,4 +1,3 @@
-import six
 from django.core.exceptions import ValidationError
 
 from ...utils import link_status_changed
@@ -54,7 +53,7 @@ class TestLinkMixin(object):
                 'status_changed': link.status_changed,
             }
         })
-        self.assertIsInstance(link.json(), six.string_types)
+        self.assertIsInstance(link.json(), str)
 
     def test_get_from_nodes(self):
         t = self.topology_model.objects.first()

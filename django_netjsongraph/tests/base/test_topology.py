@@ -1,7 +1,6 @@
 from datetime import timedelta
 
 import responses
-import six
 from django.core.exceptions import ValidationError
 from freezegun import freeze_time
 from netdiff import OlsrParser
@@ -80,7 +79,7 @@ class TestTopologyMixin(LoadMixin):
                 dict(l2.json(dict=True))
             ]
         })
-        self.assertIsInstance(t.json(), six.string_types)
+        self.assertIsInstance(t.json(), str)
 
     @responses.activate
     def test_empty_diff(self):
