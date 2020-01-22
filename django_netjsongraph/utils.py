@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 from django.dispatch import Signal
 from django.http import Http404
 from django.shortcuts import get_object_or_404 as get_obj_or_404
-from django.utils.crypto import get_random_string
 
 link_status_changed = Signal(providing_args=["link"])
 
@@ -30,10 +29,6 @@ def get_object_or_404(model, pk, **kwargs):
         return get_obj_or_404(model, **kwargs)
     except ValidationError:
         raise Http404()
-
-
-def get_random_key():
-    return get_random_string(length=32)
 
 
 def get_api_urls(views_module):

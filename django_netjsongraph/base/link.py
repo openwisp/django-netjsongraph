@@ -10,11 +10,11 @@ from django.utils.translation import ugettext_lazy as _
 from jsonfield import JSONField
 from model_utils import Choices
 from model_utils.fields import StatusField
+from openwisp_utils.base import TimeStampedEditableModel
 from rest_framework.utils.encoders import JSONEncoder
 
 from .. import settings
 from ..utils import link_status_changed, print_info
-from .base import TimeStampedEditableModel
 
 
 class AbstractLink(TimeStampedEditableModel):

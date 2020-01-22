@@ -10,12 +10,12 @@ from django.utils.module_loading import import_string
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from netdiff import NetJsonParser, diff
+from openwisp_utils.base import KeyField, TimeStampedEditableModel
 from rest_framework.utils.encoders import JSONEncoder
 
 from ..contextmanagers import log_failure
 from ..settings import PARSERS, TIMEOUT
-from ..utils import get_random_key, print_info
-from .base import TimeStampedEditableModel
+from ..utils import print_info
 
 STRATEGIES = (
     ('fetch', _('FETCH')),
@@ -42,13 +42,11 @@ class AbstractTopology(TimeStampedEditableModel):
                     ' (FETCH strategy)')
     )
     # receive strategy
-    key = models.CharField(
-        _('key'),
-        blank=True,
-        max_length=64,
-        default=get_random_key,
-        help_text=_('key needed to update topology from nodes ')
-    )
+    key = KeyField(unique=False,
+                   db_index=False,
+                   help_text=_('key needed to update topology from nodes '),
+                   verbose_name=_('key'),
+                   blank=True)
     # receive strategy
     expiration_time = models.PositiveIntegerField(
         _('expiration time'),
@@ -275,7 +273,7 @@ class AbstractTopology(TimeStampedEditableModel):
             return False
         # if using fetch strategy or
         # using receive strategy and link is coming back up or
-        # receive strategy and ``expiration_time is 0``
+        # receive strategy and ``expiration_time == 0``
         elif self.strategy == 'fetch' or status == 'up' or self.expiration_time == 0:
             return True
         # if using receive strategy and expiration_time of link has expired
