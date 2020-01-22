@@ -6,6 +6,7 @@ from django.template.response import TemplateResponse
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
+from openwisp_utils.admin import ReceiveUrlAdmin
 
 from ..contextmanagers import log_failure
 
@@ -30,13 +31,12 @@ class BaseAdmin(TimeStampedEditableAdmin):
         js = [static('netjsongraph/js/lib/d3.min.js'),
               static('netjsongraph/js/lib/jquery-ui.min.js'),
               static('netjsongraph/js/src/netjsongraph.js'),
-              static('netjsongraph/js/receive-url.js'),
               static('netjsongraph/js/strategy-switcher.js'),
               static('netjsongraph/js/topology-history.js'),
               static('netjsongraph/js/visualize.js')]
 
 
-class AbstractTopologyAdmin(BaseAdmin):
+class AbstractTopologyAdmin(BaseAdmin, ReceiveUrlAdmin):
     list_display = ['label', 'parser', 'strategy', 'published', 'created', 'modified']
     readonly_fields = ['protocol', 'version', 'revision', 'metric', 'receive_url']
     list_filter = ['parser', 'strategy']
@@ -45,12 +45,7 @@ class AbstractTopologyAdmin(BaseAdmin):
     fields = ['label', 'parser', 'strategy', 'url', 'key',
               'expiration_time', 'receive_url', 'published', 'protocol',
               'version', 'revision', 'metric', 'created']
-
-    def receive_url(self, obj):
-        url = reverse('receive_topology', kwargs={'pk': obj.pk})
-        return '{0}?key={1}'.format(url, obj.key)
-
-    receive_url.short_description = _('receive url')
+    receive_url_name = 'receive_topology'
 
     def get_actions(self, request):
         """

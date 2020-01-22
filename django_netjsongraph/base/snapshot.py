@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
-from .base import TimeStampedEditableModel
+from openwisp_utils.base import TimeStampedEditableModel
 
 
 class AbstractSnapshot(TimeStampedEditableModel):

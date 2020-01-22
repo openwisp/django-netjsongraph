@@ -6,11 +6,11 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.timezone import now
 from jsonfield import JSONField
+from openwisp_utils.base import TimeStampedEditableModel
 from rest_framework.utils.encoders import JSONEncoder
 
 from .. import settings
 from ..utils import print_info
-from .base import TimeStampedEditableModel
 
 
 class AbstractNode(TimeStampedEditableModel):
