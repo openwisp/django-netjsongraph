@@ -1,6 +1,19 @@
 Changelog
 =========
 
+Version 0.6.0 [2020-02-07]
+--------------------------
+
+- Dropped Python 3.5 and below
+- Dropped django 2.1 and below
+- Dropped netdiff 0.6 and below
+- Dropped openwisp-utils 0.3 and below
+- Moved ``ReceiveUrlAdmin`` & ``get_random_key`` logic to openwisp-utils
+- Moved from jsonfield to jsonfield2 3.X.X
+- Added Django 3.0 support
+- Added netdiff 0.7 support
+- Added openwisp-utils 0.4 support
+
 Version 0.5.0 [2020-01-13]
 --------------------------
 
