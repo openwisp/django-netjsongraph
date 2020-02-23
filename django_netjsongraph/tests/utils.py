@@ -11,7 +11,7 @@ from django.core.management import call_command
 from django.test.runner import DiscoverRunner
 from django.utils.timezone import now
 
-from .. import settings
+from .. import settings as app_settings
 
 
 @contextmanager
@@ -134,7 +134,7 @@ class TestUtilsMixin(LoadMixin):
         t.parser = 'netdiff.NetJsonParser'
         t.save()
         # should not delete
-        almost_expired_date = now() - timedelta(days=settings.LINK_EXPIRATION-10)
+        almost_expired_date = now() - timedelta(days=app_settings.LINK_EXPIRATION-10)
         n1 = self.node_model.objects.all()[0]
         n2 = self.node_model.objects.all()[1]
         link = self._create_link(source=n1,
@@ -160,7 +160,7 @@ class TestUtilsMixin(LoadMixin):
         self.assertEqual(self.node_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.count(), 1)
         # should delete
-        expired_date = now() - timedelta(days=settings.LINK_EXPIRATION+10)
+        expired_date = now() - timedelta(days=app_settings.LINK_EXPIRATION+10)
         self.link_model.objects.filter(pk=link.pk).update(created=expired_date,
                                                           modified=expired_date)
         self.topology_model.update_all('testnetwork')
@@ -169,10 +169,10 @@ class TestUtilsMixin(LoadMixin):
 
     @responses.activate
     def test_delete_expired_nodes(self):
-        NODE_EXPIRATION = getattr(settings, 'NODE_EXPIRATION')
+        NODE_EXPIRATION = getattr(app_settings, 'NODE_EXPIRATION')
         # Test with the default value(False)
         # Should not delete
-        setattr(settings, 'NODE_EXPIRATION', False)
+        setattr(app_settings, 'NODE_EXPIRATION', False)
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
@@ -200,8 +200,8 @@ class TestUtilsMixin(LoadMixin):
 
         # Test with a custom value
         # Should delete
-        setattr(settings, 'NODE_EXPIRATION', 60)
-        expired_date = now() - timedelta(days=settings.NODE_EXPIRATION+10)
+        setattr(app_settings, 'NODE_EXPIRATION', 60)
+        expired_date = now() - timedelta(days=app_settings.NODE_EXPIRATION+10)
         self.node_model.objects.filter(pk=n1.pk).update(created=expired_date,
                                                         modified=expired_date)
         self.node_model.objects.filter(pk=n2.pk).update(created=expired_date,
@@ -210,7 +210,7 @@ class TestUtilsMixin(LoadMixin):
         self.assertEqual(self.node_model.objects.count(), 0)
         self.assertEqual(self.link_model.objects.count(), 0)
         # Set the setting to it's original value
-        setattr(settings, 'NODE_EXPIRATION', NODE_EXPIRATION)
+        setattr(app_settings, 'NODE_EXPIRATION', NODE_EXPIRATION)
 
     @responses.activate
     def test_delete_expired_disabled(self):
@@ -224,7 +224,7 @@ class TestUtilsMixin(LoadMixin):
                                  cost=1,
                                  status='down',
                                  topology=t)
-        expired_date = now() - timedelta(days=settings.LINK_EXPIRATION+10)
+        expired_date = now() - timedelta(days=app_settings.LINK_EXPIRATION+10)
         self.link_model.objects.filter(pk=link.pk).update(created=expired_date,
                                                           modified=expired_date)
         empty_topology = json.dumps({
@@ -239,12 +239,12 @@ class TestUtilsMixin(LoadMixin):
                       'http://127.0.0.1:9090',
                       body=empty_topology,
                       content_type='application/json')
-        ORIGINAL_LINK_EXPIRATION = int(settings.LINK_EXPIRATION)
-        settings.LINK_EXPIRATION = False
+        ORIGINAL_LINK_EXPIRATION = int(app_settings.LINK_EXPIRATION)
+        app_settings.LINK_EXPIRATION = False
         self.topology_model.update_all('testnetwork')
         self.assertEqual(self.node_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.count(), 1)
-        settings.LINK_EXPIRATION = ORIGINAL_LINK_EXPIRATION
+        app_settings.LINK_EXPIRATION = ORIGINAL_LINK_EXPIRATION
 
     def test_save_snapshot_all_method(self, **kwargs):
         self.assertEqual(self.snapshot_model.objects.count(), 0)

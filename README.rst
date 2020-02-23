@@ -292,6 +292,32 @@ it will be deleted by the ``update_topology`` management command. This depends o
 ``NETJSONGRAPH_LINK_EXPIRATION`` being enabled.
 Replace ``False`` with an integer to enable the feature.
 
+``TOPOLOGY_RECEIVE_URLCONF``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
++--------------+---------------+
+| **type**:    |   ``string``  |
++--------------+---------------+
+| **default**: |   ``None``    |
++--------------+---------------+
+
+Use the ``urlconf`` option to change receive api url to point to
+another module, example, ``myapp.urls``.
+
+``TOPOLOGY_RECEIVE_BASEURL``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
++--------------+---------------+
+| **type**:    |   ``string``  |
++--------------+---------------+
+| **default**: |   ``None``    |
++--------------+---------------+
+
+If you have a seperate instanse of django-netjsongraph to
+which you want to point your receive url to, you can use
+this option to change the base of the url,
+example: ``https://mytopology.myapp.com``.
+
 Overriding visualizer templates
 -------------------------------
 

@@ -13,7 +13,7 @@ from model_utils.fields import StatusField
 from openwisp_utils.base import TimeStampedEditableModel
 from rest_framework.utils.encoders import JSONEncoder
 
-from .. import settings
+from .. import settings as app_settings
 from ..utils import link_status_changed, print_info
 
 
@@ -115,7 +115,7 @@ class AbstractLink(TimeStampedEditableModel):
         deletes links that have been down for more than
         ``NETJSONGRAPH_LINK_EXPIRATION`` days
         """
-        LINK_EXPIRATION = settings.LINK_EXPIRATION
+        LINK_EXPIRATION = app_settings.LINK_EXPIRATION
         if LINK_EXPIRATION not in [False, None]:
             expiration_date = now() - timedelta(days=int(LINK_EXPIRATION))
             expired_links = cls.objects.filter(status='down',
