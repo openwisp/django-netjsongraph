@@ -9,7 +9,7 @@ from jsonfield import JSONField
 from openwisp_utils.base import TimeStampedEditableModel
 from rest_framework.utils.encoders import JSONEncoder
 
-from .. import settings
+from .. import settings as app_settings
 from ..utils import print_info
 
 
@@ -101,8 +101,8 @@ class AbstractNode(TimeStampedEditableModel):
         deletes nodes that have not been  connected to the network
         for more than ``NETJSONGRAPH__EXPIRATION`` days
         """
-        NODE_EXPIRATION = settings.NODE_EXPIRATION
-        LINK_EXPIRATION = settings.LINK_EXPIRATION
+        NODE_EXPIRATION = app_settings.NODE_EXPIRATION
+        LINK_EXPIRATION = app_settings.LINK_EXPIRATION
         if NODE_EXPIRATION not in [False, None] and LINK_EXPIRATION not in [False, None]:
             expiration_date = now() - timedelta(days=int(NODE_EXPIRATION))
             expired_nodes = cls.objects.filter(modified__lt=expiration_date,

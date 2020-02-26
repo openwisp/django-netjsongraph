@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from openwisp_utils.admin import ReceiveUrlAdmin
 
+from .. import settings as app_settings
 from ..contextmanagers import log_failure
 
 
@@ -46,6 +47,8 @@ class AbstractTopologyAdmin(BaseAdmin, ReceiveUrlAdmin):
               'expiration_time', 'receive_url', 'published', 'protocol',
               'version', 'revision', 'metric', 'created']
     receive_url_name = 'receive_topology'
+    receive_url_urlconf = app_settings.TOPOLOGY_RECEIVE_URLCONF
+    receive_url_baseurl = app_settings.TOPOLOGY_RECEIVE_BASEURL
 
     def get_actions(self, request):
         """

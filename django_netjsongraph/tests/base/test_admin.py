@@ -3,10 +3,12 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from ...apps import DjangoNetjsongraphConfig as appconfig
+from ...base.admin import AbstractTopologyAdmin
 from ..utils import LoadMixin
 
 
 class TestAdminMixin(LoadMixin):
+    module = 'django_netjsongraph'
     fixtures = [
         'test_users.json'
     ]
@@ -94,6 +96,32 @@ class TestAdminMixin(LoadMixin):
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'field-receive_url')
+
+    def test_custom_topology_receive_url(self):
+        t = self.topology_model.objects.first()
+        t.strategy = 'receive'
+        t.save()
+        path = reverse('{0}_topology_change'.format(self.prefix), args=[t.pk])
+        # No change in URL Test
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'field-receive_url')
+        self.assertContains(response, 'http://testserver/api/receive')
+        # Change URL Test
+        AbstractTopologyAdmin.receive_url_baseurl = 'http://changedurlbase'
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'field-receive_url')
+        self.assertContains(response, 'http://changedurlbase/api/receive')
+        # Change URLConf Test
+        AbstractTopologyAdmin.receive_url_urlconf = '{}.api.urls'.format(self.module)
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'field-receive_url')
+        self.assertContains(response, 'http://changedurlbase/receive')
+        # Reset test options
+        AbstractTopologyAdmin.receive_url_baseurl = None
+        AbstractTopologyAdmin.receive_url_urlconf = None
 
     def test_node_change_form(self):
         n = self.node_model.objects.first()

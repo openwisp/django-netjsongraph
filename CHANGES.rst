@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 0.6.1 [unreleased]
+--------------------------
+
+- Added settings option TOPOLOGY_RECEIVE_URLCONF & TOPOLOGY_RECEIVE_BASEURL
+
 Version 0.6.0 [2020-02-07]
 --------------------------
 
