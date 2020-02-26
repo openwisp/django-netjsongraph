@@ -1,10 +1,11 @@
 Changelog
 =========
 
-Version 0.6.1 [unreleased]
+Version 0.6.1 [2020-02-26]
 --------------------------
 
 - Added settings option TOPOLOGY_RECEIVE_URLCONF & TOPOLOGY_RECEIVE_BASEURL
+- Move from jsonfield2 to jsonfield
 
 Version 0.6.0 [2020-02-07]
 --------------------------
