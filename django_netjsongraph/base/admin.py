@@ -10,6 +10,7 @@ from openwisp_utils.admin import ReceiveUrlAdmin
 
 from .. import settings as app_settings
 from ..contextmanagers import log_failure
+from ..visualizer import GraphVisualizerUrls
 
 
 class TimeStampedEditableAdmin(ModelAdmin):
@@ -37,7 +38,7 @@ class BaseAdmin(TimeStampedEditableAdmin):
               static('netjsongraph/js/visualize.js')]
 
 
-class AbstractTopologyAdmin(BaseAdmin, ReceiveUrlAdmin):
+class AbstractTopologyAdmin(BaseAdmin, ReceiveUrlAdmin, GraphVisualizerUrls):
     list_display = ['label', 'parser', 'strategy', 'published', 'created', 'modified']
     readonly_fields = ['protocol', 'version', 'revision', 'metric', 'receive_url']
     list_filter = ['parser', 'strategy']
@@ -47,8 +48,8 @@ class AbstractTopologyAdmin(BaseAdmin, ReceiveUrlAdmin):
               'expiration_time', 'receive_url', 'published', 'protocol',
               'version', 'revision', 'metric', 'created']
     receive_url_name = 'receive_topology'
-    receive_url_urlconf = app_settings.TOPOLOGY_RECEIVE_URLCONF
-    receive_url_baseurl = app_settings.TOPOLOGY_RECEIVE_BASEURL
+    receive_url_urlconf = app_settings.TOPOLOGY_API_URLCONF
+    receive_url_baseurl = app_settings.TOPOLOGY_API_BASEURL
 
     def get_actions(self, request):
         """
@@ -135,8 +136,7 @@ class AbstractTopologyAdmin(BaseAdmin, ReceiveUrlAdmin):
     unpublish_selected.short_description = _('Unpublish selected items')
 
     def visualize_view(self, request, pk):
-        graph_url = reverse('network_graph', args=[pk])
-        history_url = reverse('network_graph_history', args=[pk])
+        graph_url, history_url = self.get_graph_urls(request, pk)
         context = self.admin_site.each_context(request)
         opts = self.model._meta
         context.update({
