@@ -292,8 +292,8 @@ it will be deleted by the ``update_topology`` management command. This depends o
 ``NETJSONGRAPH_LINK_EXPIRATION`` being enabled.
 Replace ``False`` with an integer to enable the feature.
 
-``TOPOLOGY_RECEIVE_URLCONF``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``TOPOLOGY_API_URLCONF``
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 +--------------+---------------+
 | **type**:    |   ``string``  |
@@ -304,8 +304,8 @@ Replace ``False`` with an integer to enable the feature.
 Use the ``urlconf`` option to change receive api url to point to
 another module, example, ``myapp.urls``.
 
-``TOPOLOGY_RECEIVE_BASEURL``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``TOPOLOGY_API_BASEURL``
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 +--------------+---------------+
 | **type**:    |   ``string``  |
