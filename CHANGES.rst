@@ -1,11 +1,11 @@
 Changelog
 =========
 
-Version 0.6.2 [Unreleased]
+Version 0.6.2 [2020-03-19]
 --------------------------
 
-- Renamed api setting TOPOLOGY_RECEIVE_URLCONF -> TOPOLOGY_API_URLCONF
-- Renamed api setting TOPOLOGY_RECEIVE_BASEURL -> TOPOLOGY_API_BASEURL
+- Renamed api setting ``TOPOLOGY_RECEIVE_BASEURL`` -> ``TOPOLOGY_API_BASEURL``
+- Renamed api setting ``TOPOLOGY_RECEIVE_URLCONF`` -> ``TOPOLOGY_API_URLCONF``
 
 Version 0.6.1 [2020-02-26]
 --------------------------

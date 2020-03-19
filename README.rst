@@ -313,10 +313,11 @@ another module, example, ``myapp.urls``.
 | **default**: |   ``None``    |
 +--------------+---------------+
 
-If you have a seperate instanse of django-netjsongraph to
-which you want to point your receive url to, you can use
-this option to change the base of the url,
-example: ``https://mytopology.myapp.com``.
+If you have a seperate instanse of django-netjsongraph on a
+different domain, you can use this option to change the base
+of the url, this will enable you to point all the API urls to
+your django-netjsongraph API server's domain,
+example value: ``https://mytopology.myapp.com``.
 
 Overriding visualizer templates
 -------------------------------
