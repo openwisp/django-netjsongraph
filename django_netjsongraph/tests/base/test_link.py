@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
+from openwisp_utils.tests import catch_signal
 
+from ...models import Link
 from ...utils import link_status_changed
 
 
@@ -73,15 +75,12 @@ class TestLinkMixin(object):
         node1, node2 = self._get_nodes()
         link = t._create_link(source=node1, target=node2, cost=1.0, status='up')
         link.save()
-
-        def handler(sender, link, **kwargs):
-            self.signal_was_called = True
-            self.assertEqual(link.pk, link.pk)
-            self.assertEqual(link.status, 'down')
-
-        link_status_changed.connect(handler)
-        link.status = 'down'
-        link.save()
-
-        self.assertTrue(self.signal_was_called)
-        link_status_changed.disconnect(handler)
+        with catch_signal(link_status_changed) as handler:
+            link.status = 'down'
+            link.save()
+        handler.assert_called_once_with(
+            link=link,
+            sender=Link,
+            signal=link_status_changed,
+        )
+        self.assertEqual(link.status, 'down')
