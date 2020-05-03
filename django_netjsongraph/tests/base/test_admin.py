@@ -1,3 +1,5 @@
+import re
+
 import responses
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -86,7 +88,9 @@ class TestAdminMixin(LoadMixin):
         path = reverse('{0}_topology_change'.format(self.prefix), args=[t.pk])
         response = self.client.get(path)
         self.assertContains(response, 'View on site')
-        self.assertContains(response, t.get_absolute_url())
+        # Pattern for the link
+        pattern = '{0}{1}'.format(r'/admin/r/[0-9][0-9]?/', f'{t.pk}')
+        self.assertTrue(bool(re.compile(pattern).search(str(response.content))))
 
     def test_topology_receive_url(self):
         t = self.topology_model.objects.first()
