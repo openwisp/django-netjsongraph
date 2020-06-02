@@ -32,5 +32,7 @@ class TestVisualizerMixin(UnpublishMixin):
         see https://github.com/netjson/django-netjsongraph/issues/4
         """
         t = self.topology_model.objects.first()
-        response = self.client.get(reverse('topology_detail', args=['{0}-wrong'.format(t.pk)]))
+        response = self.client.get(
+            reverse('topology_detail', args=['{0}-wrong'.format(t.pk)])
+        )
         self.assertEqual(response.status_code, 404)

@@ -27,9 +27,7 @@ class LoggingDisabledTestRunner(DiscoverRunner):
     def run_tests(self, test_labels, extra_tests=None, **kwargs):
         # disable logging below CRITICAL while testing
         logging.disable(logging.CRITICAL)
-        return super().run_tests(test_labels,
-                                 extra_tests,
-                                 **kwargs)
+        return super().run_tests(test_labels, extra_tests, **kwargs)
 
 
 class UnpublishMixin(object):
@@ -49,6 +47,7 @@ class TestUtilsMixin(LoadMixin):
     """
     tests for django_netjsongraph.utils
     """
+
     maxDiff = None
 
     @responses.activate
@@ -56,10 +55,12 @@ class TestUtilsMixin(LoadMixin):
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=self._load('static/netjson-1-link.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=self._load('static/netjson-1-link.json'),
+            content_type='application/json',
+        )
         self.node_model.objects.all().delete()
         self.topology_model.update_all('testnetwork')
         self.assertEqual(self.node_model.objects.count(), 2)
@@ -69,10 +70,12 @@ class TestUtilsMixin(LoadMixin):
         t.save()
         self.node_model.objects.all().delete()
         self.link_model.objects.all().delete()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9091',
-                      body=self._load('static/netjson-invalid.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9091',
+            body=self._load('static/netjson-invalid.json'),
+            content_type='application/json',
+        )
         # capture output
         output = StringIO()
         with redirect_stdout(output):
@@ -87,10 +90,12 @@ class TestUtilsMixin(LoadMixin):
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=self._load('static/netjson-1-link.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=self._load('static/netjson-1-link.json'),
+            content_type='application/json',
+        )
         self.node_model.objects.all().delete()
         self.topology_model.update_all()
         self.assertEqual(self.node_model.objects.count(), 2)
@@ -100,10 +105,12 @@ class TestUtilsMixin(LoadMixin):
         t.save()
         self.node_model.objects.all().delete()
         self.link_model.objects.all().delete()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9091',
-                      body=self._load('static/netjson-invalid.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9091',
+            body=self._load('static/netjson-invalid.json'),
+            content_type='application/json',
+        )
         # capture output
         output = StringIO()
         with redirect_stdout(output):
@@ -119,10 +126,12 @@ class TestUtilsMixin(LoadMixin):
         t.published = False
         t.parser = 'netdiff.NetJsonParser'
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=self._load('static/netjson-1-link.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=self._load('static/netjson-1-link.json'),
+            content_type='application/json',
+        )
         self.node_model.objects.all().delete()
         self.topology_model.update_all()
         self.assertEqual(self.node_model.objects.count(), 0)
@@ -134,35 +143,39 @@ class TestUtilsMixin(LoadMixin):
         t.parser = 'netdiff.NetJsonParser'
         t.save()
         # should not delete
-        almost_expired_date = now() - timedelta(days=app_settings.LINK_EXPIRATION-10)
+        almost_expired_date = now() - timedelta(days=app_settings.LINK_EXPIRATION - 10)
         n1 = self.node_model.objects.all()[0]
         n2 = self.node_model.objects.all()[1]
-        link = self._create_link(source=n1,
-                                 target=n2,
-                                 cost=1,
-                                 status='down',
-                                 topology=t)
-        self.link_model.objects.filter(pk=link.pk).update(created=almost_expired_date,
-                                                          modified=almost_expired_date)
-        empty_topology = json.dumps({
-            "type": "NetworkGraph",
-            "protocol": "OLSR",
-            "version": "0.8",
-            "metric": "ETX",
-            "nodes": [],
-            "links": []
-        })
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=empty_topology,
-                      content_type='application/json')
+        link = self._create_link(
+            source=n1, target=n2, cost=1, status='down', topology=t
+        )
+        self.link_model.objects.filter(pk=link.pk).update(
+            created=almost_expired_date, modified=almost_expired_date
+        )
+        empty_topology = json.dumps(
+            {
+                "type": "NetworkGraph",
+                "protocol": "OLSR",
+                "version": "0.8",
+                "metric": "ETX",
+                "nodes": [],
+                "links": [],
+            }
+        )
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=empty_topology,
+            content_type='application/json',
+        )
         self.topology_model.update_all('testnetwork')
         self.assertEqual(self.node_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.count(), 1)
         # should delete
-        expired_date = now() - timedelta(days=app_settings.LINK_EXPIRATION+10)
-        self.link_model.objects.filter(pk=link.pk).update(created=expired_date,
-                                                          modified=expired_date)
+        expired_date = now() - timedelta(days=app_settings.LINK_EXPIRATION + 10)
+        self.link_model.objects.filter(pk=link.pk).update(
+            created=expired_date, modified=expired_date
+        )
         self.topology_model.update_all('testnetwork')
         self.assertEqual(self.node_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.count(), 0)
@@ -179,33 +192,41 @@ class TestUtilsMixin(LoadMixin):
         expired_date = now() - timedelta(days=60)
         n1 = self.node_model.objects.all()[0]
         n2 = self.node_model.objects.all()[1]
-        self.node_model.objects.filter(pk=n1.pk).update(created=expired_date,
-                                                        modified=expired_date)
-        self.node_model.objects.filter(pk=n2.pk).update(created=expired_date,
-                                                        modified=expired_date)
-        empty_topology = json.dumps({
-            "type": "NetworkGraph",
-            "protocol": "OLSR",
-            "version": "0.8",
-            "metric": "ETX",
-            "nodes": [],
-            "links": []
-        })
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=empty_topology,
-                      content_type='application/json')
+        self.node_model.objects.filter(pk=n1.pk).update(
+            created=expired_date, modified=expired_date
+        )
+        self.node_model.objects.filter(pk=n2.pk).update(
+            created=expired_date, modified=expired_date
+        )
+        empty_topology = json.dumps(
+            {
+                "type": "NetworkGraph",
+                "protocol": "OLSR",
+                "version": "0.8",
+                "metric": "ETX",
+                "nodes": [],
+                "links": [],
+            }
+        )
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=empty_topology,
+            content_type='application/json',
+        )
         self.topology_model.update_all('testnetwork')
         self.assertEqual(self.node_model.objects.count(), 2)
 
         # Test with a custom value
         # Should delete
         setattr(app_settings, 'NODE_EXPIRATION', 60)
-        expired_date = now() - timedelta(days=app_settings.NODE_EXPIRATION+10)
-        self.node_model.objects.filter(pk=n1.pk).update(created=expired_date,
-                                                        modified=expired_date)
-        self.node_model.objects.filter(pk=n2.pk).update(created=expired_date,
-                                                        modified=expired_date)
+        expired_date = now() - timedelta(days=app_settings.NODE_EXPIRATION + 10)
+        self.node_model.objects.filter(pk=n1.pk).update(
+            created=expired_date, modified=expired_date
+        )
+        self.node_model.objects.filter(pk=n2.pk).update(
+            created=expired_date, modified=expired_date
+        )
         self.topology_model.update_all('testnetwork')
         self.assertEqual(self.node_model.objects.count(), 0)
         self.assertEqual(self.link_model.objects.count(), 0)
@@ -219,26 +240,29 @@ class TestUtilsMixin(LoadMixin):
         t.save()
         n1 = self.node_model.objects.all()[0]
         n2 = self.node_model.objects.all()[1]
-        link = self._create_link(source=n1,
-                                 target=n2,
-                                 cost=1,
-                                 status='down',
-                                 topology=t)
-        expired_date = now() - timedelta(days=app_settings.LINK_EXPIRATION+10)
-        self.link_model.objects.filter(pk=link.pk).update(created=expired_date,
-                                                          modified=expired_date)
-        empty_topology = json.dumps({
-            "type": "NetworkGraph",
-            "protocol": "OLSR",
-            "version": "0.8",
-            "metric": "ETX",
-            "nodes": [],
-            "links": []
-        })
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=empty_topology,
-                      content_type='application/json')
+        link = self._create_link(
+            source=n1, target=n2, cost=1, status='down', topology=t
+        )
+        expired_date = now() - timedelta(days=app_settings.LINK_EXPIRATION + 10)
+        self.link_model.objects.filter(pk=link.pk).update(
+            created=expired_date, modified=expired_date
+        )
+        empty_topology = json.dumps(
+            {
+                "type": "NetworkGraph",
+                "protocol": "OLSR",
+                "version": "0.8",
+                "metric": "ETX",
+                "nodes": [],
+                "links": [],
+            }
+        )
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=empty_topology,
+            content_type='application/json',
+        )
         ORIGINAL_LINK_EXPIRATION = int(app_settings.LINK_EXPIRATION)
         app_settings.LINK_EXPIRATION = False
         self.topology_model.update_all('testnetwork')

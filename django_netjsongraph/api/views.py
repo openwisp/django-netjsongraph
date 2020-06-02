@@ -1,6 +1,10 @@
 from ..models import Snapshot, Topology
-from .generics import (BaseNetworkCollectionView, BaseNetworkGraphHistoryView,
-                       BaseNetworkGraphView, BaseReceiveTopologyView)
+from .generics import (
+    BaseNetworkCollectionView,
+    BaseNetworkGraphHistoryView,
+    BaseNetworkGraphView,
+    BaseReceiveTopologyView,
+)
 
 
 class NetworkCollectionView(BaseNetworkCollectionView):

@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from .base.admin import (AbstractLinkAdmin, AbstractNodeAdmin,
-                         AbstractTopologyAdmin)
+from .base.admin import AbstractLinkAdmin, AbstractNodeAdmin, AbstractTopologyAdmin
 from .models import Link, Node, Topology
 
 

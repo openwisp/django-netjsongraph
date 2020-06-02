@@ -17,6 +17,7 @@ class BaseNetworkCollectionView(generics.ListAPIView):
     Data of all the topologies returned
     in NetJSON NetworkCollection format
     """
+
     serializer_class = NetworkGraphSerializer
 
 
@@ -25,6 +26,7 @@ class BaseNetworkGraphView(generics.RetrieveAPIView):
     Data of a specific topology returned
     in NetJSON NetworkGraph format
     """
+
     serializer_class = NetworkGraphSerializer
 
 
@@ -40,17 +42,18 @@ class BaseNetworkGraphHistoryView(APIView):
         options = dict(topology=topology, date=date)
         # missing date: 400
         if not date:
-            return Response({'detail': _('missing required "date" parameter')},
-                            status=400)
+            return Response(
+                {'detail': _('missing required "date" parameter')}, status=400
+            )
         try:
             s = self.snapshot_model.objects.get(**options)
             return Response(json.loads(s.data))
         except self.snapshot_model.DoesNotExist:
-            return Response({'detail': _('no snapshot found for this date')},
-                            status=404)
+            return Response(
+                {'detail': _('no snapshot found for this date')}, status=404
+            )
         except ValidationError:
-            return Response({'detail': _('invalid date supplied')},
-                            status=403)
+            return Response({'detail': _('invalid date supplied')}, status=403)
 
 
 class BaseReceiveTopologyView(APIView):
@@ -63,6 +66,7 @@ class BaseReceiveTopologyView(APIView):
     Allowed content-types:
         * text/plain
     """
+
     parser_classes = (TextParser,)
 
     def post(self, request, pk, format=None):
@@ -70,22 +74,24 @@ class BaseReceiveTopologyView(APIView):
         key = request.query_params.get('key')
         # wrong content type: 415
         if request.content_type != 'text/plain':
-            return Response({'detail': _('expected content type "text/plain"')},
-                            status=415)
+            return Response(
+                {'detail': _('expected content type "text/plain"')}, status=415
+            )
         # missing key: 400
         if not key:
-            return Response({'detail': _('missing required "key" parameter')},
-                            status=400)
+            return Response(
+                {'detail': _('missing required "key" parameter')}, status=400
+            )
         # wrong key 403
         if topology.key != key:
-            return Response({'detail': _('wrong key')},
-                            status=403)
+            return Response({'detail': _('wrong key')}, status=403)
         try:
             topology.receive(request.data)
         except NetdiffException as e:
-            error = _('Supplied data not recognized as %s, '
-                      'got exception of type "%s" '
-                      'with message "%s"') % (topology.get_parser_display(),
-                                              e.__class__.__name__, e)
+            error = _(
+                'Supplied data not recognized as %s, '
+                'got exception of type "%s" '
+                'with message "%s"'
+            ) % (topology.get_parser_display(), e.__class__.__name__, e)
             return Response({'detail': error}, status=400)
         return Response({'detail': _('data received successfully')})

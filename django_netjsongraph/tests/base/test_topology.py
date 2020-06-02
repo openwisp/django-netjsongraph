@@ -35,19 +35,22 @@ class TestTopologyMixin(LoadMixin):
         t = self.topology_model.objects.first()
         self.node_model.objects.all().delete()
         graph = t.json(dict=True)
-        self.assertDictEqual(graph, {
-            'type': 'NetworkGraph',
-            'protocol': 'OLSR',
-            'version': '0.8',
-            'metric': 'ETX',
-            'label': t.label,
-            'id': str(t.id),
-            'parser': t.parser,
-            'created': t.created,
-            'modified': t.modified,
-            'nodes': [],
-            'links': []
-        })
+        self.assertDictEqual(
+            graph,
+            {
+                'type': 'NetworkGraph',
+                'protocol': 'OLSR',
+                'version': '0.8',
+                'metric': 'ETX',
+                'label': t.label,
+                'id': str(t.id),
+                'parser': t.parser,
+                'created': t.created,
+                'modified': t.modified,
+                'nodes': [],
+                'links': [],
+            },
+        )
 
     def test_json(self):
         node1, node2 = self._get_nodes()
@@ -59,26 +62,26 @@ class TestTopologyMixin(LoadMixin):
         l2 = t._create_link(source=node1, target=node3, cost=1)
         l2.save()
         graph = t.json(dict=True)
-        self.assertDictEqual(dict(graph), {
-            'type': 'NetworkGraph',
-            'protocol': 'OLSR',
-            'version': '0.8',
-            'metric': 'ETX',
-            'label': t.label,
-            'id': str(t.id),
-            'parser': t.parser,
-            'created': t.created,
-            'modified': t.modified,
-            'nodes': [
-                dict(node1.json(dict=True)),
-                dict(node2.json(dict=True)),
-                dict(node3.json(dict=True))
-            ],
-            'links': [
-                dict(link.json(dict=True)),
-                dict(l2.json(dict=True))
-            ]
-        })
+        self.assertDictEqual(
+            dict(graph),
+            {
+                'type': 'NetworkGraph',
+                'protocol': 'OLSR',
+                'version': '0.8',
+                'metric': 'ETX',
+                'label': t.label,
+                'id': str(t.id),
+                'parser': t.parser,
+                'created': t.created,
+                'modified': t.modified,
+                'nodes': [
+                    dict(node1.json(dict=True)),
+                    dict(node2.json(dict=True)),
+                    dict(node3.json(dict=True)),
+                ],
+                'links': [dict(link.json(dict=True)), dict(l2.json(dict=True))],
+            },
+        )
         self.assertIsInstance(t.json(), str)
 
     @responses.activate
@@ -86,25 +89,27 @@ class TestTopologyMixin(LoadMixin):
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=t.json(),
-                      content_type='application/json')
-        self.assertDictEqual(t.diff(), {
-            'added': None,
-            'removed': None,
-            'changed': None
-        })
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=t.json(),
+            content_type='application/json',
+        )
+        self.assertDictEqual(
+            t.diff(), {'added': None, 'removed': None, 'changed': None}
+        )
 
     @responses.activate
     def test_update_all_attributes(self):
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=self._load('static/netjson-1-link.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=self._load('static/netjson-1-link.json'),
+            content_type='application/json',
+        )
         t.protocol = None
         t.version = None
         t.metric = None
@@ -119,10 +124,12 @@ class TestTopologyMixin(LoadMixin):
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=self._load('static/netjson-1-link.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=self._load('static/netjson-1-link.json'),
+            content_type='application/json',
+        )
         self.node_model.objects.all().delete()
         t.update()
         self.assertEqual(self.node_model.objects.count(), 2)
@@ -146,20 +153,24 @@ class TestTopologyMixin(LoadMixin):
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=self._load('static/netjson-1-link.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=self._load('static/netjson-1-link.json'),
+            content_type='application/json',
+        )
         self.node_model.objects.all().delete()
         t.update()
         link = self.link_model.objects.first()
         # now change
         t.url = t.url.replace('9090', '9091')
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9091',
-                      body=self._load('static/netjson-2-links.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9091',
+            body=self._load('static/netjson-2-links.json'),
+            content_type='application/json',
+        )
         t.update()
         link.refresh_from_db()
         self.assertEqual(self.node_model.objects.count(), 3)
@@ -171,10 +182,12 @@ class TestTopologyMixin(LoadMixin):
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=self._load('static/netjson-2-links.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=self._load('static/netjson-2-links.json'),
+            content_type='application/json',
+        )
         self.node_model.objects.all().delete()
         t.update()
         self.assertEqual(self.node_model.objects.count(), 3)
@@ -182,17 +195,18 @@ class TestTopologyMixin(LoadMixin):
         # now change
         t.url = t.url.replace('9090', '9091')
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9091',
-                      body=self._load('static/netjson-1-link.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9091',
+            body=self._load('static/netjson-1-link.json'),
+            content_type='application/json',
+        )
         t.update()
         self.assertEqual(self.node_model.objects.count(), 3)
         self.assertEqual(self.link_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.filter(status='down').count(), 1)
         link = self.link_model.objects.filter(status='down').first()
-        self.assertIn('192.168.0.3', [link.source.netjson_id,
-                                      link.target.netjson_id])
+        self.assertIn('192.168.0.3', [link.source.netjson_id, link.target.netjson_id])
         self.assertEqual(link.cost, 2.0)
 
     @responses.activate
@@ -202,17 +216,17 @@ class TestTopologyMixin(LoadMixin):
         t.save()
         n1 = self.node_model.objects.all()[0]
         n2 = self.node_model.objects.all()[1]
-        link = t._create_link(source=n1,
-                              target=n2,
-                              cost=1,
-                              status='down',
-                              properties={'pretty': True})
+        link = t._create_link(
+            source=n1, target=n2, cost=1, status='down', properties={'pretty': True}
+        )
         link.full_clean()
         link.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=self._load('static/netjson-1-link.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=self._load('static/netjson-1-link.json'),
+            content_type='application/json',
+        )
         t.update()
         self.assertEqual(self.node_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.count(), 1)
@@ -220,17 +234,16 @@ class TestTopologyMixin(LoadMixin):
         self.assertEqual(link.status, 'up')
 
     def test_topology_url_empty(self):
-        t = self.topology_model(label='test',
-                                parser='netdiff.NetJsonParser',
-                                strategy='fetch')
+        t = self.topology_model(
+            label='test', parser='netdiff.NetJsonParser', strategy='fetch'
+        )
         with self.assertRaises(ValidationError):
             t.full_clean()
 
     def test_topology_key_empty(self):
-        t = self.topology_model(label='test',
-                                parser='netdiff.NetJsonParser',
-                                strategy='receive',
-                                key='')
+        t = self.topology_model(
+            label='test', parser='netdiff.NetJsonParser', strategy='receive', key=''
+        )
         with self.assertRaises(ValidationError):
             t.full_clean()
 
@@ -289,19 +302,16 @@ class TestTopologyMixin(LoadMixin):
         self.assertEqual(self.link_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.filter(status='down').count(), 1)
         link = self.link_model.objects.filter(status='down').first()
-        self.assertIn('192.168.0.3', [link.source.netjson_id,
-                                      link.target.netjson_id])
+        self.assertIn('192.168.0.3', [link.source.netjson_id, link.target.netjson_id])
         self.assertEqual(link.cost, 2.0)
 
     def test_receive_status_existing_link(self):
         t = self._set_receive()
         n1 = self.node_model.objects.all()[0]
         n2 = self.node_model.objects.all()[1]
-        link = t._create_link(source=n1,
-                              target=n2,
-                              cost=1,
-                              status='down',
-                              properties={'pretty': True})
+        link = t._create_link(
+            source=n1, target=n2, cost=1, status='down', properties={'pretty': True}
+        )
         link.full_clean()
         link.save()
         data = self._load('static/netjson-1-link.json')
@@ -326,7 +336,9 @@ class TestTopologyMixin(LoadMixin):
                 t.receive(data)
                 self.assertEqual(self.node_model.objects.count(), 3)
                 self.assertEqual(self.link_model.objects.count(), 2)
-                self.assertEqual(self.link_model.objects.filter(status='down').count(), 0)
+                self.assertEqual(
+                    self.link_model.objects.filter(status='down').count(), 0
+                )
             # receive change
             data = self._load('static/netjson-1-link.json')
             t.receive(data)
@@ -339,8 +351,9 @@ class TestTopologyMixin(LoadMixin):
             t.receive(data)
             self.assertEqual(self.link_model.objects.filter(status='down').count(), 1)
             link = self.link_model.objects.filter(status='down').first()
-            self.assertIn('192.168.0.3', [link.source.netjson_id,
-                                          link.target.netjson_id])
+            self.assertIn(
+                '192.168.0.3', [link.source.netjson_id, link.target.netjson_id]
+            )
             self.assertEqual(link.cost, 2.0)
 
     def test_multiple_receive_split_network(self):
@@ -348,14 +361,19 @@ class TestTopologyMixin(LoadMixin):
             self.assertEqual(self.node_model.objects.count(), 4)
             self.assertEqual(self.link_model.objects.filter(status='up').count(), 2)
             self.assertEqual(self.link_model.objects.filter(status='down').count(), 0)
-            link = self.link_model.get_from_nodes('192.168.0.1', '192.168.0.2', topology)
+            link = self.link_model.get_from_nodes(
+                '192.168.0.1', '192.168.0.2', topology
+            )
             self.assertIsNotNone(link)
             self.assertEqual(link.status, 'up')
             self.assertEqual(link.cost, 1.0)
-            link = self.link_model.get_from_nodes('192.168.0.10', '192.168.0.20', topology)
+            link = self.link_model.get_from_nodes(
+                '192.168.0.10', '192.168.0.20', topology
+            )
             self.assertIsNotNone(link)
             self.assertEqual(link.status, 'up')
             self.assertEqual(link.cost, 1.1)
+
         with freeze_time() as frozen_time:
             self.node_model.objects.all().delete()
             t = self._set_receive(expiration_time=0.5)

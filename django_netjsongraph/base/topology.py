@@ -10,56 +10,59 @@ from django.utils.module_loading import import_string
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from netdiff import NetJsonParser, diff
-from openwisp_utils.base import KeyField, TimeStampedEditableModel
 from rest_framework.utils.encoders import JSONEncoder
+
+from openwisp_utils.base import KeyField, TimeStampedEditableModel
 
 from ..contextmanagers import log_failure
 from ..settings import PARSERS, TIMEOUT
 from ..utils import print_info
 
-STRATEGIES = (
-    ('fetch', _('FETCH')),
-    ('receive', _('RECEIVE'))
-)
+STRATEGIES = (('fetch', _('FETCH')), ('receive', _('RECEIVE')))
 
 
 class AbstractTopology(TimeStampedEditableModel):
     label = models.CharField(_('label'), max_length=64)
-    parser = models.CharField(_('format'),
-                              choices=PARSERS,
-                              max_length=128,
-                              help_text=_('Select topology format'))
-    strategy = models.CharField(_('strategy'),
-                                max_length=16,
-                                choices=STRATEGIES,
-                                default='fetch',
-                                db_index=True)
+    parser = models.CharField(
+        _('format'),
+        choices=PARSERS,
+        max_length=128,
+        help_text=_('Select topology format'),
+    )
+    strategy = models.CharField(
+        _('strategy'), max_length=16, choices=STRATEGIES, default='fetch', db_index=True
+    )
     # fetch strategy
     url = models.URLField(
         _('url'),
         blank=True,
-        help_text=_('Topology data will be fetched from this URL'
-                    ' (FETCH strategy)')
+        help_text=_('Topology data will be fetched from this URL' ' (FETCH strategy)'),
     )
     # receive strategy
-    key = KeyField(unique=False,
-                   db_index=False,
-                   help_text=_('key needed to update topology from nodes '),
-                   verbose_name=_('key'),
-                   blank=True)
+    key = KeyField(
+        unique=False,
+        db_index=False,
+        help_text=_('key needed to update topology from nodes '),
+        verbose_name=_('key'),
+        blank=True,
+    )
     # receive strategy
     expiration_time = models.PositiveIntegerField(
         _('expiration time'),
         default=0,
-        help_text=_('"Expiration Time" in seconds: setting this to 0 will immediately mark missing links '
-                    'as down; a value higher than 0 will delay marking missing links as down until the '
-                    '"modified" field of a link is older than "Expiration Time"')
+        help_text=_(
+            '"Expiration Time" in seconds: setting this to 0 will immediately mark '
+            'missing links as down; a value higher than 0 will delay marking '
+            'missing links as down until the "modified" field of a link is older '
+            'than "Expiration Time"'
+        ),
     )
     published = models.BooleanField(
         _('published'),
         default=True,
-        help_text=_('Unpublished topologies won\'t be updated or '
-                    'shown in the visualizer')
+        help_text=_(
+            'Unpublished topologies won\'t be updated or ' 'shown in the visualizer'
+        ),
     )
 
     # the following fields will be filled automatically
@@ -80,13 +83,13 @@ class AbstractTopology(TimeStampedEditableModel):
 
     def clean(self):
         if self.strategy == 'fetch' and not self.url:
-            raise ValidationError({
-                'url': [_('an url must be specified when using FETCH strategy')]
-            })
+            raise ValidationError(
+                {'url': [_('an url must be specified when using FETCH strategy')]}
+            )
         elif self.strategy == 'receive' and not self.key:
-            raise ValidationError({
-                'key': [_('a key must be specified when using RECEIVE strategy')]
-            })
+            raise ValidationError(
+                {'key': [_('a key must be specified when using RECEIVE strategy')]}
+            )
 
     @cached_property
     def parser_class(self):
@@ -145,19 +148,21 @@ class AbstractTopology(TimeStampedEditableModel):
             links.append(link.json(dict=True))
         for node in self.node_set.all():
             nodes.append(node.json(dict=True))
-        netjson = OrderedDict((
-            ('type', 'NetworkGraph'),
-            ('protocol', self.protocol),
-            ('version', self.version),
-            ('metric', self.metric),
-            ('label', self.label),
-            ('id', str(self.id)),
-            ('parser', self.parser),
-            ('created', self.created),
-            ('modified', self.modified),
-            ('nodes', nodes),
-            ('links', links)
-        ))
+        netjson = OrderedDict(
+            (
+                ('type', 'NetworkGraph'),
+                ('protocol', self.protocol),
+                ('version', self.version),
+                ('metric', self.metric),
+                ('label', self.label),
+                ('id', str(self.id)),
+                ('parser', self.parser),
+                ('created', self.created),
+                ('modified', self.modified),
+                ('nodes', nodes),
+                ('links', links),
+            )
+        )
         if dict:
             return netjson
         return json.dumps(netjson, cls=JSONEncoder, **kwargs)
@@ -182,16 +187,8 @@ class AbstractTopology(TimeStampedEditableModel):
         Link, Node = self.link_model, self.node_model
         diff = self.diff(data)
 
-        status = {
-            'added': 'up',
-            'removed': 'down',
-            'changed': 'up'
-        }
-        action = {
-            'added': 'add',
-            'changed': 'change',
-            'removed': 'remove'
-        }
+        status = {'added': 'up', 'removed': 'down', 'changed': 'up'}
+        action = {'added': 'add', 'changed': 'change', 'removed': 'remove'}
 
         try:
             added_nodes = diff['added']['nodes']
@@ -207,8 +204,7 @@ class AbstractTopology(TimeStampedEditableModel):
             addresses = [node_dict['id']]
             addresses += node_dict.get('local_addresses', [])
             properties = node_dict.get('properties', {})
-            node = self._create_node(addresses=addresses,
-                                     properties=properties)
+            node = self._create_node(addresses=addresses, properties=properties)
             if 'label' in node_dict:
                 node.label = node_dict.get('label')
             node.full_clean()
@@ -220,18 +216,20 @@ class AbstractTopology(TimeStampedEditableModel):
                 continue
             for link_dict in graph['links']:
                 changed = False
-                link = Link.get_from_nodes(link_dict['source'],
-                                           link_dict['target'],
-                                           topology=self)
+                link = Link.get_from_nodes(
+                    link_dict['source'], link_dict['target'], topology=self
+                )
                 # if link does not exist create new
                 if not link:
                     source = Node.get_from_address(link_dict['source'], self)
                     target = Node.get_from_address(link_dict['target'], self)
-                    link = self._create_link(source=source,
-                                             target=target,
-                                             cost=link_dict['cost'],
-                                             properties=link_dict.get('properties', {}),
-                                             topology=self)
+                    link = self._create_link(
+                        source=source,
+                        target=target,
+                        cost=link_dict['cost'],
+                        properties=link_dict.get('properties', {}),
+                        topology=self,
+                    )
                     changed = True
                 # if status of link is changed
                 if self.link_status_changed(link, status[section]):
@@ -296,9 +294,9 @@ class AbstractTopology(TimeStampedEditableModel):
             netjson = data.json(dict=True)
             # update last modified date of all received links
             for link_dict in netjson['links']:
-                link = Link.get_from_nodes(link_dict['source'],
-                                           link_dict['target'],
-                                           topology=self)
+                link = Link.get_from_nodes(
+                    link_dict['source'], link_dict['target'], topology=self
+                )
                 if link:
                     link.save()
         self.update(data)

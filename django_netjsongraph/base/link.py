@@ -10,8 +10,9 @@ from django.utils.translation import ugettext_lazy as _
 from jsonfield import JSONField
 from model_utils import Choices
 from model_utils.fields import StatusField
-from openwisp_utils.base import TimeStampedEditableModel
 from rest_framework.utils.encoders import JSONEncoder
+
+from openwisp_utils.base import TimeStampedEditableModel
 
 from .. import settings as app_settings
 from ..utils import link_status_changed, print_info
@@ -21,22 +22,30 @@ class AbstractLink(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Link Object implementation
     """
-    topology = models.ForeignKey('django_netjsongraph.Topology',
-                                 on_delete=models.CASCADE)
-    source = models.ForeignKey('django_netjsongraph.Node',
-                               related_name='source_link_set',
-                               on_delete=models.CASCADE)
-    target = models.ForeignKey('django_netjsongraph.Node',
-                               related_name='target_link_set',
-                               on_delete=models.CASCADE)
+
+    topology = models.ForeignKey(
+        'django_netjsongraph.Topology', on_delete=models.CASCADE
+    )
+    source = models.ForeignKey(
+        'django_netjsongraph.Node',
+        related_name='source_link_set',
+        on_delete=models.CASCADE,
+    )
+    target = models.ForeignKey(
+        'django_netjsongraph.Node',
+        related_name='target_link_set',
+        on_delete=models.CASCADE,
+    )
     cost = models.FloatField()
     cost_text = models.CharField(max_length=24, blank=True)
     STATUS = Choices('up', 'down')
     status = StatusField()
-    properties = JSONField(default=dict,
-                           blank=True,
-                           load_kwargs={'object_pairs_hook': OrderedDict},
-                           dump_kwargs={'indent': 4})
+    properties = JSONField(
+        default=dict,
+        blank=True,
+        load_kwargs={'object_pairs_hook': OrderedDict},
+        dump_kwargs={'indent': 4},
+    )
     status_changed = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -66,17 +75,17 @@ class AbstractLink(TimeStampedEditableModel):
         """
         returns a NetJSON NetworkGraph Link object
         """
-        netjson = OrderedDict((
-            ('source', self.source.netjson_id),
-            ('target', self.target.netjson_id),
-            ('cost', self.cost),
-        ))
+        netjson = OrderedDict(
+            (
+                ('source', self.source.netjson_id),
+                ('target', self.target.netjson_id),
+                ('cost', self.cost),
+            )
+        )
         if self.cost_text:
             netjson['cost_text'] = self.cost_text
         # properties contain status by default
-        properties = OrderedDict((
-            ('status', self.status),
-        ))
+        properties = OrderedDict((('status', self.status),))
         if self.properties:
             properties.update(self.properties)
         netjson['properties'] = properties
@@ -103,10 +112,9 @@ class AbstractLink(TimeStampedEditableModel):
         """
         source = '"{}"'.format(source)
         target = '"{}"'.format(target)
-        q = (Q(source__addresses__contains=source,
-               target__addresses__contains=target) |
-             Q(source__addresses__contains=target,
-               target__addresses__contains=source))
+        q = Q(
+            source__addresses__contains=source, target__addresses__contains=target
+        ) | Q(source__addresses__contains=target, target__addresses__contains=source)
         return cls.objects.filter(q).filter(topology=topology).first()
 
     @classmethod
@@ -118,8 +126,9 @@ class AbstractLink(TimeStampedEditableModel):
         LINK_EXPIRATION = app_settings.LINK_EXPIRATION
         if LINK_EXPIRATION not in [False, None]:
             expiration_date = now() - timedelta(days=int(LINK_EXPIRATION))
-            expired_links = cls.objects.filter(status='down',
-                                               modified__lt=expiration_date)
+            expired_links = cls.objects.filter(
+                status='down', modified__lt=expiration_date
+            )
             expired_links_length = len(expired_links)
             if expired_links_length:
                 print_info('Deleting {0} expired links'.format(expired_links_length))

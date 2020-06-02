@@ -11,12 +11,23 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name='snapshot',
-            options={'verbose_name_plural': 'snapshots'},
+            name='snapshot', options={'verbose_name_plural': 'snapshots'},
         ),
         migrations.AlterField(
             model_name='topology',
             name='parser',
-            field=models.CharField(choices=[('netdiff.OlsrParser', 'OLSRd (txtinfo/jsoninfo)'), ('netdiff.BatmanParser', 'batman-advanced (jsondoc/txtinfo)'), ('netdiff.BmxParser', 'BMX6 (q6m)'), ('netdiff.NetJsonParser', 'NetJSON NetworkGraph'), ('netdiff.CnmlParser', 'CNML 1.0'), ('netdiff.OpenvpnParser', 'OpenVPN')], help_text='Select topology format', max_length=128, verbose_name='format'),
+            field=models.CharField(
+                choices=[
+                    ('netdiff.OlsrParser', 'OLSRd (txtinfo/jsoninfo)'),
+                    ('netdiff.BatmanParser', 'batman-advanced (jsondoc/txtinfo)'),
+                    ('netdiff.BmxParser', 'BMX6 (q6m)'),
+                    ('netdiff.NetJsonParser', 'NetJSON NetworkGraph'),
+                    ('netdiff.CnmlParser', 'CNML 1.0'),
+                    ('netdiff.OpenvpnParser', 'OpenVPN'),
+                ],
+                help_text='Select topology format',
+                max_length=128,
+                verbose_name='format',
+            ),
         ),
     ]

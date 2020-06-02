@@ -11,6 +11,4 @@ class Migration(migrations.Migration):
         ('django_netjsongraph', '0008_create_new_address_field'),
     ]
 
-    operations = [
-        migrations.RunPython(migrate_addresses)
-    ]
+    operations = [migrations.RunPython(migrate_addresses)]

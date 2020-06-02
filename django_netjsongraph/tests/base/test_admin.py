@@ -11,9 +11,7 @@ from ..utils import LoadMixin
 
 class TestAdminMixin(LoadMixin):
     module = 'django_netjsongraph'
-    fixtures = [
-        'test_users.json'
-    ]
+    fixtures = ['test_users.json']
 
     @property
     def prefix(self):
@@ -27,10 +25,10 @@ class TestAdminMixin(LoadMixin):
     def test_unpublish_selected(self):
         t = self.topology_model.objects.first()
         self.assertEqual(t.published, True)
-        self.client.post(self.changelist_path, {
-            'action': 'unpublish_selected',
-            '_selected_action': str(t.pk)
-        })
+        self.client.post(
+            self.changelist_path,
+            {'action': 'unpublish_selected', '_selected_action': str(t.pk)},
+        )
         t.refresh_from_db()
         self.assertEqual(t.published, False)
 
@@ -38,10 +36,10 @@ class TestAdminMixin(LoadMixin):
         t = self.topology_model.objects.first()
         t.published = False
         t.save()
-        self.client.post(self.changelist_path, {
-            'action': 'publish_selected',
-            '_selected_action': str(t.pk)
-        })
+        self.client.post(
+            self.changelist_path,
+            {'action': 'publish_selected', '_selected_action': str(t.pk)},
+        )
         t.refresh_from_db()
         self.assertEqual(t.published, True)
 
@@ -50,15 +48,17 @@ class TestAdminMixin(LoadMixin):
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body=self._load('static/netjson-1-link.json'),
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body=self._load('static/netjson-1-link.json'),
+            content_type='application/json',
+        )
         self.node_model.objects.all().delete()
-        self.client.post(self.changelist_path, {
-            'action': 'update_selected',
-            '_selected_action': str(t.pk)
-        })
+        self.client.post(
+            self.changelist_path,
+            {'action': 'update_selected', '_selected_action': str(t.pk)},
+        )
         self.assertEqual(self.node_model.objects.count(), 2)
         self.assertEqual(self.link_model.objects.count(), 1)
 
@@ -67,16 +67,19 @@ class TestAdminMixin(LoadMixin):
         t = self.topology_model.objects.first()
         t.parser = 'netdiff.NetJsonParser'
         t.save()
-        responses.add(responses.GET,
-                      'http://127.0.0.1:9090',
-                      body='{"error": "not found"}',
-                      status=404,
-                      content_type='application/json')
+        responses.add(
+            responses.GET,
+            'http://127.0.0.1:9090',
+            body='{"error": "not found"}',
+            status=404,
+            content_type='application/json',
+        )
         self.node_model.objects.all().delete()
-        response = self.client.post(self.changelist_path, {
-            'action': 'update_selected',
-            '_selected_action': str(t.pk)
-        }, follow=True)
+        response = self.client.post(
+            self.changelist_path,
+            {'action': 'update_selected', '_selected_action': str(t.pk)},
+            follow=True,
+        )
         self.assertEqual(self.node_model.objects.count(), 0)
         self.assertEqual(self.link_model.objects.count(), 0)
         message = list(response.context['messages'])[0]
@@ -156,10 +159,11 @@ class TestAdminMixin(LoadMixin):
         t.parser = 'netdiff.NetJsonParser'
         t.strategy = 'receive'
         t.save()
-        response = self.client.post(self.changelist_path, {
-            'action': 'update_selected',
-            '_selected_action': str(t.pk)
-        }, follow=True)
+        response = self.client.post(
+            self.changelist_path,
+            {'action': 'update_selected', '_selected_action': str(t.pk)},
+            follow=True,
+        )
         message = list(response.context['messages'])[0]
         self.assertEqual('warning', message.tags)
         self.assertIn('1 topology was ignored', message.message)

@@ -15,76 +15,212 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='Link',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
+                (
+                    'id',
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    'created',
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name='created',
+                    ),
+                ),
+                (
+                    'modified',
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name='modified',
+                    ),
+                ),
                 ('cost', models.FloatField()),
                 ('cost_text', models.CharField(blank=True, max_length=24)),
-                ('status', model_utils.fields.StatusField(choices=[('up', 'up'), ('down', 'down')], default='up', max_length=100, no_check_for_status=True)),
-                ('properties', jsonfield.fields.JSONField(blank=True, default=dict, dump_kwargs={'indent': 4}, load_kwargs={'object_pairs_hook': collections.OrderedDict})),
+                (
+                    'status',
+                    model_utils.fields.StatusField(
+                        choices=[('up', 'up'), ('down', 'down')],
+                        default='up',
+                        max_length=100,
+                        no_check_for_status=True,
+                    ),
+                ),
+                (
+                    'properties',
+                    jsonfield.fields.JSONField(
+                        blank=True,
+                        default=dict,
+                        dump_kwargs={'indent': 4},
+                        load_kwargs={'object_pairs_hook': collections.OrderedDict},
+                    ),
+                ),
             ],
-            options={
-                'abstract': False,
-            },
+            options={'abstract': False,},
         ),
         migrations.CreateModel(
             name='Node',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
+                (
+                    'id',
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    'created',
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name='created',
+                    ),
+                ),
+                (
+                    'modified',
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name='modified',
+                    ),
+                ),
                 ('label', models.CharField(blank=True, max_length=64)),
                 ('addresses', models.CharField(db_index=True, max_length=255)),
-                ('properties', jsonfield.fields.JSONField(blank=True, default=dict, dump_kwargs={'indent': 4}, load_kwargs={'object_pairs_hook': collections.OrderedDict})),
+                (
+                    'properties',
+                    jsonfield.fields.JSONField(
+                        blank=True,
+                        default=dict,
+                        dump_kwargs={'indent': 4},
+                        load_kwargs={'object_pairs_hook': collections.OrderedDict},
+                    ),
+                ),
             ],
-            options={
-                'abstract': False,
-            },
+            options={'abstract': False,},
         ),
         migrations.CreateModel(
             name='Topology',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
+                (
+                    'id',
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    'created',
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name='created',
+                    ),
+                ),
+                (
+                    'modified',
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name='modified',
+                    ),
+                ),
                 ('label', models.CharField(max_length=64, verbose_name='label')),
-                ('parser', models.CharField(choices=[('netdiff.OlsrParser', 'OLSRd (txtinfo/jsoninfo)'), ('netdiff.BatmanParser', 'batman-advanced (jsondoc/txtinfo)'), ('netdiff.BmxParser', 'BMX6 (q6m)'), ('netdiff.NetJsonParser', 'NetJSON NetworkGraph'), ('netdiff.CnmlParser', 'CNML 1.0')], help_text='Select topology format', max_length=128, verbose_name='format')),
-                ('url', models.URLField(blank=True, help_text='Topology data will be fetched from this URL (FETCH strategy)', verbose_name='url')),
-                ('protocol', models.CharField(blank=True, max_length=64, verbose_name='protocol')),
-                ('version', models.CharField(blank=True, max_length=24, verbose_name='version')),
-                ('revision', models.CharField(blank=True, max_length=64, verbose_name='revision')),
-                ('metric', models.CharField(blank=True, max_length=24, verbose_name='metric')),
+                (
+                    'parser',
+                    models.CharField(
+                        choices=[
+                            ('netdiff.OlsrParser', 'OLSRd (txtinfo/jsoninfo)'),
+                            (
+                                'netdiff.BatmanParser',
+                                'batman-advanced (jsondoc/txtinfo)',
+                            ),
+                            ('netdiff.BmxParser', 'BMX6 (q6m)'),
+                            ('netdiff.NetJsonParser', 'NetJSON NetworkGraph'),
+                            ('netdiff.CnmlParser', 'CNML 1.0'),
+                        ],
+                        help_text='Select topology format',
+                        max_length=128,
+                        verbose_name='format',
+                    ),
+                ),
+                (
+                    'url',
+                    models.URLField(
+                        blank=True,
+                        help_text='Topology data will be fetched from this URL (FETCH strategy)',
+                        verbose_name='url',
+                    ),
+                ),
+                (
+                    'protocol',
+                    models.CharField(
+                        blank=True, max_length=64, verbose_name='protocol'
+                    ),
+                ),
+                (
+                    'version',
+                    models.CharField(blank=True, max_length=24, verbose_name='version'),
+                ),
+                (
+                    'revision',
+                    models.CharField(
+                        blank=True, max_length=64, verbose_name='revision'
+                    ),
+                ),
+                (
+                    'metric',
+                    models.CharField(blank=True, max_length=24, verbose_name='metric'),
+                ),
             ],
-            options={
-                'verbose_name_plural': 'topologies',
-                'abstract': False,
-            },
+            options={'verbose_name_plural': 'topologies', 'abstract': False,},
         ),
         migrations.AddField(
             model_name='node',
             name='topology',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='django_netjsongraph.Topology'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='django_netjsongraph.Topology',
+            ),
         ),
         migrations.AddField(
             model_name='link',
             name='source',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='source_link_set', to='django_netjsongraph.Node'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='source_link_set',
+                to='django_netjsongraph.Node',
+            ),
         ),
         migrations.AddField(
             model_name='link',
             name='target',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='target_link_set', to='django_netjsongraph.Node'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='target_link_set',
+                to='django_netjsongraph.Node',
+            ),
         ),
         migrations.AddField(
             model_name='link',
             name='topology',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='django_netjsongraph.Topology'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='django_netjsongraph.Topology',
+            ),
         ),
     ]

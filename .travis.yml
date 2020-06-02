@@ -26,8 +26,8 @@ install:
 
 before_script:
   - |
-    openwisp-utils-qa-checks --migration-path "./django_netjsongraph/migrations" \
-                             --migration-module django_netjsongraph
+    openwisp-qa-check --migration-path "./django_netjsongraph/migrations" \
+                      --migration-module django_netjsongraph
 
 script:
   - coverage run --source=django_netjsongraph runtests.py

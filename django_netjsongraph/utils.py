@@ -21,10 +21,7 @@ def get_object_or_404(model, pk, **kwargs):
     """
     retrieves topology with specified arguments or raises 404
     """
-    kwargs.update({
-        'pk': pk,
-        'published': True
-    })
+    kwargs.update({'pk': pk, 'published': True})
     try:
         return get_obj_or_404(model, **kwargs)
     except ValidationError:
@@ -36,18 +33,22 @@ def get_api_urls(views_module):
     used by third party apps to reduce boilerplate
     """
     urls = [
-        url(r'^topology/$',
-            views_module.network_collection,
-            name='network_collection'),
-        url(r'^topology/(?P<pk>[^/]+)/$',
+        url(r'^topology/$', views_module.network_collection, name='network_collection'),
+        url(
+            r'^topology/(?P<pk>[^/]+)/$',
             views_module.network_graph,
-            name='network_graph'),
-        url(r'^topology/(?P<pk>[^/]+)/history/$',
+            name='network_graph',
+        ),
+        url(
+            r'^topology/(?P<pk>[^/]+)/history/$',
             views_module.network_graph_history,
-            name='network_graph_history'),
-        url(r'^receive/(?P<pk>[^/\?]+)/$',
+            name='network_graph_history',
+        ),
+        url(
+            r'^receive/(?P<pk>[^/\?]+)/$',
             views_module.receive_topology,
-            name='receive_topology'),
+            name='receive_topology',
+        ),
     ]
     return urls
 
@@ -57,11 +58,11 @@ def get_visualizer_urls(views_module):
     used by third party apps to reduce boilerplate
     """
     urls = [
-        url(r'^$',
-            views_module.topology_list,
-            name='topology_list'),
-        url(r'^topology/(?P<pk>[^/]+)/$',
+        url(r'^$', views_module.topology_list, name='topology_list'),
+        url(
+            r'^topology/(?P<pk>[^/]+)/$',
             views_module.topology_detail,
-            name='topology_detail'),
+            name='topology_detail',
+        ),
     ]
     return urls

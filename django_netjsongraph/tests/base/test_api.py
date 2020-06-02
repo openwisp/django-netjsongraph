@@ -55,9 +55,7 @@ class TestApiMixin(UnpublishMixin, LoadMixin):
         self._set_receive()
         self.node_model.objects.all().delete()
         data = self._load('static/netjson-1-link.json')
-        response = self.client.post(self.receive_url,
-                                    data,
-                                    content_type='text/plain')
+        response = self.client.post(self.receive_url, data, content_type='text/plain')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['detail'], 'data received successfully')
         self.assertEqual(self.node_model.objects.count(), 2)
@@ -71,17 +69,17 @@ class TestApiMixin(UnpublishMixin, LoadMixin):
     def test_receive_415(self):
         self._set_receive()
         data = self._load('static/netjson-1-link.json')
-        response = self.client.post(self.receive_url,
-                                    data,
-                                    content_type='application/xml')
+        response = self.client.post(
+            self.receive_url, data, content_type='application/xml'
+        )
         self.assertEqual(response.status_code, 415)
 
     def test_receive_400_missing_key(self):
         self._set_receive()
         data = self._load('static/netjson-1-link.json')
-        response = self.client.post(self.receive_url.replace('?key=test', ''),
-                                    data,
-                                    content_type='text/plain')
+        response = self.client.post(
+            self.receive_url.replace('?key=test', ''), data, content_type='text/plain'
+        )
         self.assertEqual(response.status_code, 400)
         self.assertIn('missing required', response.data['detail'])
 
@@ -89,18 +87,18 @@ class TestApiMixin(UnpublishMixin, LoadMixin):
         self._set_receive()
         self.node_model.objects.all().delete()
         data = 'WRONG'
-        response = self.client.post(self.receive_url,
-                                    data,
-                                    content_type='text/plain')
+        response = self.client.post(self.receive_url, data, content_type='text/plain')
         self.assertEqual(response.status_code, 400)
         self.assertIn('not recognized', response.data['detail'])
 
     def test_receive_403(self):
         self._set_receive()
         data = self._load('static/netjson-1-link.json')
-        response = self.client.post(self.receive_url.replace('?key=test', '?key=wrong'),
-                                    data,
-                                    content_type='text/plain')
+        response = self.client.post(
+            self.receive_url.replace('?key=test', '?key=wrong'),
+            data,
+            content_type='text/plain',
+        )
         self.assertEqual(response.status_code, 403)
 
     def test_receive_options(self):
@@ -115,7 +113,9 @@ class TestApiMixin(UnpublishMixin, LoadMixin):
 
     def test_snapshot_missing_date_400(self):
         date = self.snapshot_date
-        response = self.client.get(self.snapshot_url.replace('?date={0}'.format(date), ''))
+        response = self.client.get(
+            self.snapshot_url.replace('?date={0}'.format(date), '')
+        )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data['detail'], 'missing required "date" parameter')
 

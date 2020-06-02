@@ -24,9 +24,8 @@ INSTALLED_APPS = [
     'openwisp_utils.admin_theme',
     'django_netjsongraph',
     'django.contrib.admin',
-
     # rest framework
-    'rest_framework'
+    'rest_framework',
 ]
 
 STATICFILES_FINDERS = [
@@ -76,17 +75,11 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
+        'require_debug_false': {'()': 'django.utils.log.RequireDebugFalse',},
+        'require_debug_true': {'()': 'django.utils.log.RequireDebugTrue',},
     },
     'formatters': {
-        'simple': {
-            'format': '[%(levelname)s] %(message)s'
-        },
+        'simple': {'format': '[%(levelname)s] %(message)s'},
         'verbose': {
             'format': '\n\n[%(levelname)s %(asctime)s] module: %(module)s, process: %(process)d, thread: %(thread)d\n%(message)s'
         },
@@ -96,12 +89,12 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'filters': ['require_debug_true'],
-            'formatter': 'simple'
+            'formatter': 'simple',
         },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
+            'class': 'django.utils.log.AdminEmailHandler',
         },
         'main_log': {
             'level': 'ERROR',
@@ -110,18 +103,11 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'error.log'),
             'maxBytes': 5242880.0,
             'backupCount': 3,
-            'formatter': 'verbose'
-        }
+            'formatter': 'verbose',
+        },
     },
-    'root': {
-        'level': 'INFO',
-        'handlers': ['main_log', 'console', 'mail_admins'],
-    },
-    'loggers': {
-        'py.warnings': {
-            'handlers': ['console'],
-        }
-    }
+    'root': {'level': 'INFO', 'handlers': ['main_log', 'console', 'mail_admins'],},
+    'loggers': {'py.warnings': {'handlers': ['console'],}},
 }
 
 TEST_RUNNER = "django_netjsongraph.tests.utils.LoggingDisabledTestRunner"

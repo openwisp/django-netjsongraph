@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+
 from openwisp_utils.tests import catch_signal
 
 from ...models import Link
@@ -39,29 +40,41 @@ class TestLinkMixin(object):
     def test_json(self):
         t = self.topology_model.objects.first()
         node1, node2 = self._get_nodes()
-        link = t._create_link(source=node1, target=node2, cost=1.0,
-                              cost_text='100mbit/s',
-                              properties={"pretty": True})
-        self.assertEqual(dict(link.json(dict=True)), {
-            'source': '192.168.0.1',
-            'target': '192.168.0.2',
-            'cost': 1.0,
-            'cost_text': '100mbit/s',
-            'properties': {
-                'pretty': True,
-                'status': 'up',
-                'created': link.created,
-                'modified': link.modified,
-                'status_changed': link.status_changed,
-            }
-        })
+        link = t._create_link(
+            source=node1,
+            target=node2,
+            cost=1.0,
+            cost_text='100mbit/s',
+            properties={"pretty": True},
+        )
+        self.assertEqual(
+            dict(link.json(dict=True)),
+            {
+                'source': '192.168.0.1',
+                'target': '192.168.0.2',
+                'cost': 1.0,
+                'cost_text': '100mbit/s',
+                'properties': {
+                    'pretty': True,
+                    'status': 'up',
+                    'created': link.created,
+                    'modified': link.modified,
+                    'status_changed': link.status_changed,
+                },
+            },
+        )
         self.assertIsInstance(link.json(), str)
 
     def test_get_from_nodes(self):
         t = self.topology_model.objects.first()
         node1, node2 = self._get_nodes()
-        link = t._create_link(source=node1, target=node2, cost=1.0,
-                              cost_text='100mbit/s', properties='{"pretty": true}')
+        link = t._create_link(
+            source=node1,
+            target=node2,
+            cost=1.0,
+            cost_text='100mbit/s',
+            properties='{"pretty": true}',
+        )
         link.full_clean()
         link.save()
         link = self.link_model.get_from_nodes('192.168.0.1', '192.168.0.2', t)
@@ -79,8 +92,6 @@ class TestLinkMixin(object):
             link.status = 'down'
             link.save()
         handler.assert_called_once_with(
-            link=link,
-            sender=Link,
-            signal=link_status_changed,
+            link=link, sender=Link, signal=link_status_changed,
         )
         self.assertEqual(link.status, 'down')

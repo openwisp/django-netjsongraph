@@ -6,8 +6,9 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.timezone import now
 from jsonfield import JSONField
-from openwisp_utils.base import TimeStampedEditableModel
 from rest_framework.utils.encoders import JSONEncoder
+
+from openwisp_utils.base import TimeStampedEditableModel
 
 from .. import settings as app_settings
 from ..utils import print_info
@@ -17,15 +18,19 @@ class AbstractNode(TimeStampedEditableModel):
     """
     NetJSON NetworkGraph Node Object implementation
     """
-    topology = models.ForeignKey('django_netjsongraph.Topology',
-                                 on_delete=models.CASCADE)
+
+    topology = models.ForeignKey(
+        'django_netjsongraph.Topology', on_delete=models.CASCADE
+    )
     label = models.CharField(max_length=64, blank=True)
     # netjson ID and local_addresses
     addresses = JSONField(default=[])
-    properties = JSONField(default=dict,
-                           blank=True,
-                           load_kwargs={'object_pairs_hook': OrderedDict},
-                           dump_kwargs={'indent': 4})
+    properties = JSONField(
+        default=dict,
+        blank=True,
+        load_kwargs={'object_pairs_hook': OrderedDict},
+        dump_kwargs={'indent': 4},
+    )
 
     class Meta:
         abstract = True
@@ -80,8 +85,9 @@ class AbstractNode(TimeStampedEditableModel):
         :returns: Node object or None
         """
         address = '"{}"'.format(address)
-        return cls.objects.filter(topology=topology,
-                                  addresses__contains=address).first()
+        return cls.objects.filter(
+            topology=topology, addresses__contains=address
+        ).first()
 
     @classmethod
     def count_address(cls, address, topology):
@@ -92,8 +98,9 @@ class AbstractNode(TimeStampedEditableModel):
         :returns: int
         """
         address = '"{}"'.format(address)
-        return cls.objects.filter(topology=topology,
-                                  addresses__contains=address).count()
+        return cls.objects.filter(
+            topology=topology, addresses__contains=address
+        ).count()
 
     @classmethod
     def delete_expired_nodes(cls):
@@ -103,11 +110,16 @@ class AbstractNode(TimeStampedEditableModel):
         """
         NODE_EXPIRATION = app_settings.NODE_EXPIRATION
         LINK_EXPIRATION = app_settings.LINK_EXPIRATION
-        if NODE_EXPIRATION not in [False, None] and LINK_EXPIRATION not in [False, None]:
+        if NODE_EXPIRATION not in [False, None] and LINK_EXPIRATION not in [
+            False,
+            None,
+        ]:
             expiration_date = now() - timedelta(days=int(NODE_EXPIRATION))
-            expired_nodes = cls.objects.filter(modified__lt=expiration_date,
-                                               source_link_set__isnull=True,
-                                               target_link_set__isnull=True)
+            expired_nodes = cls.objects.filter(
+                modified__lt=expiration_date,
+                source_link_set__isnull=True,
+                target_link_set__isnull=True,
+            )
             expired_nodes_length = len(expired_nodes)
             if expired_nodes_length:
                 print_info('Deleting {0} expired nodes'.format(expired_nodes_length))

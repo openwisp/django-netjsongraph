@@ -20,16 +20,39 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='topology',
             name='strategy',
-            field=models.CharField(choices=[('fetch', 'FETCH'), ('receive', 'RECEIVE')], db_index=True, default='fetch', max_length=16, verbose_name='strategy'),
+            field=models.CharField(
+                choices=[('fetch', 'FETCH'), ('receive', 'RECEIVE')],
+                db_index=True,
+                default='fetch',
+                max_length=16,
+                verbose_name='strategy',
+            ),
         ),
         migrations.AddField(
             model_name='topology',
             name='expiration_time',
-            field=models.PositiveIntegerField(default=0, help_text='"Expiration Time" in seconds: setting this to 0 will immediately mark missing links as down; a value higher than 0 will delay marking missing links as down until the "modified" field of a link is older than "Expiration Time"', verbose_name='expiration time'),
+            field=models.PositiveIntegerField(
+                default=0,
+                help_text='"Expiration Time" in seconds: setting this to 0 will immediately mark missing links as down; a value higher than 0 will delay marking missing links as down until the "modified" field of a link is older than "Expiration Time"',
+                verbose_name='expiration time',
+            ),
         ),
         migrations.AddField(
             model_name='topology',
             name='key',
-            field=openwisp_utils.base.KeyField(blank=True, default=openwisp_utils.utils.get_random_key, help_text='key needed to update topology from nodes ', max_length=64, validators=[django.core.validators.RegexValidator(re.compile('^[^\\s/\\.]+$'), code='invalid', message='This value must not contain spaces, dots or slashes.')], verbose_name='key'),
+            field=openwisp_utils.base.KeyField(
+                blank=True,
+                default=openwisp_utils.utils.get_random_key,
+                help_text='key needed to update topology from nodes ',
+                max_length=64,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        re.compile('^[^\\s/\\.]+$'),
+                        code='invalid',
+                        message='This value must not contain spaces, dots or slashes.',
+                    )
+                ],
+                verbose_name='key',
+            ),
         ),
     ]
