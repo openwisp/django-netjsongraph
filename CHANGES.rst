@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Version 0.6.3 [2020-06-03]
+--------------------------
+
+- [add] Support of openwisp-utils~=0.5.0
+- [fixed] Minor issues with testcases
+
 Version 0.6.2 [2020-03-19]
 --------------------------
 
