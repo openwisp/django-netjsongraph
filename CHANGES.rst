@@ -1,8 +1,14 @@
 Changelog
 =========
 
-Version 0.6.3 [2020-06-03]
---------------------------
+Version 0.6.3.post1 [2020-06-04]
+--------------------------------
+
+- [bug] fixed broken testcase in 0.6.3 release
+- [change] minor changes handle post-releases in ``get_version()``
+
+Version 0.6.3 - 2020-06-03 [YANKED]
+-----------------------------------
 
 - [add] Support of openwisp-utils~=0.5.0
 - [fixed] Minor issues with testcases
