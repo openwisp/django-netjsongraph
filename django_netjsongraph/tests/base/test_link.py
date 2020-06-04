@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 
 from openwisp_utils.tests import catch_signal
 
-from ...models import Link
 from ...utils import link_status_changed
 
 
@@ -92,6 +91,6 @@ class TestLinkMixin(object):
             link.status = 'down'
             link.save()
         handler.assert_called_once_with(
-            link=link, sender=Link, signal=link_status_changed,
+            link=link, sender=self.link_model, signal=link_status_changed,
         )
         self.assertEqual(link.status, 'down')
